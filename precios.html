@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  ConsentPro — /precios
+  Página de precios con calculadora de ROI
+-->
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="ConsentPro — Planes y precios. Desde $30/mes para consultorios independientes hasta planes a medida para redes médicas."/>
+  <title>ConsentPro · Precios — Planes para médicos y clínicas</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#0f172a;color:#e2e8f0;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+    :root{
+      --navy:#0f172a;
+      --navy2:#1e293b;
+      --gold:#C8A24A;
+      --gold2:#A8832A;
+      --gold-glow:rgba(200,162,74,0.15);
+      --border:rgba(255,255,255,0.07);
+      --text-dim:rgba(226,232,240,0.5);
+    }
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+    @keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+    @keyframes pulse-gold{0%,100%{box-shadow:0 0 0 0 rgba(200,162,74,.3)}50%{box-shadow:0 0 0 10px rgba(200,162,74,0)}}
+
+    .reveal,.reveal-left,.reveal-right{opacity:0;transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+    .reveal{transform:translateY(22px)}.reveal-left{transform:translateX(-28px)}.reveal-right{transform:translateX(28px)}
+    .revealed{opacity:1!important;transform:none!important}
+    .d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}.d4{transition-delay:.28s}.d5{transition-delay:.35s}
+
+    nav.scrolled{background:rgba(15,23,42,.97)!important;backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+    .nav-link{font-size:.875rem;font-weight:500;color:rgba(226,232,240,.6);transition:color .2s;text-decoration:none}
+    .nav-link:hover,.nav-link.active{color:#e2e8f0}
+
+    .btn-gold{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a;font-weight:700;font-size:.875rem;border-radius:10px;border:none;cursor:pointer;transition:all .3s cubic-bezier(.22,1,.36,1);box-shadow:0 4px 20px rgba(200,162,74,.3);text-decoration:none;white-space:nowrap}
+    .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,162,74,.45)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:transparent;color:#e2e8f0;font-weight:500;font-size:.875rem;border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .25s ease;text-decoration:none}
+    .btn-ghost:hover{border-color:rgba(200,162,74,.4);color:var(--gold);background:rgba(200,162,74,.05)}
+
+    .glass-card{background:rgba(30,41,59,.6);border:1px solid var(--border);border-radius:18px;backdrop-filter:blur(12px);transition:border-color .3s,transform .3s,box-shadow .3s}
+    .glass-card:hover{border-color:rgba(200,162,74,.2);box-shadow:0 12px 40px rgba(200,162,74,.06)}
+
+    /* Pricing card */
+    .plan-card{background:rgba(30,41,59,.6);border:1px solid var(--border);border-radius:20px;padding:32px;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+    .plan-card.featured{background:rgba(200,162,74,.06);border-color:rgba(200,162,74,.4);transform:scale(1.03);box-shadow:0 0 0 1px rgba(200,162,74,.2),0 20px 60px rgba(200,162,74,.12)}
+    .plan-card:not(.featured):hover{border-color:rgba(200,162,74,.25);transform:translateY(-4px);box-shadow:0 12px 40px rgba(200,162,74,.08)}
+
+    .feature-check{width:18px;height:18px;border-radius:50%;background:rgba(200,162,74,.12);border:1px solid rgba(200,162,74,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+    /* Toggle */
+    .toggle-btn{padding:8px 20px;border-radius:8px;font-size:.8rem;font-weight:600;color:var(--text-dim);background:transparent;border:1px solid transparent;cursor:pointer;transition:all .25s ease}
+    .toggle-btn.active{background:rgba(200,162,74,.1);border-color:rgba(200,162,74,.3);color:var(--gold)}
+
+    /* ROI slider */
+    input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#C8A24A,#A8832A);cursor:pointer;box-shadow:0 2px 8px rgba(200,162,74,.5);transition:transform .15s}
+    input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+    input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#C8A24A,#A8832A);cursor:pointer;border:none}
+
+    /* FAQ */
+    .faq-content{max-height:0;overflow:hidden;transition:max-height .4s ease}
+    .faq-content.open{max-height:200px}
+    .faq-icon{transition:transform .3s;color:var(--gold);font-size:1.1rem;line-height:1}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+
+    /* Mobile menu */
+    #mob-menu{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1)}
+    #mob-menu.open{max-height:400px}
+
+    .gold-line{width:40px;height:2px;background:linear-gradient(90deg,var(--gold),rgba(200,162,74,.2));border-radius:2px}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:var(--navy)}
+    ::-webkit-scrollbar-thumb{background:rgba(200,162,74,.3);border-radius:3px}
+  </style>
+</head>
+<body>
+
+  <!-- ANNOUNCEMENT -->
+  <div style="background:linear-gradient(90deg,rgba(200,162,74,.1),rgba(200,162,74,.05),rgba(200,162,74,.1));border-bottom:1px solid rgba(200,162,74,.12);padding:9px 24px;text-align:center">
+    <p style="font-size:.78rem;color:rgba(226,232,240,.6)">
+      <span style="color:var(--gold);font-weight:700">✦ OFERTA</span>
+      &nbsp;Primer mes gratis para los primeros 50 médicos · Sin tarjeta de crédito &nbsp;·&nbsp;
+      <a href="#planes" style="color:var(--gold);text-decoration:none;font-weight:600">Ver planes →</a>
+    </p>
+  </div>
+
+  <!-- NAV -->
+  <nav id="navbar" class="fixed left-0 right-0 z-50 transition-all duration-300" style="top:0;background:transparent">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 pt-4">
+      <div class="flex items-center justify-between h-14 rounded-2xl px-6" style="background:rgba(15,23,42,.7);backdrop-filter:blur(20px);border:1px solid var(--border)">
+        <a href="index.html" style="text-decoration:none" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7.5C11.5 14.5 14 11.5 14 8V4L8 1z" fill="#0f172a"/><path d="M5.5 8.5l1.8 1.8 3.2-3.2" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;letter-spacing:-.02em;color:#fff">ConsentPro</span>
+        </a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href="soluciones/medicos.html" class="nav-link">Soluciones</a>
+          <a href="producto.html" class="nav-link">Producto</a>
+          <a href="precios.html" class="nav-link active" style="color:#e2e8f0">Precios</a>
+          <a href="nosotros.html" class="nav-link">Nosotros</a>
+        </div>
+        <div class="hidden md:flex items-center gap-3">
+          <a href="soluciones/medicos.html" class="btn-ghost" style="padding:8px 18px;font-size:.8rem">Para médicos</a>
+          <a href="soluciones/medicos.html#prueba-gratis" class="btn-gold" style="padding:9px 18px;font-size:.8rem">
+            Empezar gratis
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </a>
+        </div>
+        <button id="mob-btn" class="md:hidden w-9 h-9 rounded-lg flex items-center justify-center" style="border:1px solid var(--border)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="rgba(226,232,240,.7)" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div id="mob-menu" class="md:hidden rounded-2xl mt-2 px-5 py-4 flex flex-col gap-3" style="background:rgba(15,23,42,.97);border:1px solid var(--border)">
+        <a href="soluciones/medicos.html" class="nav-link text-sm">Soluciones</a>
+        <a href="producto.html" class="nav-link text-sm">Producto</a>
+        <a href="precios.html" class="nav-link text-sm" style="color:var(--gold)">Precios</a>
+        <a href="nosotros.html" class="nav-link text-sm">Nosotros</a>
+        <div style="border-top:1px solid var(--border);padding-top:12px">
+          <a href="soluciones/medicos.html" class="btn-gold w-full text-center text-sm justify-center">Empezar gratis</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative pt-40 pb-16 overflow-hidden" style="background:linear-gradient(180deg,rgba(200,162,74,.04) 0%,transparent 60%)">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,.07),transparent 65%)"></div>
+    </div>
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-7 reveal" style="background:rgba(200,162,74,.08);border:1px solid rgba(200,162,74,.2)">
+        <span style="font-size:.7rem;font-weight:700;color:var(--gold);letter-spacing:.08em">PLANES Y PRECIOS</span>
+      </div>
+      <h1 class="font-bold mb-5 reveal d1" style="font-family:'Playfair Display',serif;font-size:clamp(2.2rem,6vw,3.8rem);letter-spacing:-.03em;line-height:1.1;color:#f1f5f9">
+        Invierte menos de lo que<br/>
+        <span style="background:linear-gradient(135deg,#C8A24A,#f0d080,#C8A24A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">ganas en una sola consulta.</span>
+      </h1>
+      <p class="reveal d2" style="font-size:1.05rem;color:var(--text-dim);max-width:540px;margin:0 auto 2rem;line-height:1.7">
+        Planes claros, sin letra chica. Cancela cuando quieras.
+      </p>
+      <!-- Billing toggle -->
+      <div class="inline-flex items-center gap-1 rounded-xl p-1 mb-12 reveal d3" style="background:rgba(30,41,59,.8);border:1px solid var(--border)">
+        <button id="tog-mensual" class="toggle-btn active">Mensual</button>
+        <button id="tog-anual" class="toggle-btn">Anual <span style="font-size:.65rem;padding:2px 6px;border-radius:99px;background:rgba(200,162,74,.15);color:var(--gold);margin-left:4px">−20%</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANES -->
+  <section id="planes" class="pb-24">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-6 items-start" id="plans-grid">
+
+        <!-- CONSULTORIO -->
+        <div class="plan-card reveal d1">
+          <p style="font-size:.68rem;font-weight:700;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">Consultorio</p>
+          <div class="flex items-end gap-2 mb-2">
+            <span style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#f1f5f9;line-height:1" class="price-display" data-mensual="30" data-anual="24">$30</span>
+            <span style="color:var(--text-dim);font-size:.85rem;padding-bottom:8px">/mes</span>
+          </div>
+          <p style="font-size:.78rem;color:var(--text-dim);margin-bottom:24px">Hasta 100 consentimientos/mes</p>
+          <a href="soluciones/medicos.html" class="btn-ghost w-full justify-center text-sm mb-8" style="padding:11px">Empezar prueba gratuita</a>
+          <div class="space-y-3">
+            <p style="font-size:.68rem;font-weight:700;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Incluye</p>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">100 consentimientos al mes</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Plantillas ilimitadas</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Envío por WhatsApp y email</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Firma digital con metadatos</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Sellado SHA-256</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Exportación PDF jurídica</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">1 usuario</p></div>
+            <div class="flex items-start gap-3"><div class="w-4.5 h-4.5 rounded-full flex items-center justify-center flex-shrink-0" style="width:18px;height:18px;background:rgba(255,255,255,.05);border:1px solid var(--border)"><span style="font-size:.6rem;color:var(--text-dim)">—</span></div><p style="font-size:.8rem;color:rgba(226,232,240,.3)">Multi-usuario</p></div>
+            <div class="flex items-start gap-3"><div class="w-4.5 h-4.5 rounded-full flex items-center justify-center flex-shrink-0" style="width:18px;height:18px;background:rgba(255,255,255,.05);border:1px solid var(--border)"><span style="font-size:.6rem;color:var(--text-dim)">—</span></div><p style="font-size:.8rem;color:rgba(226,232,240,.3)">Logo de marca propia</p></div>
+          </div>
+        </div>
+
+        <!-- CLÍNICA (FEATURED) -->
+        <div class="plan-card featured reveal d2">
+          <div style="position:absolute;top:16px;right:16px;padding:4px 12px;border-radius:99px;background:linear-gradient(135deg,#C8A24A,#A8832A);font-size:.65rem;font-weight:700;color:#0f172a;letter-spacing:.06em">MÁS POPULAR</div>
+          <p style="font-size:.68rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">Clínica</p>
+          <div class="flex items-end gap-2 mb-2">
+            <span style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#f1f5f9;line-height:1" class="price-display" data-mensual="99" data-anual="79">$99</span>
+            <span style="color:var(--text-dim);font-size:.85rem;padding-bottom:8px">/mes</span>
+          </div>
+          <p style="font-size:.78rem;color:var(--text-dim);margin-bottom:24px">100 – 1.000 consentimientos/mes</p>
+          <a href="soluciones/medicos.html" class="btn-gold w-full justify-center text-sm mb-8" style="padding:12px;animation:pulse-gold 3s infinite">Empezar prueba gratuita</a>
+          <div class="space-y-3">
+            <p style="font-size:.68rem;font-weight:700;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Todo en Consultorio, más</p>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.85)">Hasta 1.000 consentimientos/mes</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.85)">Hasta 5 usuarios / médicos</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.85)">Logo y marca propia</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.85)">Panel multi-especialidad</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.85)">Soporte prioritario 24h</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.85)">Reportes y estadísticas</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.85)">Revisión legal semestral</p></div>
+          </div>
+        </div>
+
+        <!-- RED MÉDICA -->
+        <div class="plan-card reveal d3">
+          <p style="font-size:.68rem;font-weight:700;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">Red Médica</p>
+          <div class="mb-2">
+            <span style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:#f1f5f9;line-height:1">A medida</span>
+          </div>
+          <p style="font-size:.78rem;color:var(--text-dim);margin-bottom:24px">+1.000 consentimientos/mes · Multi-sede</p>
+          <a href="https://wa.me/584145173115?text=Hola%2C%20me%20interesa%20el%20plan%20Red%20M%C3%A9dica" target="_blank" class="btn-ghost w-full justify-center text-sm mb-8" style="padding:11px">Hablar con un asesor</a>
+          <div class="space-y-3">
+            <p style="font-size:.68rem;font-weight:700;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Todo en Clínica, más</p>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Volumen ilimitado</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Usuarios ilimitados</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Integración con HIS/EMR</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Onboarding y capacitación</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">SLA garantizado</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Soporte dedicado 24/7</p></div>
+            <div class="flex items-start gap-3"><div class="feature-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7 2.5" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg></div><p style="font-size:.8rem;color:rgba(226,232,240,.75)">Facturación corporativa</p></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Garantía -->
+      <div class="flex flex-wrap justify-center gap-6 mt-12 reveal d4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.2)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 3.5v3.5c0 3 2 5.5 5.5 7 3.5-1.5 5.5-4 5.5-7V3.5L7 1z" fill="none" stroke="#C8A24A" stroke-width="1.2"/><path d="M4.5 7l1.5 1.5L9.5 5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <p style="font-size:.8rem;color:rgba(226,232,240,.6)">Sin contrato de permanencia</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.2)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#C8A24A" stroke-width="1.2"/><path d="M7 4v3.5L9 9" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <p style="font-size:.8rem;color:rgba(226,232,240,.6)">Cancela en cualquier momento</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.2)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <p style="font-size:.8rem;color:rgba(226,232,240,.6)">Primer mes gratis · Sin tarjeta</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.2)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="4" width="10" height="7" rx="1.5" stroke="#C8A24A" stroke-width="1.2"/><path d="M5 4V3a2 2 0 014 0v1" stroke="#C8A24A" stroke-width="1.2"/></svg>
+          </div>
+          <p style="font-size:.8rem;color:rgba(226,232,240,.6)">Datos cifrados AES-256</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULADORA ROI -->
+  <section id="calculadora" class="py-24" style="background:rgba(30,41,59,.3);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <div class="gold-line mx-auto mb-5 reveal"></div>
+        <p class="reveal d1" style="font-size:.7rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Calculadora de retorno</p>
+        <h2 class="font-bold reveal d2" style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.02em;color:#f1f5f9">¿Cuánto te cuesta <em>no tenerlo</em>?</h2>
+        <p class="reveal d3 mt-3" style="font-size:.9rem;color:var(--text-dim);max-width:480px;margin-left:auto;margin-right:auto">Un solo proceso judicial puede costar 10× más que un año entero de ConsentPro. Mueve los sliders y calcula.</p>
+      </div>
+
+      <div class="glass-card p-8 reveal d4">
+        <div class="grid md:grid-cols-2 gap-10">
+          <!-- Sliders -->
+          <div class="space-y-8">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label style="font-size:.8rem;font-weight:600;color:rgba(226,232,240,.7)">Pacientes al mes</label>
+                <span id="val-pacientes" style="font-size:1.1rem;font-weight:700;color:var(--gold)">80</span>
+              </div>
+              <input type="range" id="sl-pacientes" min="10" max="500" value="80" step="5"/>
+              <div class="flex justify-between mt-1" style="font-size:.65rem;color:var(--text-dim)"><span>10</span><span>500</span></div>
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label style="font-size:.8rem;font-weight:600;color:rgba(226,232,240,.7)">Valor de consulta (USD)</label>
+                <span id="val-consulta" style="font-size:1.1rem;font-weight:700;color:var(--gold)">$50</span>
+              </div>
+              <input type="range" id="sl-consulta" min="20" max="300" value="50" step="5"/>
+              <div class="flex justify-between mt-1" style="font-size:.65rem;color:var(--text-dim)"><span>$20</span><span>$300</span></div>
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label style="font-size:.8rem;font-weight:600;color:rgba(226,232,240,.7)">Riesgo de demanda (% anual)</label>
+                <span id="val-riesgo" style="font-size:1.1rem;font-weight:700;color:var(--gold)">5%</span>
+              </div>
+              <input type="range" id="sl-riesgo" min="1" max="30" value="5" step="1"/>
+              <div class="flex justify-between mt-1" style="font-size:.65rem;color:var(--text-dim)"><span>1%</span><span>30%</span></div>
+            </div>
+          </div>
+
+          <!-- Resultado -->
+          <div class="flex flex-col justify-center space-y-5">
+            <div class="rounded-2xl p-6 text-center" style="background:rgba(200,162,74,.07);border:1px solid rgba(200,162,74,.2)">
+              <p style="font-size:.72rem;color:var(--text-dim);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">Costo estimado de 1 demanda</p>
+              <p id="res-demanda" style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--gold)">$5,000</p>
+              <p style="font-size:.7rem;color:var(--text-dim);margin-top:4px">Honorarios + tiempo + reputación</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="rounded-xl p-4 text-center" style="background:rgba(255,255,255,.04);border:1px solid var(--border)">
+                <p style="font-size:.65rem;color:var(--text-dim);margin-bottom:6px">Plan recomendado</p>
+                <p id="res-plan" style="font-size:1.1rem;font-weight:700;color:#f1f5f9">Consultorio</p>
+                <p id="res-precio" style="font-size:.75rem;color:var(--gold)">$30/mes</p>
+              </div>
+              <div class="rounded-xl p-4 text-center" style="background:rgba(255,255,255,.04);border:1px solid var(--border)">
+                <p style="font-size:.65rem;color:var(--text-dim);margin-bottom:6px">Ahorro potencial</p>
+                <p id="res-ahorro" style="font-size:1.1rem;font-weight:700;color:#22c55e">$4,640</p>
+                <p style="font-size:.75rem;color:var(--text-dim)">vs. 1 demanda</p>
+              </div>
+            </div>
+            <a href="soluciones/medicos.html" class="btn-gold text-sm justify-center" style="padding:13px">
+              Empezar con <span id="res-plan-btn">Consultorio</span>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </a>
+          </div>
+        </div>
+        <p class="mt-6 text-center" style="font-size:.68rem;color:rgba(226,232,240,.2)">* Estimación orientativa. El costo real de una demanda varía según país, tipo de procedimiento y complejidad del caso.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARACIÓN DETALLADA -->
+  <section class="py-24">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <div class="gold-line mx-auto mb-5 reveal"></div>
+        <h2 class="font-bold reveal d1" style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:-.02em;color:#f1f5f9">Comparación completa</h2>
+      </div>
+      <div class="glass-card overflow-hidden reveal d2">
+        <div class="overflow-x-auto">
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border)">
+                <th style="padding:16px 24px;text-align:left;font-size:.75rem;color:var(--text-dim);font-weight:600;width:40%">Funcionalidad</th>
+                <th style="padding:16px 16px;text-align:center;font-size:.75rem;color:var(--text-dim);font-weight:600">Consultorio</th>
+                <th style="padding:16px 16px;text-align:center;font-size:.75rem;color:var(--gold);font-weight:700;background:rgba(200,162,74,.04)">Clínica ⭐</th>
+                <th style="padding:16px 16px;text-align:center;font-size:.75rem;color:var(--text-dim);font-weight:600">Red Médica</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows -->
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+                <td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Consentimientos / mes</td>
+                <td style="padding:14px 16px;text-align:center;font-size:.82rem;color:#f1f5f9">100</td>
+                <td style="padding:14px 16px;text-align:center;font-size:.82rem;color:#f1f5f9;background:rgba(200,162,74,.03)">1.000</td>
+                <td style="padding:14px 16px;text-align:center;font-size:.82rem;color:#f1f5f9">Ilimitados</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+                <td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Usuarios incluidos</td>
+                <td style="padding:14px 16px;text-align:center;font-size:.82rem;color:#f1f5f9">1</td>
+                <td style="padding:14px 16px;text-align:center;font-size:.82rem;color:#f1f5f9;background:rgba(200,162,74,.03)">5</td>
+                <td style="padding:14px 16px;text-align:center;font-size:.82rem;color:#f1f5f9">Ilimitados</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Firma digital + metadatos</td><td style="padding:14px 16px;text-align:center">✅</td><td style="padding:14px 16px;text-align:center;background:rgba(200,162,74,.03)">✅</td><td style="padding:14px 16px;text-align:center">✅</td></tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Envío WhatsApp</td><td style="padding:14px 16px;text-align:center">✅</td><td style="padding:14px 16px;text-align:center;background:rgba(200,162,74,.03)">✅</td><td style="padding:14px 16px;text-align:center">✅</td></tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Sellado SHA-256</td><td style="padding:14px 16px;text-align:center">✅</td><td style="padding:14px 16px;text-align:center;background:rgba(200,162,74,.03)">✅</td><td style="padding:14px 16px;text-align:center">✅</td></tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Logo y marca propia</td><td style="padding:14px 16px;text-align:center;color:var(--text-dim)">—</td><td style="padding:14px 16px;text-align:center;background:rgba(200,162,74,.03)">✅</td><td style="padding:14px 16px;text-align:center">✅</td></tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Reportes y estadísticas</td><td style="padding:14px 16px;text-align:center;color:var(--text-dim)">—</td><td style="padding:14px 16px;text-align:center;background:rgba(200,162,74,.03)">✅</td><td style="padding:14px 16px;text-align:center">✅</td></tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Soporte prioritario</td><td style="padding:14px 16px;text-align:center;color:var(--text-dim)">Email</td><td style="padding:14px 16px;text-align:center;background:rgba(200,162,74,.03)">24h</td><td style="padding:14px 16px;text-align:center">24/7</td></tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:14px 24px;font-size:.82rem;color:rgba(226,232,240,.75)">Integración HIS/EMR</td><td style="padding:14px 16px;text-align:center;color:var(--text-dim)">—</td><td style="padding:14px 16px;text-align:center;color:var(--text-dim);background:rgba(200,162,74,.03)">—</td><td style="padding:14px 16px;text-align:center">✅</td></tr>
+              <tr><td style="padding:14px 24px;font-weight:700;font-size:.9rem;color:#f1f5f9">Precio mensual</td>
+                <td style="padding:14px 16px;text-align:center;font-weight:700;font-size:.95rem;color:#f1f5f9">$30</td>
+                <td style="padding:14px 16px;text-align:center;font-weight:700;font-size:.95rem;color:var(--gold);background:rgba(200,162,74,.03)">$99</td>
+                <td style="padding:14px 16px;text-align:center;font-weight:700;font-size:.95rem;color:#f1f5f9">A medida</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20" style="background:rgba(30,41,59,.25);border-top:1px solid var(--border)">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-10">
+        <div class="gold-line mx-auto mb-5 reveal"></div>
+        <h2 class="font-bold reveal d1" style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.2rem);letter-spacing:-.02em;color:#f1f5f9">Preguntas frecuentes sobre precios</h2>
+      </div>
+      <div class="space-y-3" id="faq-precios">
+        <div class="faq-item glass-card overflow-hidden reveal d1">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left" style="background:transparent;border:none;cursor:pointer">
+            <span style="font-size:.875rem;font-weight:600;color:#f1f5f9;padding-right:16px">¿Puedo cambiar de plan en cualquier momento?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content px-6"><p style="font-size:.82rem;color:var(--text-dim);line-height:1.7;padding-bottom:20px">Sí. Puedes subir o bajar de plan en cualquier momento desde tu panel. El cambio se aplica al inicio del siguiente ciclo de facturación. No hay penalizaciones.</p></div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden reveal d2">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left" style="background:transparent;border:none;cursor:pointer">
+            <span style="font-size:.875rem;font-weight:600;color:#f1f5f9;padding-right:16px">¿Qué métodos de pago aceptan?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content px-6"><p style="font-size:.82rem;color:var(--text-dim);line-height:1.7;padding-bottom:20px">Aceptamos tarjetas de crédito/débito internacionales (Visa, Mastercard, American Express), transferencias bancarias y Zelle para clientes en Venezuela. Para el plan Red Médica también ofrecemos facturación en moneda local.</p></div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden reveal d3">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left" style="background:transparent;border:none;cursor:pointer">
+            <span style="font-size:.875rem;font-weight:600;color:#f1f5f9;padding-right:16px">¿Qué pasa si supero el límite de consentimientos?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content px-6"><p style="font-size:.82rem;color:var(--text-dim);line-height:1.7;padding-bottom:20px">Te avisamos con anticipación cuando te acercas al límite. Puedes comprar consentimientos adicionales a $0.50/unidad, o simplemente subir de plan. No bloqueamos tu cuenta de forma repentina.</p></div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden reveal d4">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left" style="background:transparent;border:none;cursor:pointer">
+            <span style="font-size:.875rem;font-weight:600;color:#f1f5f9;padding-right:16px">Si cancelo, ¿pierdo mis registros?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-content px-6"><p style="font-size:.82rem;color:var(--text-dim);line-height:1.7;padding-bottom:20px">No. Tienes 90 días desde la cancelación para exportar todos tus consentimientos en PDF. Pasado ese plazo, los datos son eliminados de nuestros servidores. Recomendamos exportar antes de cancelar.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;bottom:-150px;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,.08),transparent 65%)"></div>
+    </div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+      <h2 class="font-bold mb-5 reveal d1" style="font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);letter-spacing:-.03em;color:#f1f5f9">
+        Empieza gratis hoy.<br/>
+        <span style="color:var(--gold)">Sin tarjeta. Sin letra chica.</span>
+      </h2>
+      <p class="reveal d2 mb-10" style="font-size:1rem;color:var(--text-dim);line-height:1.7">Nuestro equipo te configura la cuenta en menos de 24 horas, adaptada a tu especialidad.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center reveal d3">
+        <a href="soluciones/medicos.html" class="btn-gold text-sm px-10 py-4">
+          Solicitar acceso gratuito
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <a href="https://wa.me/584145173115" target="_blank" class="btn-ghost text-sm px-10 py-4">
+          Hablar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-7" style="background:var(--navy);border-top:1px solid var(--border)">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A)">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L1 3.5v3c0 2.5 1.8 4.5 5 5.5 3.2-1 5-3 5-5.5v-3L6 1z" fill="#0f172a"/></svg>
+        </div>
+        <span style="font-family:'Playfair Display',serif;font-weight:700;color:#fff;letter-spacing:-.02em">ConsentPro</span>
+      </div>
+      <p style="font-size:.72rem;color:rgba(226,232,240,.25)">© 2025 ConsentPro. Todos los derechos reservados.</p>
+      <div class="flex gap-5">
+        <a href="index.html" style="font-size:.75rem;color:rgba(226,232,240,.3);text-decoration:none">Inicio</a>
+        <a href="soluciones/medicos.html" style="font-size:.75rem;color:rgba(226,232,240,.3);text-decoration:none">Médicos</a>
+        <a href="producto.html" style="font-size:.75rem;color:rgba(226,232,240,.3);text-decoration:none">Producto</a>
+        <a href="mailto:abgjosemrojas@gmail.com" style="font-size:.75rem;color:rgba(226,232,240,.3);text-decoration:none">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav
+    const nav=document.getElementById('navbar');
+    window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40),{passive:true});
+    document.getElementById('mob-btn').addEventListener('click',()=>document.getElementById('mob-menu').classList.toggle('open'));
+
+    // Billing toggle
+    let billingMode='mensual';
+    function updatePrices(){
+      document.querySelectorAll('.price-display').forEach(el=>{
+        const val=billingMode==='mensual'?el.dataset.mensual:el.dataset.anual;
+        if(val) el.textContent='$'+val;
+      });
+    }
+    document.getElementById('tog-mensual').addEventListener('click',()=>{
+      billingMode='mensual';
+      document.getElementById('tog-mensual').classList.add('active');
+      document.getElementById('tog-anual').classList.remove('active');
+      updatePrices();
+    });
+    document.getElementById('tog-anual').addEventListener('click',()=>{
+      billingMode='anual';
+      document.getElementById('tog-anual').classList.add('active');
+      document.getElementById('tog-mensual').classList.remove('active');
+      updatePrices();
+    });
+
+    // ROI Calculator
+    const fmt=n=>n>=1000?'$'+Math.round(n/1000*10)/10+'k':'$'+Math.round(n);
+    function calcROI(){
+      const pac=+document.getElementById('sl-pacientes').value;
+      const con=+document.getElementById('sl-consulta').value;
+      const riesgo=+document.getElementById('sl-riesgo').value/100;
+      document.getElementById('val-pacientes').textContent=pac;
+      document.getElementById('val-consulta').textContent='$'+con;
+      document.getElementById('val-riesgo').textContent=riesgo*100+'%';
+
+      // Costo demanda: 10-20 consultas de defensa + honorarios abogado estimado
+      const costoBase=Math.max(3000, pac*con*0.8);
+      const costoAnual=costoBase*riesgo;
+      document.getElementById('res-demanda').textContent=fmt(costoBase);
+
+      // Plan recomendado
+      let plan,precio;
+      if(pac<=100){plan='Consultorio';precio=30}
+      else if(pac<=1000){plan='Clínica';precio=99}
+      else{plan='Red Médica';precio=299}
+
+      document.getElementById('res-plan').textContent=plan;
+      document.getElementById('res-precio').textContent='$'+precio+'/mes';
+      document.getElementById('res-plan-btn').textContent=plan;
+
+      const ahorro=costoBase-(precio*12);
+      document.getElementById('res-ahorro').textContent=fmt(Math.max(0,ahorro));
+    }
+    ['sl-pacientes','sl-consulta','sl-riesgo'].forEach(id=>document.getElementById(id).addEventListener('input',calcROI));
+    calcROI();
+
+    // FAQ
+    document.querySelectorAll('.faq-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const item=btn.closest('.faq-item');
+        const content=item.querySelector('.faq-content');
+        const isOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-content').classList.remove('open')});
+        if(!isOpen){item.classList.add('open');content.classList.add('open')}
+      });
+    });
+
+    // Reveal
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed');obs.unobserve(e.target)}});
+    },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obs.observe(el));
+  </script>
+</body>
+</html>
