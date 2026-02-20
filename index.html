@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  ConsentPro — International Digital Consent & Compliance    ║
+  ║  Version: 1.0.0                                              ║
+  ║  Author: UI/UX Senior — Legal-Tech Premium                  ║
+  ║  Ready for: GitHub Pages, Netlify, Vercel                   ║
+  ║  i18n: All user-facing strings marked with [i18n]           ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ConsentPro — Plataforma internacional de consentimiento digital y compliance. Segura, conforme y elegante." />
+  <meta name="keywords" content="gestión de consentimientos, GDPR, compliance, consentimiento digital, legal-tech" />
+  <meta property="og:title" content="ConsentPro — Plataforma de Consentimiento Digital" />
+  <meta property="og:description" content="Gestión de consentimientos digitales de clase mundial. Compliance global." />
+  <meta property="og:type" content="website" />
+  <title>ConsentPro — Plataforma Internacional de Consentimiento Digital y Compliance</title>
+
+  <!-- ── Tailwind CSS via CDN ── -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ── Google Fonts: Playfair Display + DM Sans ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- ── Tailwind Config ── -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              DEFAULT: '#C8A24A',
+              light: '#E2C87A',
+              dark: '#A8832A',
+            },
+            ink: '#111827',
+            surface: '#F1F5F9',
+          },
+          fontFamily: {
+            display: ['Playfair Display', 'Georgia', 'serif'],
+            body: ['DM Sans', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'gold-sm': '0 2px 12px 0 rgba(200,162,74,0.18)',
+            'gold-md': '0 4px 32px 0 rgba(200,162,74,0.28)',
+            'card': '0 2px 24px 0 rgba(17,24,39,0.07)',
+            'card-hover': '0 8px 48px 0 rgba(17,24,39,0.13)',
+            'deep': '0 16px 64px 0 rgba(17,24,39,0.15)',
+          },
+          keyframes: {
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(32px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideLeft: {
+              '0%': { opacity: '0', transform: 'translateX(-40px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            slideRight: {
+              '0%': { opacity: '0', transform: 'translateX(40px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            pulse_gold: {
+              '0%, 100%': { boxShadow: '0 0 0 0 rgba(200,162,74,0)' },
+              '50%': { boxShadow: '0 0 0 8px rgba(200,162,74,0.15)' },
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-200% center' },
+              '100%': { backgroundPosition: '200% center' },
+            },
+            draw: {
+              '0%': { strokeDashoffset: '1000' },
+              '100%': { strokeDashoffset: '0' },
+            },
+            scaleIn: {
+              '0%': { opacity: '0', transform: 'scale(0.92)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) forwards',
+            'fade-in': 'fadeIn 0.6s ease-out forwards',
+            'slide-left': 'slideLeft 0.7s cubic-bezier(0.22,1,0.36,1) forwards',
+            'slide-right': 'slideRight 0.7s cubic-bezier(0.22,1,0.36,1) forwards',
+            'float': 'float 5s ease-in-out infinite',
+            'scale-in': 'scaleIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: #111827;
+      background: #ffffff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Scroll-reveal base state ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.72s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.72s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-36px);
+      transition: opacity 0.72s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.72s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-left.revealed { opacity: 1; transform: translateX(0); }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(36px);
+      transition: opacity 0.72s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.72s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-right.revealed { opacity: 1; transform: translateX(0); }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.93);
+      transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-scale.revealed { opacity: 1; transform: scale(1); }
+
+    /* Stagger delays */
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.18s; }
+    .delay-3 { transition-delay: 0.28s; }
+    .delay-4 { transition-delay: 0.38s; }
+    .delay-5 { transition-delay: 0.48s; }
+
+    /* ── Navigation ── */
+    #navbar {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    #navbar.scrolled {
+      background: rgba(255,255,255,0.96) !important;
+      box-shadow: 0 1px 24px rgba(17,24,39,0.08);
+    }
+
+    /* Nav link — animated gold underline */
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+      color: #374151;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: #C8A24A;
+      transition: width 0.3s cubic-bezier(0.22,1,0.36,1);
+      border-radius: 2px;
+    }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link:hover { color: #111827; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #111827;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+      padding: 12px 28px;
+      border-radius: 8px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease,
+                  border-color 0.3s ease, box-shadow 0.3s ease,
+                  transform 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(200,162,74,0.15) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: #1a1a2e;
+      border-color: #C8A24A;
+      color: #C8A24A;
+      box-shadow: 0 0 0 3px rgba(200,162,74,0.18), 0 4px 24px rgba(200,162,74,0.2);
+      transform: translateY(-1px);
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: #111827;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+      padding: 11px 28px;
+      border-radius: 8px;
+      border: 1.5px solid #d1d5db;
+      cursor: pointer;
+      transition: border-color 0.3s ease, color 0.3s ease,
+                  background 0.3s ease, box-shadow 0.3s ease,
+                  transform 0.2s ease;
+    }
+    .btn-outline:hover {
+      border-color: #C8A24A;
+      color: #C8A24A;
+      background: rgba(200,162,74,0.05);
+      box-shadow: 0 0 0 3px rgba(200,162,74,0.1);
+      transform: translateY(-1px);
+    }
+
+    /* ── Hero background animation ── */
+    #hero {
+      position: relative;
+      overflow: hidden;
+    }
+    #hero-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(200,162,74,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 70%, rgba(17,24,39,0.04) 0%, transparent 60%),
+        #ffffff;
+      animation: heroShift 12s ease-in-out infinite alternate;
+    }
+    @keyframes heroShift {
+      0%   { background-position: 60% 40%, 20% 70%; }
+      50%  { background-position: 55% 35%, 25% 75%; }
+      100% { background-position: 65% 45%, 15% 65%; }
+    }
+
+    /* Particle canvas */
+    #particles-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* ── Dashboard mockup ── */
+    .dashboard-mockup {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 24px 80px rgba(17,24,39,0.14), 0 2px 8px rgba(17,24,39,0.06);
+      overflow: hidden;
+      animation: float 5s ease-in-out infinite;
+      transform-origin: center center;
+      border: 1px solid rgba(17,24,39,0.07);
+    }
+    .mockup-bar {
+      height: 36px;
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 7px;
+    }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-stat-card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      flex: 1;
+    }
+    .mockup-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+    .gold-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #C8A24A 0%, #E2C87A 100%);
+      border-radius: 2px;
+    }
+    .mockup-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #F1F5F9;
+      font-size: 11px;
+    }
+    .mockup-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #C8A24A22 0%, #C8A24A44 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #C8A24A;
+      flex-shrink: 0;
+    }
+
+    /* ── Step connector line ── */
+    .step-connector {
+      position: absolute;
+      top: 32px;
+      left: calc(50% + 80px);
+      right: calc(-50% + 80px);
+      height: 1px;
+      background: linear-gradient(90deg, #C8A24A 0%, rgba(200,162,74,0.2) 100%);
+    }
+
+    /* ── Module cards ── */
+    .module-card {
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 32px;
+      background: #fff;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .module-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #C8A24A, #E2C87A);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+      border-radius: 0 0 0 0;
+    }
+    .module-card:hover {
+      border-color: #C8A24A;
+      box-shadow: 0 8px 40px rgba(200,162,74,0.15);
+      transform: translateY(-4px);
+    }
+    .module-card:hover::before { transform: scaleX(1); }
+    .module-card .module-icon {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .module-card:hover .module-icon { transform: scale(1.12) rotate(-4deg); }
+
+    /* ── How it works cards ── */
+    .step-card {
+      background: #fff;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+      transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .step-card:hover {
+      box-shadow: 0 8px 40px rgba(17,24,39,0.10);
+      transform: translateY(-6px);
+      border-color: #C8A24A44;
+    }
+    .step-num {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px; height: 28px;
+      background: #111827;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── Industry grid ── */
+    .industry-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 24px 16px;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
+      background: #fff;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      text-align: center;
+      cursor: default;
+    }
+    .industry-item:hover {
+      border-color: #C8A24A55;
+      box-shadow: 0 4px 20px rgba(200,162,74,0.12);
+      transform: translateY(-3px);
+    }
+
+    /* ── Pricing cards ── */
+    .pricing-card {
+      border-radius: 16px;
+      padding: 36px 32px;
+      border: 1.5px solid #E2E8F0;
+      background: #fff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-card:hover { transform: translateY(-6px); box-shadow: 0 16px 64px rgba(17,24,39,0.12); }
+    .pricing-card.featured {
+      border-color: #C8A24A;
+      box-shadow: 0 8px 48px rgba(200,162,74,0.18);
+      transform: scale(1.02);
+    }
+    .pricing-card.featured:hover { transform: scale(1.02) translateY(-6px); }
+    .pricing-check { color: #C8A24A; margin-right: 8px; flex-shrink: 0; }
+
+    /* ── Gold section separator ── */
+    .gold-divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, #C8A24A 0%, #E2C87A 100%);
+      border-radius: 2px;
+    }
+
+    /* ── Security badge ── */
+    .security-badge {
+      background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+      border: 1px solid rgba(200,162,74,0.3);
+      border-radius: 14px;
+      padding: 20px 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .security-badge::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(200,162,74,0.12) 0%, transparent 60%);
+    }
+
+    /* ── Section transition overlay ── */
+    section { position: relative; }
+
+    /* ── Pricing toggle ── */
+    .toggle-track {
+      width: 44px; height: 24px;
+      background: #E2E8F0;
+      border-radius: 100px;
+      position: relative;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+    .toggle-track.active { background: #111827; }
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 18px; height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .toggle-track.active .toggle-thumb { transform: translateX(20px); }
+
+    /* ── Testimonial quote ── */
+    .quote-mark {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 5rem;
+      line-height: 1;
+      color: #C8A24A;
+      opacity: 0.25;
+      user-select: none;
+    }
+
+    /* ── Custom scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #F1F5F9; }
+    ::-webkit-scrollbar-thumb { background: #C8A24A66; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #C8A24A; }
+
+    /* ── Parallax hero content ── */
+    #hero-content { transition: transform 0.1s linear; }
+
+    /* ── Mobile nav ── */
+    #mobile-menu {
+      transform: translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    #mobile-menu.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ── Announcement bar ── */
+    .announcement-bar {
+      background: linear-gradient(90deg, #111827 0%, #1e293b 50%, #111827 100%);
+      background-size: 200% auto;
+      animation: shimmer 6s linear infinite;
+    }
+
+    /* responsive fixes */
+    @media (max-width: 768px) {
+      .dashboard-mockup { transform: scale(0.85); transform-origin: top center; }
+    }
+  </style>
+</head>
+
+<body class="bg-white text-ink font-body">
+
+  <!-- ═══════════════════════════════════════════════════════
+       ANNOUNCEMENT BAR
+  ═══════════════════════════════════════════════════════ -->
+  <div class="announcement-bar text-white text-center py-2.5 text-xs font-medium tracking-wide" role="banner">
+    <!-- [i18n] announcement -->
+    🌍 &nbsp;ConsentPro v3.0 — Compliance con GDPR, CCPA y LGPD en una sola plataforma &nbsp;·&nbsp;
+    <a href="#precios" class="underline decoration-gold hover:text-gold transition-colors duration-200">Ver planes →</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       NAVIGATION
+       Structure prepared for: /product /solutions /security /pricing /login
+  ═══════════════════════════════════════════════════════ -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/90 border-b border-transparent" style="margin-top:38px">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2.5 group" aria-label="ConsentPro Home">
+          <div class="w-8 h-8 rounded-lg bg-ink flex items-center justify-center transition-all duration-300 group-hover:bg-gold">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M9 2L14.196 5V11L9 14L3.804 11V5L9 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M6 9L8 11L12 7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="font-display font-semibold text-ink text-lg tracking-tight">ConsentPro</span>
+        </a>
+
+        <!-- Desktop nav links -->
+        <div class="hidden md:flex items-center gap-7">
+          <!-- [i18n] nav links -->
+          <a href="/producto" class="nav-link">Producto</a>
+          <!-- Soluciones dropdown -->
+          <div class="relative group">
+            <button class="nav-link flex items-center gap-1 bg-transparent border-none cursor-pointer p-0 font-[inherit]">
+              Soluciones
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" class="transition-transform duration-200 group-hover:rotate-180 opacity-50"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div class="absolute top-full left-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-surface opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-50" style="transition:opacity 0.2s ease,transform 0.2s ease;transform:translateY(-4px);" onmouseover="this.style.opacity='1';this.style.pointerEvents='all'">
+              <div class="p-2">
+                <a href="soluciones/medicos.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-surface transition-colors duration-200">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#C8A24A" stroke-width="1.2"/><path d="M5 7h4M7 5v4" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-ink hover:text-gold">Médicos y Clínicas</p>
+                    <p class="text-xs text-ink/40">Consentimientos informados</p>
+                  </div>
+                </a>
+                <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg opacity-50 cursor-not-allowed">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-surface">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="#94a3b8" stroke-width="1.2"/><path d="M5 7h4M7 5v4" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-ink/50">Más sectores</p>
+                    <p class="text-xs text-ink/30">Próximamente</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="/seguridad" class="nav-link">Seguridad</a>
+          <a href="#como-funciona" class="nav-link">Cómo funciona</a>
+          <a href="#asesoria-legal" class="nav-link">Asesoría Legal</a>
+          <a href="#precios" class="nav-link">Precios</a>
+        </div>
+
+        <!-- CTA buttons -->
+        <div class="hidden md:flex items-center gap-3">
+          <!-- [i18n] CTA buttons -->
+          <a href="/login" class="btn-outline text-sm">Iniciar sesión</a>
+          <a href="#precios" class="btn-primary text-sm">
+            Prueba gratuita
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button id="menu-btn" class="md:hidden p-2 rounded-lg hover:bg-surface transition-colors" aria-label="Toggle menu" aria-expanded="false">
+          <svg id="icon-open" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 5h14M3 10h14M3 15h14" stroke="#111827" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <svg id="icon-close" class="hidden" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 5l10 10M15 5L5 15" stroke="#111827" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden absolute top-full left-0 right-0 bg-white border-b border-surface shadow-card px-6 py-4">
+      <div class="flex flex-col gap-4">
+        <!-- [i18n] mobile nav -->
+        <a href="/producto" class="nav-link text-sm">Producto</a>
+        <a href="soluciones/medicos.html" class="nav-link text-sm">Soluciones → Médicos y Clínicas</a>
+        <a href="/seguridad" class="nav-link text-sm">Seguridad</a>
+        <a href="#como-funciona" class="nav-link text-sm">Cómo funciona</a>
+        <a href="#asesoria-legal" class="nav-link text-sm">Asesoría Legal</a>
+        <a href="#precios" class="nav-link text-sm">Precios</a>
+        <div class="flex flex-col gap-2 pt-2 border-t border-surface">
+          <a href="/login" class="btn-outline text-sm text-center">Iniciar sesión</a>
+          <a href="#precios" class="btn-primary text-sm text-center">Prueba gratuita</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HERO SECTION
+       - Animated gradient background
+       - Particle canvas
+       - Parallax effect on scroll
+       - Floating dashboard mockup
+  ═══════════════════════════════════════════════════════ -->
+  <section id="hero" class="min-h-screen flex items-center pt-36 pb-20" aria-labelledby="hero-title">
+    <!-- Animated background gradient -->
+    <div id="hero-gradient" aria-hidden="true"></div>
+
+    <!-- Subtle particles -->
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+    <!-- Decorative ring -->
+    <div class="absolute top-1/3 right-1/4 w-96 h-96 rounded-full border border-gold/10 pointer-events-none" aria-hidden="true" style="animation: float 8s ease-in-out infinite;"></div>
+    <div class="absolute top-1/4 right-1/3 w-48 h-48 rounded-full border border-gold/8 pointer-events-none" aria-hidden="true" style="animation: float 10s ease-in-out infinite reverse;"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Left: Text content -->
+        <div id="hero-content">
+          <!-- Tag pill -->
+          <div class="inline-flex items-center gap-2 bg-white border border-gold/30 rounded-full px-4 py-1.5 mb-8 shadow-gold-sm reveal" style="opacity:1;transform:none;">
+            <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+            <!-- [i18n] hero tag -->
+            <span class="text-xs font-medium text-ink/70 tracking-wide">GDPR · CCPA · LGPD · ISO 27001</span>
+          </div>
+
+          <!-- Main heading -->
+          <h1 id="hero-title" class="font-display text-5xl lg:text-6xl xl:text-7xl font-bold text-ink leading-[1.08] mb-6 reveal delay-1"
+              style="letter-spacing: -0.02em;">
+            <!-- [i18n] hero title -->
+            Consentimiento digital<br/>
+            <em class="not-italic" style="background: linear-gradient(135deg, #C8A24A 0%, #E2C87A 50%, #A8832A 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">a escala global.</em>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="text-lg text-ink/60 leading-relaxed max-w-lg mb-10 reveal delay-2">
+            <!-- [i18n] hero subtitle -->
+            ConsentPro es la plataforma empresarial para recopilar, gestionar y evidenciar consentimientos digitales — con plena conformidad con las normativas internacionales.
+          </p>
+
+          <!-- CTA row -->
+          <div class="flex flex-col sm:flex-row gap-4 mb-12 reveal delay-3">
+            <!-- [i18n] CTA buttons -->
+            <a href="#precios" class="btn-primary">
+              Prueba gratuita 14 días
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                <path d="M2 7.5H13M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#como-funciona" class="btn-outline">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/>
+                <path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="currentColor"/>
+              </svg>
+              Ver demo de 2 minutos
+            </a>
+          </div>
+
+          <!-- Social proof -->
+          <div class="flex items-center gap-4 reveal delay-4">
+            <div class="flex -space-x-2">
+              <div class="w-8 h-8 rounded-full bg-ink border-2 border-white flex items-center justify-center text-white text-xs font-semibold">A</div>
+              <div class="w-8 h-8 rounded-full bg-gold border-2 border-white flex items-center justify-center text-white text-xs font-semibold">B</div>
+              <div class="w-8 h-8 rounded-full bg-slate-400 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">C</div>
+              <div class="w-8 h-8 rounded-full bg-slate-600 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">D</div>
+            </div>
+            <div>
+              <!-- [i18n] social proof -->
+              <p class="text-sm font-medium text-ink">Más de 2.400 organizaciones confían en nosotros</p>
+              <div class="flex gap-0.5 mt-0.5">
+                <svg class="text-gold" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M6 1l1.545 3.13L11 4.635l-2.5 2.436.59 3.44L6 8.885l-3.09 1.626.59-3.44L1 4.635l3.455-.505z"/>
+                </svg>
+                <svg class="text-gold" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M6 1l1.545 3.13L11 4.635l-2.5 2.436.59 3.44L6 8.885l-3.09 1.626.59-3.44L1 4.635l3.455-.505z"/>
+                </svg>
+                <svg class="text-gold" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M6 1l1.545 3.13L11 4.635l-2.5 2.436.59 3.44L6 8.885l-3.09 1.626.59-3.44L1 4.635l3.455-.505z"/>
+                </svg>
+                <svg class="text-gold" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M6 1l1.545 3.13L11 4.635l-2.5 2.436.59 3.44L6 8.885l-3.09 1.626.59-3.44L1 4.635l3.455-.505z"/>
+                </svg>
+                <svg class="text-gold" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M6 1l1.545 3.13L11 4.635l-2.5 2.436.59 3.44L6 8.885l-3.09 1.626.59-3.44L1 4.635l3.455-.505z"/>
+                </svg>
+                <span class="text-xs text-ink/50 ml-1">4.9 / 5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Dashboard mockup -->
+        <div class="reveal-right delay-2 hidden lg:block">
+          <div class="relative">
+            <!-- Shadow layer behind -->
+            <div class="absolute inset-0 translate-x-4 translate-y-4 rounded-2xl bg-gold/10 blur-xl" aria-hidden="true"></div>
+
+            <!-- Main mockup -->
+            <div class="dashboard-mockup">
+              <!-- Browser bar -->
+              <div class="mockup-bar">
+                <div class="mockup-dot bg-red-400"></div>
+                <div class="mockup-dot bg-yellow-400"></div>
+                <div class="mockup-dot bg-green-400"></div>
+                <div class="mx-auto flex items-center gap-1.5 bg-white rounded-md px-3 py-1 text-xs text-ink/40 border border-surface" style="width:54%;">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1a4 4 0 100 8A4 4 0 005 1z" stroke="#94a3b8" stroke-width="1"/></svg>
+                  app.consentpro.io/dashboard
+                </div>
+              </div>
+
+              <!-- Dashboard body -->
+              <div class="p-4">
+                <!-- Top stats row -->
+                <div class="flex gap-3 mb-4">
+                  <div class="mockup-stat-card">
+                    <div class="text-xs text-ink/40 mb-1">Total Consentimientos</div>
+                    <div class="text-xl font-bold text-ink font-display">148.302</div>
+                    <div class="gold-bar mt-2"></div>
+                  </div>
+                  <div class="mockup-stat-card">
+                    <div class="text-xs text-ink/40 mb-1">Puntuación Compliance</div>
+                    <div class="text-xl font-bold font-display" style="color:#C8A24A">98,7%</div>
+                    <div class="gold-bar mt-2" style="width:98.7%"></div>
+                  </div>
+                  <div class="mockup-stat-card">
+                    <div class="text-xs text-ink/40 mb-1">Normativas</div>
+                    <div class="flex gap-1 flex-wrap mt-1">
+                      <span class="mockup-badge bg-ink text-white">GDPR</span>
+                      <span class="mockup-badge bg-gold/20 text-gold-dark">CCPA</span>
+                      <span class="mockup-badge bg-surface text-ink/60">LGPD</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mini chart bar -->
+                <div class="bg-surface rounded-xl p-3 mb-4">
+                  <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-medium text-ink/60">Actividad mensual de consentimientos</span>
+                    <span class="mockup-badge bg-green-100 text-green-700">↑ 12.4%</span>
+                  </div>
+                  <div class="flex items-end gap-1.5 h-10">
+                    <div class="flex-1 bg-gold/20 rounded-sm" style="height:40%"></div>
+                    <div class="flex-1 bg-gold/30 rounded-sm" style="height:55%"></div>
+                    <div class="flex-1 bg-gold/25 rounded-sm" style="height:45%"></div>
+                    <div class="flex-1 bg-gold/40 rounded-sm" style="height:70%"></div>
+                    <div class="flex-1 bg-gold/35 rounded-sm" style="height:60%"></div>
+                    <div class="flex-1 bg-gold/50 rounded-sm" style="height:80%"></div>
+                    <div class="flex-1 rounded-sm" style="height:100%; background:#C8A24A;"></div>
+                  </div>
+                </div>
+
+                <!-- Recent consents list -->
+                <div class="text-xs font-medium text-ink/40 mb-2 px-1">Consentimientos recientes</div>
+                <div class="rounded-xl border border-surface overflow-hidden">
+                  <div class="mockup-row">
+                    <div class="mockup-avatar">MG</div>
+                    <div class="flex-1">
+                      <div class="font-medium text-ink/80">Marie Garnier</div>
+                      <div class="text-ink/40">GDPR Marketing · Francia</div>
+                    </div>
+                    <span class="mockup-badge bg-green-100 text-green-700">✓ Activo</span>
+                  </div>
+                  <div class="mockup-row">
+                    <div class="mockup-avatar">RP</div>
+                    <div class="flex-1">
+                      <div class="font-medium text-ink/80">Rahul Patel</div>
+                      <div class="text-ink/40">CCPA Privacidad · EE.UU.</div>
+                    </div>
+                    <span class="mockup-badge bg-green-100 text-green-700">✓ Activo</span>
+                  </div>
+                  <div class="mockup-row" style="border-bottom:none;">
+                    <div class="mockup-avatar">SC</div>
+                    <div class="flex-1">
+                      <div class="font-medium text-ink/80">Sofia Carvalho</div>
+                      <div class="text-ink/40">LGPD Términos · Brasil</div>
+                    </div>
+                    <span class="mockup-badge bg-yellow-100 text-yellow-700">⏳ Pendiente</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating security badge -->
+            <div class="absolute -bottom-4 -left-8 security-badge text-white z-20" style="min-width:160px">
+              <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-1">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M7 1l4.196 2.4v4.8L7 10.6 2.804 8.2V3.4L7 1z" stroke="#C8A24A" stroke-width="1.2"/>
+                    <path d="M5 7l1.5 1.5L9.5 5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/>
+                  </svg>
+                  <span class="text-xs font-semibold text-gold tracking-wide">ISO 27001</span>
+                </div>
+                <p class="text-xs text-white/60">Certificado y Auditado</p>
+              </div>
+            </div>
+
+            <!-- Floating compliance pill -->
+            <div class="absolute -top-3 -right-4 bg-white rounded-full px-3 py-2 shadow-card border border-surface flex items-center gap-2 z-20">
+              <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+              <span class="text-xs font-medium text-ink/70">Todas las normativas conformes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trusted logos strip -->
+      <div class="mt-20 reveal delay-5">
+        <p class="text-xs text-ink/30 text-center uppercase tracking-widest mb-6 font-medium">
+          <!-- [i18n] trusted by -->
+          La confianza de organizaciones líderes en todo el mundo
+        </p>
+        <div class="flex flex-wrap justify-center gap-10 items-center opacity-30 grayscale" aria-label="Client logos">
+          <svg width="80" height="24" viewBox="0 0 80 24" fill="none">
+            <rect width="72" height="14" rx="3" y="5" fill="#111827"/>
+            <text x="36" y="16" fill="white" font-size="9" font-family="sans-serif" text-anchor="middle" font-weight="600">ACCENTURE</text>
+          </svg>
+          <svg width="60" height="24" viewBox="0 0 60 24" fill="none">
+            <text x="0" y="18" fill="#111827" font-size="14" font-family="serif" font-weight="700">Allianz</text>
+          </svg>
+          <svg width="80" height="24" viewBox="0 0 80 24" fill="none">
+            <rect width="72" height="14" rx="3" y="5" fill="#111827" opacity="0.8"/>
+            <text x="36" y="16" fill="white" font-size="8" font-family="sans-serif" text-anchor="middle" font-weight="600">SANTANDER</text>
+          </svg>
+          <svg width="70" height="24" viewBox="0 0 70 24" fill="none">
+            <text x="0" y="18" fill="#111827" font-size="13" font-family="serif" font-weight="700">Philips</text>
+          </svg>
+          <svg width="70" height="24" viewBox="0 0 70 24" fill="none">
+            <text x="0" y="18" fill="#111827" font-size="12" font-family="sans-serif" font-weight="600">Volkswagen</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40" aria-hidden="true">
+      <span class="text-xs font-medium text-ink/50 tracking-widest uppercase">Desplazar</span>
+      <div class="w-5 h-8 border border-ink/20 rounded-full flex items-start justify-center p-1.5">
+        <div class="w-1 h-1.5 bg-ink/40 rounded-full" style="animation: float 2s ease-in-out infinite;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       HOW IT WORKS
+       - 4 step cards with stagger animation
+       - Visual connector line
+  ═══════════════════════════════════════════════════════ -->
+  <section id="como-funciona" class="py-28 bg-white" aria-labelledby="como-title">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+      <!-- Section header -->
+      <div class="text-center mb-20">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">
+          <!-- [i18n] section eyebrow -->
+          Cómo funciona
+        </p>
+        <h2 id="como-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2"
+            style="letter-spacing:-0.02em;">
+          <!-- [i18n] section title -->
+          Del primer ajuste al compliance<br/>en cuatro pasos.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          <!-- [i18n] section subtitle -->
+          Un flujo de trabajo sin fricciones diseñado para equipos legales y de compliance — sin necesidad de código.
+        </p>
+      </div>
+
+      <!-- Steps grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+
+        <!-- Connector line (desktop only) -->
+        <div class="hidden lg:block absolute top-8 left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-px bg-gradient-to-r from-gold/60 via-gold/20 to-gold/60" aria-hidden="true"></div>
+
+        <!-- Step 1 -->
+        <div class="step-card reveal delay-1">
+          <div class="step-num">1</div>
+          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mx-auto mb-4 mt-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-gold">
+              <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-center text-sm">Configurar</h3>
+          <!-- [i18n] step description -->
+          <p class="text-ink/50 text-xs leading-relaxed text-center">Define tus plantillas de consentimiento para cada normativa y jurisdicción en minutos.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card reveal delay-2">
+          <div class="step-num">2</div>
+          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mx-auto mb-4 mt-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-gold">
+              <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 12h8M8 8h8M8 16h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-center text-sm">Recopilar</h3>
+          <!-- [i18n] -->
+          <p class="text-ink/50 text-xs leading-relaxed text-center">Integra vía API, widget o embed. Captura consentimientos en web, móvil y correo electrónico.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card reveal delay-3">
+          <div class="step-num">3</div>
+          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mx-auto mb-4 mt-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-gold">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-center text-sm">Monitorear</h3>
+          <!-- [i18n] -->
+          <p class="text-ink/50 text-xs leading-relaxed text-center">El panel en tiempo real registra todos los estados de consentimiento, vencimientos y revocaciones automáticamente.</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card reveal delay-4">
+          <div class="step-num">4</div>
+          <div class="w-12 h-12 bg-surface rounded-xl flex items-center justify-center mx-auto mb-4 mt-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-gold">
+              <path d="M9 17H7a4 4 0 010-8h2M15 7h2a4 4 0 010 8h-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M9 12h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-center text-sm">Evidenciar</h3>
+          <!-- [i18n] -->
+          <p class="text-ink/50 text-xs leading-relaxed text-center">Genera registros de auditoría inviolables e informes con validez jurídica para inspecciones regulatorias.</p>
+        </div>
+      </div>
+
+      <!-- CTA under steps -->
+      <div class="text-center mt-14 reveal">
+        <a href="/producto" class="btn-outline">
+          Explorar todas las funciones
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MODULES SECTION
+       - Three large feature blocks
+       - Animated gold border on hover
+       - Icon microanimation
+  ═══════════════════════════════════════════════════════ -->
+  <section id="modulos" class="py-28 bg-surface" aria-labelledby="modulos-title">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+      <div class="text-center mb-20">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Módulos de la Plataforma</p>
+        <h2 id="modulos-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          <!-- [i18n] -->
+          Todo lo que tu equipo<br/>de compliance necesita.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          <!-- [i18n] -->
+          Tres potentes módulos, una plataforma unificada — diseñada para escalar con tu organización.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <!-- Module 1: Digital Consents -->
+        <div class="module-card reveal delay-1" tabindex="0" role="article">
+          <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+              <path d="M14 3L5 8v7c0 5.5 3.8 10.6 9 12 5.2-1.4 9-6.5 9-12V8L14 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M10 14l3 3 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Módulo 01</span>
+          <h3 class="font-display text-xl font-bold text-ink mb-3">
+            <!-- [i18n] -->
+            Consentimientos Digitales
+          </h3>
+          <p class="text-ink/55 text-sm leading-relaxed mb-6">
+            <!-- [i18n] -->
+            Recopila, almacena y gestiona consentimientos digitales en canales web, móvil y offline. Plantillas personalizables para cada jurisdicción.
+          </p>
+          <ul class="space-y-2 mb-6">
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Recopilación multicanal
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Plantillas por jurisdicción
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Firma biométrica y electrónica
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Vencimiento y renovación automáticos
+            </li>
+          </ul>
+          <a href="/producto" class="text-sm font-medium text-ink flex items-center gap-1.5 hover:text-gold transition-colors duration-200 group">
+            Saber más
+            <svg class="transition-transform duration-200 group-hover:translate-x-1" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Module 2: Compliance & Policies -->
+        <div class="module-card reveal delay-2" tabindex="0" role="article">
+          <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+              <rect x="5" y="3" width="18" height="22" rx="3" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M9 9h10M9 13h10M9 17h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="20" cy="20" r="4" fill="#1e293b" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M18.5 20l1 1 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Módulo 02</span>
+          <h3 class="font-display text-xl font-bold text-ink mb-3">
+            <!-- [i18n] -->
+            Compliance y Políticas
+          </h3>
+          <p class="text-ink/55 text-sm leading-relaxed mb-6">
+            <!-- [i18n] -->
+            Publica y gestiona políticas de privacidad, términos de servicio y documentos de compliance — siempre actualizados con los cambios normativos.
+          </p>
+          <ul class="space-y-2 mb-6">
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Versionado de políticas y registro de cambios
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Alertas regulatorias automáticas
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Soporte multiidioma
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Flujo de revisión legal
+            </li>
+          </ul>
+          <a href="/producto" class="text-sm font-medium text-ink flex items-center gap-1.5 hover:text-gold transition-colors duration-200 group">
+            Saber más
+            <svg class="transition-transform duration-200 group-hover:translate-x-1" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Module 3: Management & Evidence -->
+        <div class="module-card reveal delay-3" tabindex="0" role="article">
+          <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+              <path d="M4 20l6-8 4 4 5-7 5 11H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+              <circle cx="22" cy="6" r="3" fill="#1e293b" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M21 6l.8.8 1.6-1.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Módulo 03</span>
+          <h3 class="font-display text-xl font-bold text-ink mb-3">
+            <!-- [i18n] -->
+            Gestión y Evidencia
+          </h3>
+          <p class="text-ink/55 text-sm leading-relaxed mb-6">
+            <!-- [i18n] -->
+            Registro de auditoría centralizado, generación de evidencia con validez jurídica y gestión de ARSF (Acceso, Rectificación, Supresión y otros) en un solo lugar.
+          </p>
+          <ul class="space-y-2 mb-6">
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Registros de auditoría inviolables
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Gestión del flujo ARSF
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Exportación regulatoria con un clic
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Sellado de tiempo blockchain
+            </li>
+          </ul>
+          <a href="/producto" class="text-sm font-medium text-ink flex items-center gap-1.5 hover:text-gold transition-colors duration-200 group">
+            Saber más
+            <svg class="transition-transform duration-200 group-hover:translate-x-1" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECURITY & EVIDENCE
+       - Gray background
+       - Alternating fade-left / fade-right
+       - Floating security badge
+  ═══════════════════════════════════════════════════════ -->
+  <section id="seguridad" class="py-28 bg-white overflow-hidden" aria-labelledby="seg-title">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+      <!-- Section header -->
+      <div class="text-center mb-20">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Seguridad y Evidencia</p>
+        <h2 id="seg-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          <!-- [i18n] -->
+          Seguridad empresarial,<br/>evidencia con validez jurídica.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          <!-- [i18n] -->
+          Cada consentimiento está cifrado criptográficamente, sellado con marca temporal y almacenado con documentación de cadena de custodia.
+        </p>
+      </div>
+
+      <!-- Feature rows alternating -->
+      <div class="space-y-20">
+
+        <!-- Row 1: Left text, right visual -->
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="reveal-left">
+            <div class="w-12 h-12 rounded-xl bg-ink flex items-center justify-center mb-6">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-gold">
+                <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-2xl font-bold text-ink mb-4">
+              <!-- [i18n] -->
+              Sello de integridad criptográfica
+            </h3>
+            <p class="text-ink/55 leading-relaxed mb-6">
+              <!-- [i18n] -->
+              Cada registro de consentimiento se cifra con SHA-256 y se ancla a un registro de auditoría inmutable. Cualquier intento de manipulación es detectado y alertado al instante.
+            </p>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-surface rounded-xl p-4">
+                <div class="text-2xl font-display font-bold text-ink mb-1">256 bits</div>
+                <div class="text-xs text-ink/50">Cifrado AES en reposo</div>
+              </div>
+              <div class="bg-surface rounded-xl p-4">
+                <div class="text-2xl font-display font-bold text-gold mb-1">99,99%</div>
+                <div class="text-xs text-ink/50">SLA de disponibilidad</div>
+              </div>
+            </div>
+          </div>
+          <div class="reveal-right">
+            <div class="security-badge relative">
+              <div class="relative z-10">
+                <div class="flex items-center justify-between mb-6">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gold/20 flex items-center justify-center">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                        <path d="M10 2L3 6v5c0 4.25 2.9 8.2 7 9.5C14.1 19.2 17 15.25 17 11V6L10 2z" stroke="currentColor" stroke-width="1.4"/>
+                        <path d="M7.5 10l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="text-white font-semibold text-sm">Registro de consentimiento</p>
+                      <p class="text-white/40 text-xs">ID: CPR-2024-001847</p>
+                    </div>
+                  </div>
+                  <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-medium">✓ Sellado</span>
+                </div>
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center py-2 border-b border-white/10">
+                    <span class="text-white/50 text-xs">Titular</span>
+                    <span class="text-white text-xs font-medium">Marie Garnier</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-white/10">
+                    <span class="text-white/50 text-xs">Marca temporal</span>
+                    <span class="text-white text-xs font-medium">2024-09-14 14:32:07 UTC</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-white/10">
+                    <span class="text-white/50 text-xs">Normativa</span>
+                    <span class="text-gold text-xs font-medium">GDPR Art. 7</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-white/10">
+                    <span class="text-white/50 text-xs">Hash IP</span>
+                    <span class="text-white/60 text-xs font-mono">a3f1b7c2...</span>
+                  </div>
+                  <div class="pt-2">
+                    <span class="text-white/50 text-xs block mb-1">Hash de integridad SHA-256</span>
+                    <span class="text-gold text-xs font-mono break-all opacity-80">8f14e45f-ceea-367f-a27f-e5b3f5...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Right text, left visual -->
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="order-2 lg:order-1 reveal-left">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-surface rounded-xl p-5 reveal delay-1">
+                <div class="w-10 h-10 rounded-lg bg-white border border-gold/20 flex items-center justify-center mb-3 shadow-gold-sm">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/>
+                    <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <p class="text-sm font-semibold text-ink mb-1">ISO 27001</p>
+                <p class="text-xs text-ink/50">Seguridad de la Información</p>
+              </div>
+              <div class="bg-surface rounded-xl p-5 reveal delay-2">
+                <div class="w-10 h-10 rounded-lg bg-white border border-gold/20 flex items-center justify-center mb-3 shadow-gold-sm">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.4"/>
+                    <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <p class="text-sm font-semibold text-ink mb-1">SOC 2 Type II</p>
+                <p class="text-xs text-ink/50">Auditoría Anual</p>
+              </div>
+              <div class="bg-surface rounded-xl p-5 reveal delay-3">
+                <div class="w-10 h-10 rounded-lg bg-white border border-gold/20 flex items-center justify-center mb-3 shadow-gold-sm">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <path d="M10 2L3 6v5c0 4 2.5 7.5 7 9 4.5-1.5 7-5 7-9V6L10 2z" stroke="currentColor" stroke-width="1.4"/>
+                  </svg>
+                </div>
+                <p class="text-sm font-semibold text-ink mb-1">GDPR Ready</p>
+                <p class="text-xs text-ink/50">Residencia de Datos UE</p>
+              </div>
+              <div class="bg-surface rounded-xl p-5 reveal delay-4">
+                <div class="w-10 h-10 rounded-lg bg-white border border-gold/20 flex items-center justify-center mb-3 shadow-gold-sm">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <path d="M4 9.5V6a6 6 0 0112 0v3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    <rect x="2" y="9" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.4"/>
+                    <circle cx="10" cy="14" r="1.5" fill="currentColor"/>
+                  </svg>
+                </div>
+                <p class="text-sm font-semibold text-ink mb-1">Zero-trust</p>
+                <p class="text-xs text-ink/50">Arquitectura</p>
+              </div>
+            </div>
+          </div>
+          <div class="order-1 lg:order-2 reveal-right">
+            <div class="w-12 h-12 rounded-xl bg-ink flex items-center justify-center mb-6">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-gold">
+                <path d="M12 2l8 3v7c0 6-4 10-8 11C8 22 4 18 4 12V5l8-3z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M9 12.5l2 2L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-2xl font-bold text-ink mb-4">
+              <!-- [i18n] -->
+              Estándares de seguridad certificados
+            </h3>
+            <p class="text-ink/55 leading-relaxed mb-6">
+              <!-- [i18n] -->
+              ConsentPro se somete a rigurosas auditorías anuales por terceros independientes. Nuestra infraestructura está certificada bajo los estándares internacionales de seguridad más exigentes.
+            </p>
+            <a href="/seguridad" class="btn-outline text-sm">
+              Ver documentación de seguridad
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       INDUSTRIES
+       - Progressive appearance grid
+  ═══════════════════════════════════════════════════════ -->
+  <section id="industrias" class="py-28 bg-surface" aria-labelledby="ind-title">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+      <div class="text-center mb-20">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Sectores</p>
+        <h2 id="ind-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          <!-- [i18n] -->
+          Diseñado para cada sector regulado.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          <!-- [i18n] -->
+          Equipos de compliance en todos los sectores confían en nosotros donde la responsabilidad no es negociable.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+
+        <!-- [i18n] industry labels -->
+        <div class="industry-item reveal delay-1">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <path d="M4 22V10l10-6 10 6v12H4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M10 22v-7h8v7" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Servicios Financieros</span>
+        </div>
+
+        <div class="industry-item reveal delay-2">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <rect x="4" y="6" width="20" height="16" rx="3" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M9 12h10M9 16h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M14 3v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Legal y Despachos</span>
+        </div>
+
+        <div class="industry-item reveal delay-3">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <circle cx="14" cy="10" r="5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M5 23c0-4.97 4.03-9 9-9s9 4.03 9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">RR.HH. y Talento</span>
+        </div>
+
+        <div class="industry-item reveal delay-1">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <path d="M14 4C8.477 4 4 8.477 4 14s4.477 10 10 10 10-4.477 10-10S19.523 4 14 4z" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M4 14h20M14 4c-2.5 3-4 6.3-4 10s1.5 7 4 10c2.5-3 4-6.3 4-10S16.5 7 14 4z" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">E-commerce y Retail</span>
+        </div>
+
+        <div class="industry-item reveal delay-2">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <rect x="4" y="9" width="20" height="13" rx="2" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M9 9V7a5 5 0 0110 0v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="14" cy="15.5" r="2" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Insurance</span>
+        </div>
+
+        <div class="industry-item reveal delay-3">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <path d="M14 4L5 9v7c0 5 3.8 9.5 9 11 5.2-1.5 9-6 9-11V9L14 4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Sector Público</span>
+        </div>
+
+        <div class="industry-item reveal delay-1">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <rect x="3" y="5" width="22" height="16" rx="3" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M8 21h12M14 21v-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M9 11h10M9 15h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Medios y Editoriales</span>
+        </div>
+
+        <div class="industry-item reveal delay-2">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <path d="M5 9h18M5 14h18M5 19h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <rect x="3" y="5" width="22" height="18" rx="3" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">SaaS y Tecnología</span>
+        </div>
+
+        <div class="industry-item reveal delay-3">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <path d="M22 10c0-4.4-3.6-8-8-8s-8 3.6-8 8c0 2.5 1.2 4.8 3 6.2V22h10v-5.8c1.8-1.4 3-3.7 3-6.2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Educación</span>
+        </div>
+
+        <a href="soluciones/medicos.html" class="industry-item reveal delay-1" style="text-decoration:none;cursor:pointer;border:1.5px solid rgba(200,162,74,0.3);background:rgba(200,162,74,0.04);" title="Ver solución para Salud">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M10 14h8M14 10v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <span class="text-xs font-medium text-gold">Salud ↗</span>
+        </a>
+
+        <div class="industry-item reveal delay-2">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <path d="M4 20l5-7 4 4 4-5 5 8H4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Marketing y AdTech</span>
+        </div>
+
+        <div class="industry-item reveal delay-3">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+            <rect x="5" y="5" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M10 14l3 3 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <span class="text-xs font-medium text-ink/70">Consultoría</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       TESTIMONIAL
+  ═══════════════════════════════════════════════════════ -->
+  <section class="py-24 bg-ink overflow-hidden relative" aria-label="Testimonial">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-60px;left:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,0.1),transparent 70%)"></div>
+      <div style="position:absolute;bottom:-80px;right:-40px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,0.07),transparent 70%)"></div>
+    </div>
+    <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
+      <div class="quote-mark mb-0 reveal">"</div>
+      <blockquote class="font-display text-2xl lg:text-3xl text-white font-normal leading-snug mb-8 reveal delay-1" style="letter-spacing:-0.01em;">
+        <!-- [i18n] testimonial -->
+        "ConsentPro redujo el tiempo de preparación de nuestra auditoría GDPR de tres semanas a una sola tarde. Los exportes de evidencia son exactamente lo que espera nuestra Autoridad de Protección de Datos."
+      </blockquote>
+      <div class="flex items-center justify-center gap-3 reveal delay-2">
+        <div class="w-11 h-11 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold font-bold font-display">MV</div>
+        <div class="text-left">
+          <p class="text-white font-medium text-sm">Marta Völker</p>
+          <!-- [i18n] -->
+          <p class="text-white/40 text-xs">Directora de Privacidad, Allianz Group</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ASESORÍA LEGAL — José Manuel Rojas
+       Sección dedicada al abogado corporativo de ConsentPro
+       Paleta navy/dorado alineada con identidad JM Abogado
+  ═══════════════════════════════════════════════════════ -->
+  <section id="asesoria-legal" class="py-28 bg-surface overflow-hidden relative" aria-labelledby="legal-title">
+
+    <!-- Decorative background elements -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:10%;right:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,0.06),transparent 65%)"></div>
+      <div style="position:absolute;bottom:5%;left:-60px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(17,24,39,0.04),transparent 70%)"></div>
+      <!-- Subtle laurel watermark -->
+      <svg class="absolute right-0 top-1/2 -translate-y-1/2 opacity-[0.025] hidden xl:block" width="420" height="420" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="48" stroke="#C8A24A" stroke-width="0.8"/>
+        <circle cx="50" cy="50" r="38" stroke="#C8A24A" stroke-width="0.4"/>
+        <path d="M50 10 L54 30 L70 20 L62 38 L80 42 L64 50 L78 62 L60 60 L62 78 L50 68 L38 78 L40 60 L22 62 L36 50 L20 42 L38 38 L30 20 L46 30 Z" stroke="#C8A24A" stroke-width="0.5" fill="none"/>
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+
+      <!-- Section header -->
+      <div class="text-center mb-16">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Respaldo Jurídico</p>
+        <h2 id="legal-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          Asesoría legal de confianza,<br/>
+          <em class="not-italic" style="background:linear-gradient(135deg,#C8A24A 0%,#E2C87A 50%,#A8832A 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">desde 2013.</em>
+        </h2>
+        <p class="text-ink/55 text-lg max-w-2xl mx-auto reveal delay-3">
+          ConsentPro cuenta con el respaldo jurídico del <strong class="text-ink font-semibold">Abg. José Manuel Rojas</strong>, abogado corporativo especializado en compliance, protección de datos y derecho empresarial venezolano e internacional.
+        </p>
+      </div>
+
+      <!-- Main lawyer card -->
+      <div class="grid lg:grid-cols-12 gap-8 mb-12">
+
+        <!-- Left: Profile card -->
+        <div class="lg:col-span-4 reveal-left">
+          <div class="relative rounded-2xl overflow-hidden h-full" style="background:linear-gradient(145deg,#0f172a 0%,#1e293b 60%,#0f172a 100%);border:1px solid rgba(200,162,74,0.25);box-shadow:0 24px 64px rgba(0,0,0,0.25);">
+
+            <!-- Gold top accent bar -->
+            <div style="height:3px;background:linear-gradient(90deg,transparent,#C8A24A,#E2C87A,#C8A24A,transparent);"></div>
+
+            <div class="p-8 flex flex-col h-full">
+              <!-- Logo / Monogram -->
+              <div class="flex items-center gap-4 mb-8">
+                <div class="relative flex-shrink-0">
+                  <div class="w-20 h-20 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A22,#C8A24A44);border:2px solid rgba(200,162,74,0.5);">
+                    <span class="font-display font-bold text-3xl" style="background:linear-gradient(135deg,#C8A24A,#E2C87A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">JM</span>
+                  </div>
+                  <!-- Online indicator -->
+                  <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-slate-900 flex items-center justify-center">
+                    <div class="w-2 h-2 rounded-full bg-green-300 animate-pulse"></div>
+                  </div>
+                </div>
+                <div>
+                  <p class="text-white font-display font-semibold text-lg leading-tight">José Manuel<br/>Rojas</p>
+                  <p class="text-gold text-xs font-medium tracking-wide uppercase mt-1">Abogado Corporativo</p>
+                </div>
+              </div>
+
+              <!-- Since badge -->
+              <div class="flex items-center gap-2 mb-6">
+                <div class="flex items-center gap-1.5 bg-white/5 border border-gold/20 rounded-full px-3 py-1.5">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M6 1l1.236 2.506L10 3.882l-2 1.944.472 2.756L6 7.25 3.528 8.582 4 5.826 2 3.882l2.764-.376z" fill="#C8A24A"/>
+                  </svg>
+                  <span class="text-gold text-xs font-semibold">Since 2013</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
+                  <span class="text-white/50 text-xs">+10 años</span>
+                </div>
+              </div>
+
+              <!-- Divider -->
+              <div class="border-t border-white/8 mb-6"></div>
+
+              <!-- Description -->
+              <p class="text-white/55 text-sm leading-relaxed mb-6 flex-grow">
+                Profesional del derecho especializado en asesoría corporativa, cumplimiento normativo y protección jurídica de empresas y emprendedores. Actúa como aliado estratégico en todas las etapas del negocio.
+              </p>
+
+              <!-- Areas chips -->
+              <div class="flex flex-wrap gap-2 mb-8">
+                <span class="text-xs px-2.5 py-1 rounded-full border border-gold/30 text-gold/80" style="background:rgba(200,162,74,0.08)">Compliance</span>
+                <span class="text-xs px-2.5 py-1 rounded-full border border-white/15 text-white/50" style="background:rgba(255,255,255,0.04)">Derecho Laboral</span>
+                <span class="text-xs px-2.5 py-1 rounded-full border border-white/15 text-white/50" style="background:rgba(255,255,255,0.04)">Protección de Datos</span>
+                <span class="text-xs px-2.5 py-1 rounded-full border border-white/15 text-white/50" style="background:rgba(255,255,255,0.04)">Comercio Internacional</span>
+                <span class="text-xs px-2.5 py-1 rounded-full border border-white/15 text-white/50" style="background:rgba(255,255,255,0.04)">Propiedad Intelectual</span>
+              </div>
+
+              <!-- Contact info -->
+              <div class="space-y-3">
+                <a href="tel:+584145173115" class="flex items-center gap-3 group">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 group-hover:bg-gold/20" style="background:rgba(200,162,74,0.1);border:1px solid rgba(200,162,74,0.2);">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-gold">
+                      <path d="M2.5 2C2.5 2 1 2 1 3.5c0 5 4 9.5 9.5 9.5C12 13 12 11.5 12 11.5l-2-2s-1 .5-1.5.5C7 10 4 7 4 5.5c0-.5.5-1.5.5-1.5L2.5 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-white/30 text-xs">Venezuela</p>
+                    <p class="text-white/75 text-xs font-medium group-hover:text-gold transition-colors duration-200">+58 (414) 517 31 15</p>
+                  </div>
+                </a>
+                <a href="tel:+19295674479" class="flex items-center gap-3 group">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 group-hover:bg-gold/20" style="background:rgba(200,162,74,0.1);border:1px solid rgba(200,162,74,0.2);">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-gold">
+                      <path d="M2.5 2C2.5 2 1 2 1 3.5c0 5 4 9.5 9.5 9.5C12 13 12 11.5 12 11.5l-2-2s-1 .5-1.5.5C7 10 4 7 4 5.5c0-.5.5-1.5.5-1.5L2.5 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-white/30 text-xs">Internacional</p>
+                    <p class="text-white/75 text-xs font-medium group-hover:text-gold transition-colors duration-200">+1 (929) 567 44 79</p>
+                  </div>
+                </a>
+                <a href="/cdn-cgi/l/email-protection#1e7f7c7974716d7b736c71747f6d5e79737f7772307d7173" class="flex items-center gap-3 group">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 group-hover:bg-gold/20" style="background:rgba(200,162,74,0.1);border:1px solid rgba(200,162,74,0.2);">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-gold">
+                      <rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+                      <path d="M1 4.5l6 4 6-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <p class="text-white/75 text-xs font-medium group-hover:text-gold transition-colors duration-200"><span class="__cf_email__" data-cfemail="6f0e0d0805001c0a021d00050e1c2f08020e0603410c0002">[email&#160;protected]</span></p>
+                </a>
+                <a href="https://instagram.com/josemanuel_goat" target="_blank" rel="noopener" class="flex items-center gap-3 group">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 group-hover:bg-gold/20" style="background:rgba(200,162,74,0.1);border:1px solid rgba(200,162,74,0.2);">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-gold">
+                      <rect x="1" y="1" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.2"/>
+                      <circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/>
+                      <circle cx="10.5" cy="3.5" r="0.8" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <p class="text-white/75 text-xs font-medium group-hover:text-gold transition-colors duration-200">@josemanuel_goat</p>
+                </a>
+              </div>
+
+              <!-- CTA button -->
+              <a href="/cdn-cgi/l/email-protection#aacbc8cdc0c5d9cfc7d8c5c0cbd9eacdc7cbc3c684c9c5c7" class="mt-7 flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold transition-all duration-300" style="background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a;box-shadow:0 4px 20px rgba(200,162,74,0.3);" onmouseover="this.style.boxShadow='0 6px 32px rgba(200,162,74,0.5)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='0 4px 20px rgba(200,162,74,0.3)';this.style.transform='translateY(0)'">
+                Consultar al abogado
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Practice areas grid -->
+        <div class="lg:col-span-8 reveal-right">
+          <div class="mb-6">
+            <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-1">Áreas de práctica</p>
+            <h3 class="font-display text-2xl font-bold text-ink" style="letter-spacing:-0.01em;">Cobertura jurídica integral para tu empresa</h3>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+
+            <!-- Area 1: Derecho Laboral -->
+            <div class="lawyer-area-card group" style="background:#fff;border:1.5px solid #E2E8F0;border-radius:14px;padding:24px;transition:all 0.3s ease;cursor:default;">
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <path d="M10 2L3 6v5c0 4.25 2.9 8.2 7 9.5C14.1 16.2 17 12.25 17 11V6L10 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                    <path d="M7.5 10l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="font-semibold text-ink text-sm mb-2 group-hover:text-gold transition-colors duration-200">Derecho Laboral y Relaciones Laborales</h4>
+                  <ul class="space-y-1">
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Cumplimiento de la LOTTT y normativa vigente</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Contratos, convenciones colectivas y reglamentos</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Representación ante Tribunales Laborales</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Prestaciones sociales e indemnizaciones</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-4 h-px" style="background:linear-gradient(90deg,#C8A24A,transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);" data-gold-line></div>
+            </div>
+
+            <!-- Area 2: Compliance -->
+            <div class="lawyer-area-card group" style="background:#fff;border:1.5px solid #E2E8F0;border-radius:14px;padding:24px;transition:all 0.3s ease;cursor:default;">
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <rect x="3" y="2" width="14" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/>
+                    <path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    <circle cx="15" cy="15" r="3.5" fill="#1e293b" stroke="currentColor" stroke-width="1.1"/>
+                    <path d="M13.8 15l.9.9 1.8-1.8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="font-semibold text-ink text-sm mb-2 group-hover:text-gold transition-colors duration-200">Cumplimiento y Prevención de Riesgos</h4>
+                  <ul class="space-y-1">
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Diseño de programas de compliance empresarial</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Políticas de prevención de riesgos legales</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Capacitación en cumplimiento normativo</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Auditorías legales internas periódicas</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-4 h-px" style="background:linear-gradient(90deg,#C8A24A,transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);" data-gold-line></div>
+            </div>
+
+            <!-- Area 3: Protección de Datos -->
+            <div class="lawyer-area-card group" style="background:#fff;border:1.5px solid #E2E8F0;border-radius:14px;padding:24px;transition:all 0.3s ease;cursor:default;">
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <path d="M4 9.5V6a6 6 0 0112 0v3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    <rect x="2" y="9" width="16" height="9" rx="2" stroke="currentColor" stroke-width="1.4"/>
+                    <circle cx="10" cy="13.5" r="1.5" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="font-semibold text-ink text-sm mb-2 group-hover:text-gold transition-colors duration-200">Protección de Datos y Privacidad</h4>
+                  <ul class="space-y-1">
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Adecuación y políticas de protección de datos</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Cláusulas de privacidad en contratos digitales</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Evaluación de riesgos en datos de clientes</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Propiedad intelectual e industrial (SAPI)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-4 h-px" style="background:linear-gradient(90deg,#C8A24A,transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);" data-gold-line></div>
+            </div>
+
+            <!-- Area 4: Comercio Internacional -->
+            <div class="lawyer-area-card group" style="background:#fff;border:1.5px solid #E2E8F0;border-radius:14px;padding:24px;transition:all 0.3s ease;cursor:default;">
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-gold">
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/>
+                    <path d="M2 10h16M10 2c-2 3-3.2 5.7-3.2 8S8 15 10 18c2-3 3.2-5.7 3.2-8S12 5 10 2z" stroke="currentColor" stroke-width="1.4"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="font-semibold text-ink text-sm mb-2 group-hover:text-gold transition-colors duration-200">Comercio Internacional y Aduanas</h4>
+                  <ul class="space-y-1">
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Asesoría en importaciones y exportaciones</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Trámites ante SENIAT-Aduanas y organismos</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Contratos internacionales y disputas</li>
+                    <li class="text-xs text-ink/50 flex items-start gap-1.5"><span class="text-gold mt-0.5 flex-shrink-0">·</span>Litigios y Arbitraje Comercial</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-4 h-px" style="background:linear-gradient(90deg,#C8A24A,transparent);transform:scaleX(0);transform-origin:left;transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);" data-gold-line></div>
+            </div>
+
+          </div>
+
+          <!-- Value prop strip -->
+          <div class="mt-6 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4" style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid rgba(200,162,74,0.2);">
+            <div class="flex-1">
+              <p class="text-white font-semibold text-sm mb-1">¿Por qué contar con asesoría legal corporativa?</p>
+              <p class="text-white/45 text-xs leading-relaxed">Previene riesgos legales, evita sanciones y garantiza el cumplimiento normativo en todas las etapas de tu empresa — para que te enfoques en crecer.</p>
+            </div>
+            <a href="/cdn-cgi/l/email-protection#5d3c3f3a37322e38302f32373c2e1d3a303c3431733e3230" class="flex-shrink-0 text-xs font-semibold px-5 py-2.5 rounded-lg transition-all duration-300" style="background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a;" onmouseover="this.style.boxShadow='0 4px 20px rgba(200,162,74,0.4)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='none';this.style.transform='translateY(0)'">
+              Agendar consulta →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- JS for lawyer area cards hover line effect -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    document.querySelectorAll('.lawyer-area-card').forEach(card => {
+      const line = card.querySelector('[data-gold-line]');
+      card.addEventListener('mouseenter', () => {
+        card.style.borderColor = 'rgba(200,162,74,0.5)';
+        card.style.boxShadow = '0 8px 32px rgba(200,162,74,0.12)';
+        card.style.transform = 'translateY(-3px)';
+        if (line) line.style.transform = 'scaleX(1)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.borderColor = '#E2E8F0';
+        card.style.boxShadow = 'none';
+        card.style.transform = 'translateY(0)';
+        if (line) line.style.transform = 'scaleX(0)';
+      });
+    });
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       PRICING
+       - Three cards, center card featured
+       - Monthly/Annual toggle (UI ready, not functional)
+       - Scale hover effect
+  ═══════════════════════════════════════════════════════ -->
+  <section id="precios" class="py-28 bg-white" aria-labelledby="pricing-title">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+      <div class="text-center mb-16">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Precios</p>
+        <h2 id="pricing-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          <!-- [i18n] -->
+          Precios simples y transparentes.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto mb-8 reveal delay-3">
+          <!-- [i18n] -->
+          Sin cargos ocultos. Cancela cuando quieras. Comienza con 14 días gratis — sin tarjeta de crédito.
+        </p>
+
+        <!-- Billing toggle -->
+        <div class="flex items-center justify-center gap-3 reveal delay-4">
+          <!-- [i18n] billing labels -->
+          <span id="toggle-monthly" class="text-sm font-medium text-ink">Mensual</span>
+          <div class="toggle-track" id="billing-toggle" role="switch" aria-checked="false" aria-label="Toggle annual billing" tabindex="0">
+            <div class="toggle-thumb"></div>
+          </div>
+          <span id="toggle-annual" class="text-sm font-medium text-ink/50">Anual
+            <span class="ml-1 text-xs bg-gold/15 text-gold-dark px-2 py-0.5 rounded-full font-semibold">Ahorra 20%</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Pricing cards -->
+      <div class="grid md:grid-cols-3 gap-6 items-center max-w-5xl mx-auto">
+
+        <!-- Starter -->
+        <div class="pricing-card reveal delay-1">
+          <div class="mb-6">
+            <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-2">Starter</p>
+            <div class="flex items-end gap-1 mb-1">
+              <span class="font-display text-4xl font-bold text-ink">€49</span>
+              <span class="text-ink/40 text-sm mb-1">/ mo</span>
+            </div>
+            <!-- [i18n] -->
+            <p class="text-xs text-ink/50">Hasta 3 usuarios · 5.000 consentimientos/mes</p>
+          </div>
+          <a href="#" class="btn-outline w-full text-center text-sm block mb-8">Start free trial</a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Digital consent collection
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Plantillas GDPR y CCPA
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Registro de auditoría básico
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Soporte por correo electrónico
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/30">
+              <span class="mt-0.5 text-ink/25">—</span>Acceso a API
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/30">
+              <span class="mt-0.5 text-ink/25">—</span>Marca blanca
+            </li>
+          </ul>
+        </div>
+
+        <!-- Professional — Featured -->
+        <div class="pricing-card featured reveal delay-2">
+          <!-- Top badge -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span class="bg-ink text-white text-xs font-semibold px-4 py-1.5 rounded-full tracking-wide shadow-deep">Más popular</span>
+          </div>
+          <div class="mb-6 pt-4">
+            <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-2">Professional</p>
+            <div class="flex items-end gap-1 mb-1">
+              <span class="font-display text-4xl font-bold text-ink">€149</span>
+              <span class="text-ink/40 text-sm mb-1">/ mo</span>
+            </div>
+            <!-- [i18n] -->
+            <p class="text-xs text-ink/50">Hasta 15 usuarios · 50.000 consentimientos/mes</p>
+          </div>
+          <a href="#" class="btn-primary w-full text-center text-sm block mb-8">Start free trial</a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2 text-sm text-ink/70">
+              <span class="pricing-check mt-0.5">✓</span>Todo lo de Starter
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/70">
+              <span class="pricing-check mt-0.5">✓</span>Todas las normativas globales (GDPR, CCPA, LGPD, PDPA…)
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/70">
+              <span class="pricing-check mt-0.5">✓</span>API completa y webhooks
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/70">
+              <span class="pricing-check mt-0.5">✓</span>Registros de auditoría avanzados
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/70">
+              <span class="pricing-check mt-0.5">✓</span>Gestión de derechos ARSF
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/70">
+              <span class="pricing-check mt-0.5">✓</span>Soporte prioritario
+            </li>
+          </ul>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card reveal delay-3">
+          <div class="mb-6">
+            <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-2">Enterprise</p>
+            <div class="flex items-end gap-1 mb-1">
+              <span class="font-display text-4xl font-bold text-ink">A medida</span>
+            </div>
+            <!-- [i18n] -->
+            <p class="text-xs text-ink/50">Usuarios ilimitados · Consentimientos ilimitados</p>
+          </div>
+          <a href="/cdn-cgi/l/email-protection#74071518110734171b1a07111a0004061b5a1d1b" class="btn-outline w-full text-center text-sm block mb-8">Contactar ventas</a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Todo lo de Professional
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Marca blanca y dominio personalizado
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Opción de despliegue on-premise
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>SLA disponibilidad 99,99%
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Gestor de éxito dedicado
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Soporte de integración personalizada
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pricing footer note -->
+      <p class="text-center text-xs text-ink/35 mt-10 reveal">
+        <!-- [i18n] -->
+        Todos los precios excluyen impuestos aplicables. El precio Enterprise se determina según volumen y requerimientos.
+        <a href="/precios" class="underline hover:text-gold transition-colors">Ver detalles completos de precios.</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FINAL CTA BANNER
+  ═══════════════════════════════════════════════════════ -->
+  <section class="py-24 bg-surface relative overflow-hidden" aria-label="Final CTA">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(200,162,74,0.08),transparent 70%)"></div>
+    </div>
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10">
+      <h2 class="font-display text-4xl lg:text-5xl font-bold text-ink mb-5 reveal" style="letter-spacing:-0.02em;">
+        <!-- [i18n] -->
+        Convierte el consentimiento<br/>en tu ventaja competitiva.
+      </h2>
+      <p class="text-ink/55 text-lg mb-10 reveal delay-1">
+        <!-- [i18n] -->
+        Únete a más de 2.400 organizaciones que confían en ConsentPro para el compliance digital. 14 días gratis — sin tarjeta, sin compromiso.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center reveal delay-2">
+        <a href="#precios" class="btn-primary text-base px-8 py-3">
+          Comenzar prueba gratuita
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8H14M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="/cdn-cgi/l/email-protection#b8cbd9d4ddcbf8dbd7d6cbddd6ccc8cad796d1d7" class="btn-outline text-base px-8 py-3">Hablar con ventas</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FOOTER
+       - Professional minimal layout
+       - Language selector
+       - Legal links
+       - Prepared for: /product /solutions /security /pricing /login
+  ═══════════════════════════════════════════════════════ -->
+  <footer class="bg-ink text-white" role="contentinfo">
+    <!-- Main footer -->
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
+
+        <!-- Brand column -->
+        <div class="col-span-2 md:col-span-2">
+          <div class="flex items-center gap-2.5 mb-5">
+            <div class="w-8 h-8 rounded-lg bg-gold flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M9 2L14.196 5V11L9 14L3.804 11V5L9 2Z" stroke="#111827" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M6 9L8 11L12 7" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="font-display font-semibold text-white text-lg tracking-tight">ConsentPro</span>
+          </div>
+          <!-- [i18n] footer brand description -->
+          <p class="text-white/45 text-sm leading-relaxed max-w-xs mb-6">
+            La plataforma internacional para la gestión de consentimientos digitales y compliance. Reconocida en todo el mundo.
+          </p>
+          <!-- Social links -->
+          <div class="flex gap-3">
+            <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-lg bg-white/8 hover:bg-gold/20 border border-white/10 hover:border-gold/30 flex items-center justify-center transition-all duration-200 group">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-white/50 group-hover:text-gold">
+                <path d="M1 4h2.5v9H1V4zm1.25-1.5a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5zM5.5 4H8v1.2S8.7 4 10.3 4c1.8 0 2.7 1.2 2.7 3.5V13H10.5V8c0-1-.3-1.5-1-1.5-.9 0-1.5.6-1.5 1.8V13H5.5V4z" fill="currentColor"/>
+              </svg>
+            </a>
+            <a href="#" aria-label="Twitter/X" class="w-9 h-9 rounded-lg bg-white/8 hover:bg-gold/20 border border-white/10 hover:border-gold/30 flex items-center justify-center transition-all duration-200 group">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-white/50 group-hover:text-gold">
+                <path d="M1 1l4.8 6.4L1 13h1.5l3.7-4.4L9.8 13H13L8 6.3 12.5 1H11l-3.3 4L3.3 1H1z" fill="currentColor"/>
+              </svg>
+            </a>
+            <a href="#" aria-label="GitHub" class="w-9 h-9 rounded-lg bg-white/8 hover:bg-gold/20 border border-white/10 hover:border-gold/30 flex items-center justify-center transition-all duration-200 group">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-white/50 group-hover:text-gold">
+                <path d="M7 1C3.7 1 1 3.7 1 7c0 2.65 1.7 4.9 4.1 5.7.3.05.4-.13.4-.3V11.4c-1.67.36-2.02-.8-2.02-.8-.27-.7-.67-.88-.67-.88-.55-.37.04-.36.04-.36.6.04.92.62.92.62.54.93 1.4.66 1.75.5.05-.39.21-.66.38-.81-1.33-.15-2.73-.67-2.73-2.96 0-.65.23-1.18.62-1.6-.06-.15-.27-.76.06-1.58 0 0 .5-.16 1.65.62A5.7 5.7 0 017 4.9c.51 0 1.02.07 1.5.2 1.14-.78 1.64-.62 1.64-.62.33.82.12 1.43.06 1.58.38.42.62.95.62 1.6 0 2.3-1.4 2.8-2.74 2.95.22.19.41.56.41 1.12v1.67c0 .16.1.35.41.29A6.002 6.002 0 0013 7c0-3.3-2.7-6-6-6z" fill="currentColor"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Product links — prepared for /product page -->
+        <div>
+          <!-- [i18n] footer headings -->
+          <h4 class="text-white/80 font-semibold text-sm mb-4 tracking-wide">Producto</h4>
+          <ul class="space-y-3">
+            <!-- [i18n] footer links -->
+            <li><a href="/producto" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Visión general</a></li>
+            <li><a href="/producto#consentimientos" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Consentimientos Digitales</a></li>
+            <li><a href="/producto#compliance" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Compliance</a></li>
+            <li><a href="/producto#evidencia" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Evidencia y Auditoría</a></li>
+            <li><a href="/producto#api" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">API e Integraciones</a></li>
+          </ul>
+        </div>
+
+        <!-- Solutions — prepared for /solutions -->
+        <div>
+          <h4 class="text-white/80 font-semibold text-sm mb-4 tracking-wide">Soluciones</h4>
+          <ul class="space-y-3">
+            <li><a href="soluciones/medicos.html" class="text-gold/70 hover:text-gold text-sm transition-colors duration-200 font-medium">✦ Médicos y Clínicas</a></li>
+            <li><a href="/soluciones" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Enterprise</a></li>
+            <li><a href="/soluciones#legal" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Legal y Compliance</a></li>
+            <li><a href="/soluciones#rrhh" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">RR.HH. y Talento</a></li>
+            <li><a href="#precios" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Precios</a></li>
+          </ul>
+        </div>
+
+        <!-- Company & Legal -->
+        <div>
+          <h4 class="text-white/80 font-semibold text-sm mb-4 tracking-wide">Empresa</h4>
+          <ul class="space-y-3">
+            <li><a href="/nosotros" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Sobre nosotros</a></li>
+            <li><a href="/seguridad" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Seguridad</a></li>
+            <li><a href="/blog" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Blog</a></li>
+            <li><a href="/empleos" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Empleos</a></li>
+            <li><a href="/login" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Iniciar sesión</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom bar -->
+    <div class="border-t border-white/8">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+
+        <!-- Copyright -->
+        <p class="text-white/30 text-xs">
+          <!-- [i18n] copyright -->
+          © 2025 ConsentPro Technologies Ltd. Todos los derechos reservados.
+        </p>
+
+        <!-- Legal links -->
+        <div class="flex flex-wrap justify-center gap-5">
+          <!-- [i18n] legal links -->
+          <a href="/legal/privacidad" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">Política de Privacidad</a>
+          <a href="/legal/terminos" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">Términos de Servicio</a>
+          <a href="/legal/cookies" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">Política de Cookies</a>
+          <a href="/legal/apd" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">APD</a>
+          <a href="/legal/gdpr" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">Declaración GDPR</a>
+        </div>
+
+        <!-- Language selector -->
+        <div class="relative">
+          <select id="lang-selector"
+            class="appearance-none bg-white/8 border border-white/15 text-white/50 hover:text-white/80 text-xs px-3 py-2 pr-8 rounded-lg cursor-pointer transition-colors duration-200 focus:outline-none focus:border-gold/40"
+            aria-label="Seleccionar idioma">
+            <!-- [i18n] language options -->
+            <option value="en">🌐 English</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="pt">🇧🇷 Português</option>
+            <option value="it">🇮🇹 Italiano</option>
+            <option value="ja">🇯🇵 日本語</option>
+          </select>
+          <div class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════
+       JAVASCRIPT
+       - Scroll reveal (IntersectionObserver)
+       - Navbar scroll effect
+       - Mobile menu toggle
+       - Particle canvas
+       - Hero parallax
+       - Pricing toggle UI
+  ═══════════════════════════════════════════════════════ -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── DOM ready ──────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // ══════════════════════════════════════
+      // 1. SCROLL REVEAL — IntersectionObserver
+      // Targets: .reveal, .reveal-left, .reveal-right, .reveal-scale
+      // ══════════════════════════════════════
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              // Once revealed, stop observing
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale')
+        .forEach(el => revealObserver.observe(el));
+
+
+      // ══════════════════════════════════════
+      // 2. NAVBAR — scroll glass effect
+      // ══════════════════════════════════════
+      const navbar = document.getElementById('navbar');
+      const onScroll = () => {
+        if (window.scrollY > 30) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+
+      // ══════════════════════════════════════
+      // 3. MOBILE MENU toggle
+      // ══════════════════════════════════════
+      const menuBtn = document.getElementById('menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const iconOpen = document.getElementById('icon-open');
+      const iconClose = document.getElementById('icon-close');
+      let menuOpen = false;
+
+      menuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        iconOpen.classList.toggle('hidden', menuOpen);
+        iconClose.classList.toggle('hidden', !menuOpen);
+        menuBtn.setAttribute('aria-expanded', menuOpen);
+      });
+
+      // Close mobile menu on nav link click
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          menuOpen = false;
+          mobileMenu.classList.remove('open');
+          iconOpen.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+
+      // ══════════════════════════════════════
+      // 4. HERO PARALLAX — subtle on scroll
+      // ══════════════════════════════════════
+      const heroContent = document.getElementById('hero-content');
+      const heroSection = document.getElementById('hero');
+
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const heroH = heroSection.offsetHeight;
+        if (scrollY < heroH) {
+          const parallaxFactor = scrollY * 0.18;
+          if (heroContent) {
+            heroContent.style.transform = `translateY(${parallaxFactor}px)`;
+          }
+        }
+      }, { passive: true });
+
+
+      // ══════════════════════════════════════
+      // 5. PARTICLE CANVAS — subtle gold dots
+      // ══════════════════════════════════════
+      const canvas = document.getElementById('particles-canvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animFrame;
+
+        const resize = () => {
+          canvas.width = canvas.offsetWidth;
+          canvas.height = canvas.offsetHeight;
+        };
+        resize();
+
+        class Particle {
+          constructor() {
+            this.reset();
+          }
+          reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.r = Math.random() * 1.8 + 0.5;
+            this.vx = (Math.random() - 0.5) * 0.3;
+            this.vy = (Math.random() - 0.5) * 0.3;
+            this.alpha = Math.random() * 0.4 + 0.1;
+            this.gold = Math.random() > 0.6;
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > canvas.width ||
+                this.y < 0 || this.y > canvas.height) {
+              this.reset();
+            }
+          }
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = this.gold
+              ? `rgba(200,162,74,${this.alpha})`
+              : `rgba(17,24,39,${this.alpha * 0.4})`;
+            ctx.fill();
+          }
+        }
+
+        const initParticles = () => {
+          particles = [];
+          const count = Math.floor((canvas.width * canvas.height) / 12000);
+          for (let i = 0; i < Math.min(count, 60); i++) {
+            particles.push(new Particle());
+          }
+        };
+        initParticles();
+
+        const animate = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach(p => { p.update(); p.draw(); });
+          animFrame = requestAnimationFrame(animate);
+        };
+        animate();
+
+        // Resize handler
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            resize();
+            initParticles();
+          }, 150);
+        }, { passive: true });
+
+        // Stop animation when hero is not visible (performance)
+        const heroObserver = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (!e.isIntersecting) {
+              cancelAnimationFrame(animFrame);
+            } else {
+              animate();
+            }
+          });
+        }, { threshold: 0 });
+        heroObserver.observe(heroSection);
+      }
+
+
+      // ══════════════════════════════════════
+      // 6. PRICING TOGGLE — UI only
+      // Prepared for future monthly/annual logic
+      // ══════════════════════════════════════
+      const toggle = document.getElementById('billing-toggle');
+      const monthlyLabel = document.getElementById('toggle-monthly');
+      const annualLabel = document.getElementById('toggle-annual');
+      let isAnnual = false;
+
+      const setToggle = (annual) => {
+        isAnnual = annual;
+        toggle.classList.toggle('active', annual);
+        toggle.setAttribute('aria-checked', annual);
+        monthlyLabel.classList.toggle('text-ink', !annual);
+        monthlyLabel.classList.toggle('text-ink/50', annual);
+        annualLabel.classList.toggle('text-ink', annual);
+        annualLabel.classList.toggle('text-ink/50', !annual);
+        // TODO: Swap prices when backend/i18n is connected
+      };
+
+      toggle.addEventListener('click', () => setToggle(!isAnnual));
+      toggle.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setToggle(!isAnnual);
+        }
+      });
+
+
+      // ══════════════════════════════════════
+      // 7. SMOOTH ANCHOR SCROLL (override default)
+      // ══════════════════════════════════════
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            const offset = 80; // navbar height
+            const top = target.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        });
+      });
+
+
+      // ══════════════════════════════════════
+      // 8. LANGUAGE SELECTOR — UI stub
+      // i18n: Wire to actual translation system (e.g. i18next)
+      // ══════════════════════════════════════
+      document.getElementById('lang-selector')?.addEventListener('change', function() {
+        const lang = this.value;
+  

@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<!--
+  ConsentPro — /soluciones/medicos
+  Página de soluciones para profesionales de salud
+  Diseño: Premium Medical Tech · Navy/Gold
+-->
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="ConsentPro para médicos — Digitaliza y protege tus consentimientos informados. Válido legalmente, seguro y accesible desde cualquier dispositivo."/>
+  <meta name="keywords" content="consentimiento informado digital, médicos, clínicas, ginecología, odontología, estética, compliance médico"/>
+  <meta property="og:title" content="ConsentPro para Médicos — Consentimientos Informados Digitales"/>
+  <meta property="og:description" content="Protege tu consulta. Digitaliza tus consentimientos informados con validez jurídica."/>
+  <title>ConsentPro para Médicos · Consentimientos Informados Digitales</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:     '#111827',
+            gold:    '#C8A24A',
+            'gold-dark': '#A8832A',
+            surface: '#F1F5F9',
+            navy:    '#0f172a',
+            'navy-mid': '#1e293b',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'serif'],
+            sans:    ['"DM Sans"', 'sans-serif'],
+          },
+          animation: {
+            'fade-up':   'fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) forwards',
+            'fade-in':   'fadeIn 0.6s ease-out forwards',
+            'float':     'float 5s ease-in-out infinite',
+            'pulse-gold':'pulseGold 2s ease-in-out infinite',
+            'shimmer':   'shimmer 2.5s linear infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #fff; color: #111827; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    @keyframes fadeUp    { from { opacity:0; transform:translateY(32px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+    @keyframes float     { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+    @keyframes pulseGold { 0%,100% { box-shadow:0 0 0 0 rgba(200,162,74,0.4); } 50% { box-shadow:0 0 0 12px rgba(200,162,74,0); } }
+    @keyframes shimmer   { 0% { background-position:-400px 0; } 100% { background-position:400px 0; } }
+    @keyframes scaleIn   { from { opacity:0; transform:scale(0.93); } to { opacity:1; transform:scale(1); } }
+    @keyframes slideUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    /* Reveal animations */
+    .reveal, .reveal-left, .reveal-right, .reveal-scale {
+      opacity: 0;
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal          { transform: translateY(28px); }
+    .reveal-left     { transform: translateX(-36px); }
+    .reveal-right    { transform: translateX(36px); }
+    .reveal-scale    { transform: scale(0.94); }
+    .revealed        { opacity:1 !important; transform:none !important; }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+    .delay-5 { transition-delay: 0.40s; }
+
+    /* Nav */
+    nav { transition: all 0.3s ease; }
+    nav.scrolled { background: rgba(255,255,255,0.97) !important; backdrop-filter: blur(20px); box-shadow: 0 1px 0 rgba(0,0,0,0.06); }
+    .nav-link { position:relative; font-size:0.875rem; font-weight:500; color:#374151; transition:color 0.2s; padding-bottom:2px; }
+    .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1.5px; background:#C8A24A; transition:width 0.3s cubic-bezier(0.22,1,0.36,1); }
+    .nav-link:hover { color:#111827; }
+    .nav-link:hover::after { width:100%; }
+    .nav-link.active { color:#C8A24A; }
+    .nav-link.active::after { width:100%; }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px;
+      background: linear-gradient(135deg, #C8A24A, #A8832A); color: #fff;
+      font-weight: 600; font-size: 0.9rem; border-radius: 10px; border: none; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+      box-shadow: 0 4px 20px rgba(200,162,74,0.35);
+      text-decoration: none; white-space: nowrap;
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(200,162,74,0.5); }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px;
+      background: transparent; color: #111827;
+      font-weight: 600; font-size: 0.9rem; border-radius: 10px;
+      border: 1.5px solid #E2E8F0; cursor: pointer;
+      transition: all 0.3s ease; text-decoration: none; white-space: nowrap;
+    }
+    .btn-outline:hover { border-color:#C8A24A; color:#C8A24A; background:rgba(200,162,74,0.04); }
+
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px;
+      background: #fff; color: #111827;
+      font-weight: 600; font-size: 0.9rem; border-radius: 10px; border: none; cursor: pointer;
+      transition: all 0.3s ease; text-decoration: none;
+    }
+    .btn-white:hover { background:#F8F4EC; color:#C8A24A; transform:translateY(-2px); }
+
+    /* Gold divider */
+    .gold-divider { width: 48px; height: 2.5px; background: linear-gradient(90deg, #C8A24A, #E2C87A); border-radius: 2px; }
+
+    /* Cards */
+    .feature-card {
+      background: #fff; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 28px;
+      transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+    .feature-card:hover { border-color: rgba(200,162,74,0.4); box-shadow: 0 12px 40px rgba(200,162,74,0.12); transform: translateY(-4px); }
+
+    /* Pricing cards */
+    .pricing-card {
+      background: #fff; border: 1.5px solid #E2E8F0; border-radius: 20px; padding: 36px 32px;
+      transition: all 0.35s cubic-bezier(0.22,1,0.36,1); position: relative; overflow: hidden;
+    }
+    .pricing-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+    .pricing-card.featured { border-color: rgba(200,162,74,0.6); box-shadow: 0 8px 40px rgba(200,162,74,0.2); transform: scale(1.03); }
+    .pricing-card.featured:hover { transform: scale(1.03) translateY(-6px); }
+    .pricing-check { color: #C8A24A; font-weight: 700; flex-shrink: 0; }
+
+    /* Specialty pill */
+    .specialty-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 99px;
+      border: 1.5px solid #E2E8F0; background: #fff;
+      font-size: 0.8rem; font-weight: 500; color: #374151;
+      transition: all 0.25s ease; cursor: default;
+    }
+    .specialty-pill:hover { border-color: rgba(200,162,74,0.5); background: rgba(200,162,74,0.06); color: #111827; }
+
+    /* Step connector */
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg,#C8A24A,#A8832A);
+      color: #fff; font-weight: 700; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 4px 12px rgba(200,162,74,0.35);
+    }
+
+    /* Video placeholder */
+    .video-placeholder {
+      aspect-ratio: 16/9; background: linear-gradient(135deg,#0f172a,#1e293b);
+      border-radius: 14px; border: 1.5px solid rgba(200,162,74,0.2);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .video-placeholder:hover { border-color: rgba(200,162,74,0.5); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+    .play-btn {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg,#C8A24A,#A8832A);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 8px rgba(200,162,74,0.2);
+      transition: all 0.3s ease;
+    }
+    .video-placeholder:hover .play-btn { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(200,162,74,0.15); }
+
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(15,23,42,0.85); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: #fff; border-radius: 24px; width: 100%; max-width: 520px;
+      box-shadow: 0 32px 100px rgba(0,0,0,0.3);
+      transform: scale(0.95) translateY(20px); transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-overlay.open .modal-box { transform: scale(1) translateY(0); }
+
+    /* Form inputs */
+    .form-input {
+      width: 100%; padding: 12px 16px; border-radius: 10px;
+      border: 1.5px solid #E2E8F0; font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; color: #111827; background: #F8FAFC;
+      transition: all 0.2s ease; outline: none;
+    }
+    .form-input:focus { border-color: #C8A24A; background: #fff; box-shadow: 0 0 0 3px rgba(200,162,74,0.12); }
+    .form-input::placeholder { color: #9CA3AF; }
+    .form-label { font-size: 0.82rem; font-weight: 600; color: #374151; margin-bottom: 6px; display: block; }
+
+    /* Success state */
+    .success-state { display: none; }
+    .success-state.visible { display: flex; }
+
+    /* Announcement bar */
+    .ann-bar {
+      background: linear-gradient(90deg, #0f172a, #1e293b 40%, #0f172a);
+      padding: 10px 24px; text-align: center;
+      font-size: 0.8rem; color: rgba(255,255,255,0.75); font-weight: 500;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #F1F5F9; }
+    ::-webkit-scrollbar-thumb { background: #C8A24A; border-radius: 3px; }
+
+    /* Mobile menu */
+    #mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.22,1,0.36,1); }
+    #mobile-menu.open { max-height: 400px; }
+
+    /* FAQ accordion */
+    .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-content.open { max-height: 300px; }
+    .faq-icon { transition: transform 0.3s ease; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══ ANNOUNCEMENT BAR ═══ -->
+  <div class="ann-bar">
+    <span style="background:linear-gradient(90deg,#C8A24A,#E2C87A,#C8A24A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;">✦ NUEVO</span>
+    &nbsp;Consentimientos informados digitales con validez jurídica · Válido en toda Latinoamérica y España &nbsp;·&nbsp;
+    <a href="#prueba-gratis" class="underline text-gold hover:text-yellow-300 transition-colors duration-200" style="-webkit-text-fill-color:initial;color:#C8A24A;">Comenzar gratis →</a>
+  </div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav id="navbar" class="fixed top-8 left-0 right-0 z-50 bg-transparent" style="top:40px;">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 bg-white/95 backdrop-blur-xl rounded-2xl px-6 shadow-sm" style="border:1px solid rgba(0,0,0,0.06);">
+
+        <!-- Logo -->
+        <a href="../index.html" class="flex items-center gap-2.5 group" style="text-decoration:none;">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7.5C11.5 14.5 14 11.5 14 8V4L8 1z" fill="white"/>
+              <path d="M6 8.5l1.5 1.5 3-3" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="font-display font-bold text-xl text-ink group-hover:text-gold transition-colors duration-200" style="letter-spacing:-0.02em;">ConsentPro</span>
+          <span class="text-xs font-medium text-gold/70 bg-gold/10 px-2 py-0.5 rounded-full border border-gold/20">Médicos</span>
+        </a>
+
+        <!-- Desktop nav -->
+        <div class="hidden md:flex items-center gap-7">
+          <a href="../index.html#como-funciona" class="nav-link">Cómo funciona</a>
+          <a href="#especialidades" class="nav-link active">Especialidades</a>
+          <a href="#precios" class="nav-link">Precios</a>
+          <a href="../index.html#asesoria-legal" class="nav-link">Asesoría Legal</a>
+        </div>
+
+        <div class="hidden md:flex items-center gap-3">
+          <a href="#prueba-gratis" class="btn-primary" style="padding:10px 20px;font-size:0.85rem;" onclick="openModal()">
+            Solicitar acceso gratuito
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5H11M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button id="menu-btn" class="md:hidden w-9 h-9 rounded-lg border border-surface flex items-center justify-center" aria-label="Menú">
+          <svg id="menu-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 5h12M3 9h12M3 13h12" stroke="#374151" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="md:hidden bg-white/97 backdrop-blur-xl rounded-2xl mt-2 px-5 py-4 flex flex-col gap-3 shadow-lg" style="border:1px solid rgba(0,0,0,0.06);">
+        <a href="../index.html#como-funciona" class="nav-link text-sm">Cómo funciona</a>
+        <a href="#especialidades" class="nav-link text-sm">Especialidades</a>
+        <a href="#precios" class="nav-link text-sm">Precios</a>
+        <a href="../index.html#asesoria-legal" class="nav-link text-sm">Asesoría Legal</a>
+        <div class="border-t border-surface pt-3">
+          <button onclick="openModal()" class="btn-primary w-full text-center text-sm justify-center">Solicitar acceso gratuito</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════ -->
+  <section class="relative min-h-screen flex items-center pt-40 pb-24 overflow-hidden" aria-label="Hero">
+
+    <!-- Background -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;inset:0;background:linear-gradient(160deg,#F8F9FF 0%,#FAFCFF 40%,#F0F4F0 100%);"></div>
+      <!-- Medical cross pattern -->
+      <svg class="absolute right-0 top-0 opacity-[0.04] hidden lg:block" width="600" height="600" viewBox="0 0 200 200" fill="none">
+        <g fill="#C8A24A">
+          <rect x="85" y="20" width="30" height="160" rx="4"/>
+          <rect x="20" y="85" width="160" height="30" rx="4"/>
+        </g>
+      </svg>
+      <div style="position:absolute;top:-100px;right:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,0.07),transparent 65%);"></div>
+      <div style="position:absolute;bottom:-150px;left:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(15,23,42,0.04),transparent 70%);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Left: Copy -->
+        <div>
+          <!-- Eyebrow tag -->
+          <div class="inline-flex items-center gap-2.5 bg-white border border-gold/25 rounded-full px-4 py-2 mb-8 reveal shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span class="text-xs font-semibold text-ink/70 tracking-wide">Para profesionales de salud · Validez jurídica garantizada</span>
+          </div>
+
+          <h1 class="font-display text-5xl lg:text-6xl font-bold text-ink leading-[1.07] mb-6 reveal delay-1" style="letter-spacing:-0.025em;">
+            Protege tu consulta.<br/>
+            <em class="not-italic" style="background:linear-gradient(135deg,#C8A24A 0%,#E2C87A 50%,#A8832A 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Digitaliza tus<br/>consentimientos.</em>
+          </h1>
+
+          <p class="text-lg text-ink/60 leading-relaxed max-w-lg mb-8 reveal delay-2">
+            La plataforma diseñada para médicos, clínicas y profesionales de salud que necesitan consentimientos informados <strong class="text-ink font-semibold">con validez legal</strong>, firmados digitalmente y almacenados de forma segura.
+          </p>
+
+          <!-- Key benefits inline -->
+          <div class="flex flex-wrap gap-3 mb-10 reveal delay-3">
+            <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-surface shadow-sm text-sm">
+              <span class="text-green-500">✓</span><span class="text-ink/70 font-medium">Sin papel</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-surface shadow-sm text-sm">
+              <span class="text-green-500">✓</span><span class="text-ink/70 font-medium">Firma digital</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-surface shadow-sm text-sm">
+              <span class="text-green-500">✓</span><span class="text-ink/70 font-medium">Evidencia jurídica</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-surface shadow-sm text-sm">
+              <span class="text-green-500">✓</span><span class="text-ink/70 font-medium">Respaldado por abogado</span>
+            </div>
+          </div>
+
+          <!-- CTA buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 mb-12 reveal delay-4">
+            <button onclick="openModal()" class="btn-primary text-base px-8 py-4">
+              Solicitar acceso gratuito
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8H14M9 3.5l5 4.5-5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <a href="#como-funciona-medico" class="btn-outline text-base px-8 py-4">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/>
+                <path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="currentColor"/>
+              </svg>
+              Ver cómo funciona
+            </a>
+          </div>
+
+          <!-- Social proof -->
+          <div class="flex items-center gap-4 reveal delay-5">
+            <div class="flex -space-x-2">
+              <div class="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-xs font-bold text-blue-600">DR</div>
+              <div class="w-8 h-8 rounded-full bg-purple-100 border-2 border-white flex items-center justify-center text-xs font-bold text-purple-600">MC</div>
+              <div class="w-8 h-8 rounded-full bg-green-100 border-2 border-white flex items-center justify-center text-xs font-bold text-green-600">OB</div>
+              <div class="w-8 h-8 rounded-full bg-gold/20 border-2 border-white flex items-center justify-center text-xs font-bold text-gold-dark">+</div>
+            </div>
+            <p class="text-sm text-ink/55 font-medium">
+              Ya confiado por <strong class="text-ink">médicos y clínicas</strong> en varios países
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: UI mockup — consent form preview -->
+        <div class="hidden lg:block reveal-right">
+          <div class="relative">
+            <!-- Floating card: consent form preview -->
+            <div class="rounded-2xl overflow-hidden shadow-2xl" style="border:1px solid rgba(200,162,74,0.2);background:#fff;">
+              <!-- Browser bar -->
+              <div class="flex items-center gap-2 px-5 py-3" style="background:#F8FAFC;border-bottom:1px solid #E2E8F0;">
+                <div class="flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div class="flex-1 mx-4 bg-white rounded-md px-3 py-1 text-xs text-ink/40 border border-surface">
+                  app.consentpro.com/firmar/gi-001
+                </div>
+                <div class="w-5 h-5 rounded flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A);">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L2 3v3c0 2 1.5 3.5 3 4 1.5-.5 3-2 3-4V3L5 1z" fill="white"/></svg>
+                </div>
+              </div>
+
+              <div class="p-6">
+                <!-- Header -->
+                <div class="flex items-center gap-3 mb-5">
+                  <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-gold">
+                      <path d="M9 1L2 4.5v4.5c0 4 2.8 7.5 7 9 4.2-1.5 7-5 7-9V4.5L9 1z" stroke="#C8A24A" stroke-width="1.3" fill="none"/>
+                      <path d="M6.5 9l1.8 1.8 3.2-3.2" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-semibold text-ink text-sm">Consentimiento Informado</p>
+                    <p class="text-xs text-ink/40">Ginecología y Obstetricia · Ref. GI-2025-0047</p>
+                  </div>
+                  <span class="ml-auto text-xs bg-green-50 text-green-600 border border-green-200 px-2 py-1 rounded-full font-medium">Activo</span>
+                </div>
+
+                <!-- Patient info -->
+                <div class="bg-surface rounded-xl p-4 mb-4 grid grid-cols-2 gap-3">
+                  <div>
+                    <p class="text-xs text-ink/40 mb-1">Paciente</p>
+                    <p class="text-sm font-semibold text-ink">María J. Rodríguez</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-ink/40 mb-1">Médico</p>
+                    <p class="text-sm font-semibold text-ink">Dra. Ana Medina</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-ink/40 mb-1">Procedimiento</p>
+                    <p class="text-sm font-semibold text-ink">Colposcopia</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-ink/40 mb-1">Fecha</p>
+                    <p class="text-sm font-semibold text-ink">20/02/2025</p>
+                  </div>
+                </div>
+
+                <!-- Signature area -->
+                <div class="rounded-xl border-2 border-dashed border-gold/30 p-4 mb-4 text-center" style="background:rgba(200,162,74,0.03);">
+                  <svg class="mx-auto mb-2 text-gold/40" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M6 24c4-8 8-16 14-16 3 0 4 2 2 6s-6 8-4 10c1.5 1.5 5-2 8-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M4 26h24" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+                  </svg>
+                  <p class="text-xs text-ink/40">Área de firma digital</p>
+                  <p class="text-xs text-ink/25 mt-0.5">Toque para firmar en pantalla</p>
+                </div>
+
+                <!-- Status chips -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5 text-xs text-ink/50">
+                    <div class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></div>
+                    Esperando firma del paciente
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-xs bg-blue-50 text-blue-600 border border-blue-200 px-2 py-0.5 rounded-full">WhatsApp ✓</span>
+                    <span class="text-xs bg-purple-50 text-purple-600 border border-purple-200 px-2 py-0.5 rounded-full">Email ✓</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating badges -->
+            <div class="absolute -top-5 -right-5 bg-white rounded-xl px-4 py-2.5 shadow-lg border border-surface animate-float" style="animation-delay:0s;">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-ink">Firmado</p>
+                  <p class="text-xs text-ink/40">hace 2 min</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="absolute -bottom-4 -left-5 bg-white rounded-xl px-4 py-2.5 shadow-lg border border-surface animate-float" style="animation-delay:2.5s;">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A);">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 3.5v3.5c0 3.2 2.2 6 5.5 7 3.3-1 5.5-3.8 5.5-7V3.5L7 1z" fill="white"/></svg>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-ink">Evidencia sellada</p>
+                  <p class="text-xs text-ink/40">SHA-256 · Blockchain</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       EL PROBLEMA — Pain points del médico
+  ═══════════════════════════════════════════ -->
+  <section class="py-20" style="background:linear-gradient(180deg,#F8F9FF,#fff);">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <h2 class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-1" style="letter-spacing:-0.02em;">
+          ¿Te suena familiar?
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-2">
+          Estos son los problemas que enfrentan los médicos cada día — y para los que ConsentPro es la solución.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div class="feature-card reveal delay-1" style="border-left:3px solid #ef4444;">
+          <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v6M10 13v1" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/><circle cx="10" cy="10" r="8" stroke="#ef4444" stroke-width="1.4"/></svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-sm">Papeles perdidos o deteriorados</h3>
+          <p class="text-xs text-ink/50 leading-relaxed">¿Cuántas veces has buscado el consentimiento firmado de un paciente y no aparece? Un papel mojado, roto o simplemente extraviado puede costarte una demanda.</p>
+        </div>
+
+        <div class="feature-card reveal delay-2" style="border-left:3px solid #f59e0b;">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 6v5c0 4 2.5 7.5 7 9 4.5-1.5 7-5 7-9V6L10 2z" stroke="#f59e0b" stroke-width="1.4"/><path d="M8 10l1.5 1.5 3-3" stroke="#f59e0b" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-sm">Demandas por falta de evidencia</h3>
+          <p class="text-xs text-ink/50 leading-relaxed">El paciente dice que no le explicaron los riesgos. Tú sabes que sí lo hiciste, pero sin un consentimiento con firma digital, fecha, hora y datos del procedimiento, es tu palabra contra la del paciente.</p>
+        </div>
+
+        <div class="feature-card reveal delay-3" style="border-left:3px solid #8b5cf6;">
+          <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="3" width="12" height="14" rx="2" stroke="#8b5cf6" stroke-width="1.4"/><path d="M7 7h6M7 10h6M7 13h4" stroke="#8b5cf6" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-sm">Formularios genéricos sin validez</h3>
+          <p class="text-xs text-ink/50 leading-relaxed">Un PDF impreso sin control de versiones, sin registro de quién firmó, desde dónde y cuándo, tiene poca o ninguna validez jurídica ante un tribunal.</p>
+        </div>
+
+        <div class="feature-card reveal delay-1" style="border-left:3px solid #3b82f6;">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#3b82f6" stroke-width="1.4"/><path d="M10 6v4l3 3" stroke="#3b82f6" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-sm">Tiempo perdido en papeleo</h3>
+          <p class="text-xs text-ink/50 leading-relaxed">Imprimir, que el paciente firme, escanear, archivar, buscar. Un proceso que toma 15 minutos por paciente se puede reducir a 2 minutos con ConsentPro.</p>
+        </div>
+
+        <div class="feature-card reveal delay-2" style="border-left:3px solid #10b981;">
+          <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10l5 5 9-9" stroke="#10b981" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-sm">Pacientes que firman sin leer</h3>
+          <p class="text-xs text-ink/50 leading-relaxed">Con el formato digital puedes asegurarte de que el paciente vea cada sección, confirme que entendió los riesgos y firme con plena consciencia del procedimiento.</p>
+        </div>
+
+        <div class="feature-card reveal delay-3" style="border-left:3px solid #C8A24A;">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(200,162,74,0.1);">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 6v5c0 4 2.5 7.5 7 9 4.5-1.5 7-5 7-9V6L10 2z" stroke="#C8A24A" stroke-width="1.4"/></svg>
+          </div>
+          <h3 class="font-semibold text-ink mb-2 text-sm">Sin respaldo legal actualizado</h3>
+          <p class="text-xs text-ink/50 leading-relaxed">Las normativas cambian. Con ConsentPro, el Abg. José Manuel Rojas revisa y actualiza las plantillas de consentimiento para mantenerlas siempre conformes con la ley vigente.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       CÓMO FUNCIONA PARA MÉDICOS
+  ═══════════════════════════════════════════ -->
+  <section id="como-funciona-medico" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Flujo de trabajo</p>
+        <h2 class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          Así de simple es el proceso.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          Sin apps adicionales. Sin capacitación técnica. Funciona en tablet, teléfono o computador — el tuyo o el del paciente.
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto">
+
+        <div class="relative">
+          <!-- Vertical connector line -->
+          <div class="absolute left-[22px] top-12 bottom-12 w-0.5 hidden sm:block" style="background:linear-gradient(180deg,#C8A24A,rgba(200,162,74,0.1));"></div>
+
+          <div class="space-y-8">
+
+            <!-- Step 1 -->
+            <div class="flex gap-6 items-start reveal delay-1">
+              <div class="step-num flex-shrink-0 relative z-10">1</div>
+              <div class="feature-card flex-1">
+                <div class="flex items-start gap-4">
+                  <div>
+                    <h3 class="font-semibold text-ink mb-2">Configuras tu plantilla una sola vez</h3>
+                    <p class="text-sm text-ink/55 leading-relaxed">Elige el tipo de consentimiento (cirugía, procedimiento estético, psicología, etc.), personalizas con el nombre de tu consulta y el logotipo. El Abg. Rojas valida el contenido jurídico. Listo — esta plantilla es tuya para siempre.</p>
+                  </div>
+                  <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface flex items-center justify-center">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" class="text-gold"><rect x="3" y="3" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M7 8h8M7 11h8M7 14h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex gap-6 items-start reveal delay-2">
+              <div class="step-num flex-shrink-0 relative z-10">2</div>
+              <div class="feature-card flex-1">
+                <div class="flex items-start gap-4">
+                  <div>
+                    <h3 class="font-semibold text-ink mb-2">Envías el link al paciente</h3>
+                    <p class="text-sm text-ink/55 leading-relaxed">El día de la consulta, generas el consentimiento y lo envías por <strong class="text-ink">WhatsApp</strong> o <strong class="text-ink">correo electrónico</strong> al paciente. También puede firmarlo en una tablet en tu sala de espera. El link caduca automáticamente después de la cita.</p>
+                  </div>
+                  <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface flex items-center justify-center">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" class="text-gold"><path d="M4 6l8 6 8-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="2" y="4" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex gap-6 items-start reveal delay-3">
+              <div class="step-num flex-shrink-0 relative z-10">3</div>
+              <div class="feature-card flex-1">
+                <div class="flex items-start gap-4">
+                  <div>
+                    <h3 class="font-semibold text-ink mb-2">El paciente lee y firma digitalmente</h3>
+                    <p class="text-sm text-ink/55 leading-relaxed">El paciente accede desde su teléfono, lee el documento, confirma que entendió cada sección y firma con su dedo. Se registran automáticamente: <strong class="text-ink">hora exacta, IP, ubicación aproximada y huella del documento.</strong></p>
+                  </div>
+                  <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-surface flex items-center justify-center">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" class="text-gold"><path d="M5 16c4-9 8-14 12-12-2 4-6 10-4 12 1.5 1.5 5-2 7-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M3 18h16" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.4"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="flex gap-6 items-start reveal delay-4">
+              <div class="step-num flex-shrink-0 relative z-10">4</div>
+              <div class="feature-card flex-1" style="border-color:rgba(200,162,74,0.3);background:linear-gradient(135deg,rgba(200,162,74,0.03),transparent);">
+                <div class="flex items-start gap-4">
+                  <div>
+                    <h3 class="font-semibold text-ink mb-2">Evidencia jurídica guardada de por vida</h3>
+                    <p class="text-sm text-ink/55 leading-relaxed">El consentimiento queda sellado con <strong class="text-ink">firma SHA-256</strong>, almacenado en servidor seguro y accesible para siempre desde tu panel. Si algún día lo necesitas ante un tribunal, lo exportas con un clic en formato con validez legal.</p>
+                  </div>
+                  <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L3 6v5c0 5 3.5 9 8 10.5C16.5 20 20 16 20 11V6L11 2z" stroke="#C8A24A" stroke-width="1.4" fill="none"/><path d="M8.5 11.5l2 2 4-4" stroke="#C8A24A" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       ESPECIALIDADES — broad but starts with Ginecología
+  ═══════════════════════════════════════════ -->
+  <section id="especialidades" class="py-24" style="background:#F8F9FF;">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Especialidades cubiertas</p>
+        <h2 class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          Para cualquier consulta<br/>o procedimiento médico.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-2xl mx-auto reveal delay-3">
+          Contamos con plantillas base para las especialidades más comunes. Si la tuya no está en la lista, la creamos contigo y con el respaldo del Abg. Rojas.
+        </p>
+      </div>
+
+      <!-- Featured: Ginecología -->
+      <div class="mb-8 reveal">
+        <div class="rounded-2xl overflow-hidden" style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid rgba(200,162,74,0.25);">
+          <div class="grid lg:grid-cols-2 gap-0">
+            <div class="p-10 lg:p-12">
+              <div class="inline-flex items-center gap-2 bg-gold/20 border border-gold/30 rounded-full px-3 py-1.5 mb-6">
+                <span class="text-gold text-xs font-semibold">⭐ Especialidad destacada</span>
+              </div>
+              <h3 class="font-display text-3xl font-bold text-white mb-4" style="letter-spacing:-0.02em;">
+                Ginecología y Obstetricia
+              </h3>
+              <p class="text-white/55 leading-relaxed mb-6 text-sm">
+                Una de las especialidades con mayor exposición legal. ConsentPro incluye plantillas específicas para cada procedimiento ginecológico — diseñadas y validadas con lenguaje claro para la paciente y protección jurídica para el médico.
+              </p>
+              <div class="grid grid-cols-2 gap-2 mb-8">
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Colposcopia</div>
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Parto y cesárea</div>
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Legrado uterino</div>
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Laparoscopia</div>
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Histerectomía</div>
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Biopsia cervical</div>
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Anticoncepción quirúrgica</div>
+                <div class="flex items-center gap-2 text-white/60 text-xs"><span class="text-gold">·</span>Histeroscopía</div>
+              </div>
+              <button onclick="openModal()" class="btn-primary">
+                Quiero estas plantillas
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="hidden lg:flex items-center justify-center p-12">
+              <!-- Visual: Document stack mockup -->
+              <div class="relative w-full max-w-xs">
+                <div class="absolute top-4 left-4 right-4 h-64 rounded-xl opacity-30" style="background:linear-gradient(135deg,#C8A24A22,#C8A24A11);border:1px solid rgba(200,162,74,0.3);transform:rotate(-4deg);"></div>
+                <div class="absolute top-2 left-2 right-2 h-64 rounded-xl opacity-50" style="background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid rgba(200,162,74,0.3);transform:rotate(-2deg);"></div>
+                <div class="relative rounded-xl p-6" style="background:linear-gradient(135deg,#243047,#1a2540);border:1.5px solid rgba(200,162,74,0.4);">
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A);">
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 3.5v3.5c0 3.2 2.2 6 5.5 7 3.3-1 5.5-3.8 5.5-7V3.5L7 1z" fill="white"/></svg>
+                    </div>
+                    <div>
+                      <p class="text-white text-xs font-semibold">ConsentPro</p>
+                      <p class="text-white/40 text-xs">Consentimiento Válido</p>
+                    </div>
+                  </div>
+                  <p class="text-white text-sm font-semibold mb-1">Colposcopia diagnóstica</p>
+                  <p class="text-white/40 text-xs mb-4">Ginecología · Art. 50 LOPNA</p>
+                  <div class="space-y-2 mb-4">
+                    <div class="h-2 rounded-full bg-white/10" style="width:90%"></div>
+                    <div class="h-2 rounded-full bg-white/10" style="width:75%"></div>
+                    <div class="h-2 rounded-full bg-white/10" style="width:82%"></div>
+                    <div class="h-2 rounded-full bg-white/8" style="width:60%"></div>
+                  </div>
+                  <div class="flex items-center justify-between pt-3 border-t border-white/10">
+                    <span class="text-xs text-green-400 font-medium">✓ Firmado</span>
+                    <span class="text-xs text-gold/70 font-mono">SHA-256 ✦</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other specialties grid -->
+      <div class="flex flex-wrap gap-3 justify-center reveal">
+        <span class="specialty-pill">🦷 Odontología</span>
+        <span class="specialty-pill">💉 Medicina Estética</span>
+        <span class="specialty-pill">🧠 Psicología y Psiquiatría</span>
+        <span class="specialty-pill">🦴 Traumatología</span>
+        <span class="specialty-pill">👁️ Oftalmología</span>
+        <span class="specialty-pill">❤️ Cardiología</span>
+        <span class="specialty-pill">🩺 Medicina General</span>
+        <span class="specialty-pill">🔬 Dermatología</span>
+        <span class="specialty-pill">🧬 Cirugía Plástica</span>
+        <span class="specialty-pill">👶 Pediatría</span>
+        <span class="specialty-pill">🥗 Nutrición</span>
+        <span class="specialty-pill">💪 Fisioterapia</span>
+        <span class="specialty-pill">🏥 Clínicas privadas</span>
+        <span class="specialty-pill">🌿 Medicina alternativa</span>
+        <span class="specialty-pill">+ Tu especialidad</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       PRICING
+  ═══════════════════════════════════════════ -->
+  <section id="precios" class="py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Precios</p>
+        <h2 class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          Simple. Sin sorpresas.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          Paga por lo que usas. Sin contratos anuales obligatorios. Cancela cuando quieras.
+        </p>
+
+        <!-- ROI callout -->
+        <div class="inline-flex items-center gap-3 mt-6 bg-amber-50 border border-amber-200 rounded-xl px-5 py-3 reveal delay-4">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1l2 5.5H17l-4.5 3.3 1.7 5.2L9 12l-5.2 3 1.7-5.2L1 6.5h6z" fill="#f59e0b"/></svg>
+          <p class="text-sm text-amber-800 font-medium">Una sola demanda evitada paga <strong>más de 30 años</strong> de ConsentPro.</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-7 max-w-5xl mx-auto">
+
+        <!-- Plan Consultorio -->
+        <div class="pricing-card reveal delay-1">
+          <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-3">Plan Consultorio</p>
+          <div class="flex items-baseline gap-1 mb-2">
+            <span class="text-xs text-ink/50 font-medium">USD</span>
+            <span class="font-display text-5xl font-bold text-ink">30</span>
+            <span class="text-ink/40 text-sm">/mes</span>
+          </div>
+          <p class="text-xs text-ink/50 mb-7">Hasta <strong class="text-ink">100 consentimientos</strong> por mes</p>
+          <button onclick="openModal()" class="btn-outline w-full text-center justify-center mb-8">Comenzar gratis</button>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Hasta 100 consentimientos/mes
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Firma digital del paciente
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Envío por WhatsApp y Email
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Plantillas por especialidad
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Almacenamiento seguro
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Evidencia jurídica SHA-256
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Soporte por email
+            </li>
+          </ul>
+        </div>
+
+        <!-- Plan Clínica — FEATURED -->
+        <div class="pricing-card featured reveal delay-2" style="border-color:rgba(200,162,74,0.6);">
+          <!-- Top badge -->
+          <div class="absolute -top-4 left-0 right-0 flex justify-center">
+            <span class="bg-ink text-white text-xs font-semibold px-5 py-1.5 rounded-full shadow-lg tracking-wide">Más popular</span>
+          </div>
+          <div style="height:3px;background:linear-gradient(90deg,#C8A24A,#E2C87A,#C8A24A);border-radius:2px;margin-bottom:24px;margin-top:8px;"></div>
+          <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3">Plan Clínica</p>
+          <div class="flex items-baseline gap-1 mb-2">
+            <span class="text-xs text-ink/50 font-medium">USD</span>
+            <span class="font-display text-5xl font-bold text-ink">99</span>
+            <span class="text-ink/40 text-sm">/mes</span>
+          </div>
+          <p class="text-xs text-ink/50 mb-7">Hasta <strong class="text-ink">1,000 consentimientos</strong> por mes</p>
+          <button onclick="openModal()" class="btn-primary w-full justify-center mb-8">
+            Comenzar gratis
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5H11M7.5 3l3.5 3.5L7.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Todo lo del Plan Consultorio
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Hasta 1,000 consentimientos/mes
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Múltiples médicos / especialidades
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Panel de gestión centralizado
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Registros de auditoría avanzados
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Exportación con un clic (PDF jurídico)
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Soporte prioritario (WhatsApp)
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Personalización de marca
+            </li>
+          </ul>
+        </div>
+
+        <!-- Plan Red Médica -->
+        <div class="pricing-card reveal delay-3">
+          <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-3">Plan Red Médica</p>
+          <div class="flex items-baseline gap-1 mb-2">
+            <span class="font-display text-5xl font-bold text-ink">A medida</span>
+          </div>
+          <p class="text-xs text-ink/50 mb-7">Consentimientos <strong class="text-ink">ilimitados</strong> · múltiples sedes</p>
+          <a href="/cdn-cgi/l/email-protection#dfbebdb8b5b0acbab2adb0b5beac9fb8b2beb6b3f1bcb0b2" class="btn-outline w-full text-center justify-center block mb-8">Hablar con el equipo</a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Todo lo del Plan Clínica
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Consentimientos ilimitados
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Múltiples sedes y hospitales
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Integración con HIS/EMR
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Acceso API completo
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>Gerente de éxito dedicado
+            </li>
+            <li class="flex items-start gap-2 text-sm text-ink/65">
+              <span class="pricing-check mt-0.5">✓</span>SLA 99.99% disponibilidad
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p class="text-center text-xs text-ink/35 mt-8 reveal">
+        Todos los precios en USD. Facturación mensual. Cancela en cualquier momento. Sin tarjeta de crédito requerida para la prueba gratuita.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       TESTIMONIOS EN VIDEO
+  ═══════════════════════════════════════════ -->
+  <section id="testimonios" class="py-24" style="background:linear-gradient(180deg,#F8F9FF,#fff);">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Testimonios</p>
+        <h2 class="font-display text-4xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
+          Lo que dicen los médicos<br/>que ya usan ConsentPro.
+        </h2>
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          Médicos reales compartiendo su experiencia. Sin guión.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <!-- Video testimonial 1 -->
+        <div class="reveal delay-1">
+          <div class="video-placeholder mb-4" onclick="alert('Video próximamente disponible')">
+            <!-- Placeholder background pattern -->
+            <div class="absolute inset-0 opacity-10" style="background:repeating-linear-gradient(45deg,#C8A24A,#C8A24A 1px,transparent 1px,transparent 20px);"></div>
+            <div class="play-btn relative z-10">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><path d="M6 4l12 6-12 6V4z"/></svg>
+            </div>
+            <p class="text-white/40 text-xs relative z-10">Testimonio en video</p>
+            <div class="absolute bottom-4 left-4 right-4 flex items-center gap-3 relative z-10">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style="background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a;">DM</div>
+              <div>
+                <p class="text-white text-xs font-semibold">Dr. ___________</p>
+                <p class="text-white/40 text-xs">Ginecólogo · Venezuela</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-1">
+            <div class="h-2 rounded-full bg-ink/8 mb-2" style="width:85%"></div>
+            <div class="h-2 rounded-full bg-ink/5" style="width:65%"></div>
+          </div>
+        </div>
+
+        <!-- Video testimonial 2 -->
+        <div class="reveal delay-2">
+          <div class="video-placeholder mb-4" onclick="alert('Video próximamente disponible')">
+            <div class="absolute inset-0 opacity-10" style="background:repeating-linear-gradient(-45deg,#C8A24A,#C8A24A 1px,transparent 1px,transparent 20px);"></div>
+            <div class="play-btn relative z-10">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><path d="M6 4l12 6-12 6V4z"/></svg>
+            </div>
+            <p class="text-white/40 text-xs relative z-10">Testimonio en video</p>
+            <div class="absolute bottom-4 left-4 right-4 flex items-center gap-3 relative z-10">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style="background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a;">DA</div>
+              <div>
+                <p class="text-white text-xs font-semibold">Dra. ___________</p>
+                <p class="text-white/40 text-xs">Odontóloga · Colombia</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-1">
+            <div class="h-2 rounded-full bg-ink/8 mb-2" style="width:75%"></div>
+            <div class="h-2 rounded-full bg-ink/5" style="width:55%"></div>
+          </div>
+        </div>
+
+        <!-- Video testimonial 3 -->
+        <div class="reveal delay-3">
+          <div class="video-placeholder mb-4" onclick="alert('Video próximamente disponible')">
+            <div class="absolute inset-0 opacity-10" style="background:radial-gradient(circle at 30% 30%,#C8A24A,transparent 60%);"></div>
+            <div class="play-btn relative z-10">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="white"><path d="M6 4l12 6-12 6V4z"/></svg>
+            </div>
+            <p class="text-white/40 text-xs relative z-10">Testimonio en video</p>
+            <div class="absolute bottom-4 left-4 right-4 flex items-center gap-3 relative z-10">
+              <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm" style="background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a;">DL</div>
+              <div>
+                <p class="text-white text-xs font-semibold">Dr. ___________</p>
+                <p class="text-white/40 text-xs">Cirujano Plástico · México</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-1">
+            <div class="h-2 rounded-full bg-ink/8 mb-2" style="width:90%"></div>
+            <div class="h-2 rounded-full bg-ink/5" style="width:70%"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Upload CTA for future videos -->
+      <div class="text-center mt-8 reveal">
+        <p class="text-xs text-ink/35">¿Eres médico y quieres aparecer aquí? <a href="/cdn-cgi/l/email-protection#3b5a595c5154485e564954515a487b5c565a525715585456" class="text-gold hover:text-gold-dark transition-colors duration-200 font-medium">Contáctanos →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       ABOGADO BLOCK — respaldo jurídico
+  ═══════════════════════════════════════════ -->
+  <section class="py-20" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal-left">
+          <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-4">Respaldo Jurídico</p>
+          <h2 class="font-display text-3xl lg:text-4xl font-bold text-white mb-5" style="letter-spacing:-0.02em;">
+            Cada plantilla,<br/>
+            <em class="not-italic text-gold">validada por un abogado.</em>
+          </h2>
+          <p class="text-white/55 leading-relaxed mb-6">
+            El <strong class="text-white">Abg. José Manuel Rojas</strong>, especialista en derecho corporativo y compliance con más de 10 años de experiencia, revisa y valida jurídicamente todos los formularios de consentimiento de ConsentPro para garantizar su validez legal en Venezuela, Colombia, y el resto de Latinoamérica.
+          </p>
+          <div class="space-y-3 mb-8">
+            <div class="flex items-center gap-3 text-white/60 text-sm">
+              <span class="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center text-gold text-xs flex-shrink-0">✓</span>
+              Plantillas alineadas con la legislación vigente de cada país
+            </div>
+            <div class="flex items-center gap-3 text-white/60 text-sm">
+              <span class="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center text-gold text-xs flex-shrink-0">✓</span>
+              Actualizaciones automáticas ante cambios normativos
+            </div>
+            <div class="flex items-center gap-3 text-white/60 text-sm">
+              <span class="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center text-gold text-xs flex-shrink-0">✓</span>
+              Asesoría directa disponible para casos complejos
+            </div>
+          </div>
+          <a href="../index.html#asesoria-legal" class="btn-white text-sm">
+            Ver perfil del abogado →
+          </a>
+        </div>
+        <div class="reveal-right">
+          <div class="rounded-2xl p-7" style="background:rgba(255,255,255,0.05);border:1px solid rgba(200,162,74,0.25);">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,rgba(200,162,74,0.2),rgba(200,162,74,0.1));border:2px solid rgba(200,162,74,0.4);">
+                <span class="font-display font-bold text-xl text-gold">JM</span>
+              </div>
+              <div>
+                <p class="text-white font-semibold">José Manuel Rojas</p>
+                <p class="text-gold text-xs">Abogado Corporativo · Since 2013</p>
+              </div>
+            </div>
+            <blockquote class="text-white/60 text-sm leading-relaxed italic mb-5">
+              "El consentimiento informado no es solo un requisito legal — es la herramienta más poderosa que tiene un médico para proteger su ejercicio profesional. Digitalizar y custodiar ese proceso correctamente es la diferencia entre una práctica médica segura y una expuesta."
+            </blockquote>
+            <div class="grid grid-cols-2 gap-3">
+              <a href="tel:+584145173115" class="flex items-center gap-2 text-white/50 text-xs hover:text-gold transition-colors duration-200">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2s-1 0-1 1c0 3.5 3 7 7 7 1 0 1-1 1-1L7.5 7.5S7 8 6.5 8C5 8 4 7 3 6S2 4 2 4s1-.5 1.5-.5L2 2z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
+                +58 (414) 517 31 15
+              </a>
+              <a href="/cdn-cgi/l/email-protection#c9a8abaea3a6baaca4bba6a3a8ba89aea4a8a0a5e7aaa6a4" class="flex items-center gap-2 text-white/50 text-xs hover:text-gold transition-colors duration-200">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2.5" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1"/><path d="M1 3.5l5 3.5 5-3.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                <span class="__cf_email__" data-cfemail="fa9b989d9095899f978895909b89ba9d979b9396d4999597">[email&#160;protected]</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FAQ
+  ═══════════════════════════════════════════ -->
+  <section class="py-24 bg-white">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="gold-divider mx-auto mb-5 reveal"></div>
+        <h2 class="font-display text-4xl font-bold text-ink mb-4 reveal delay-1" style="letter-spacing:-0.02em;">Preguntas frecuentes</h2>
+      </div>
+
+      <div class="space-y-3" id="faq-container">
+
+        <div class="faq-item border border-surface rounded-xl overflow-hidden reveal delay-1">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface transition-colors duration-200">
+            <span class="font-semibold text-ink text-sm pr-4">¿El consentimiento digital tiene la misma validez legal que el firmado a mano?</span>
+            <span class="faq-icon text-gold text-xl font-light flex-shrink-0">+</span>
+          </button>
+          <div class="faq-content px-6">
+            <p class="text-sm text-ink/55 leading-relaxed pb-5">Sí. La firma digital con registro de metadatos (hora, IP, dispositivo, geolocalización) y sellado criptográfico SHA-256 tiene plena validez probatoria. El Abg. Rojas valida que cada plantilla cumpla con los requisitos legales del país del médico. En caso de litigio, el documento es exportable en formato jurídico aceptado por tribunales.</p>
+          </div>
+        </div>
+
+        <div class="faq-item border border-surface rounded-xl overflow-hidden reveal delay-2">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface transition-colors duration-200">
+            <span class="font-semibold text-ink text-sm pr-4">¿Qué pasa si el paciente no tiene teléfono o no sabe usar apps?</span>
+            <span class="faq-icon text-gold text-xl font-light flex-shrink-0">+</span>
+          </button>
+          <div class="faq-content px-6">
+            <p class="text-sm text-ink/55 leading-relaxed pb-5">ConsentPro funciona en cualquier navegador — el paciente no necesita descargar ninguna app. Además, puedes mostrarle el formulario en una tablet de tu consultorio. Para pacientes sin acceso digital, el sistema también permite imprimir el documento con código QR de verificación.</p>
+          </div>
+        </div>
+
+        <div class="faq-item border border-surface rounded-xl overflow-hidden reveal delay-3">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface transition-colors duration-200">
+            <span class="font-semibold text-ink text-sm pr-4">¿Mis datos y los de mis pacientes están seguros?</span>
+            <span class="faq-icon text-gold text-xl font-light flex-shrink-0">+</span>
+          </button>
+          <div class="faq-content px-6">
+            <p class="text-sm text-ink/55 leading-relaxed pb-5">Todos los documentos se cifran con AES-256 en reposo y en tránsito. Los servidores operan bajo protocolos de confidencialidad médica. Los datos de los pacientes nunca se comparten con terceros. Tienes control absoluto sobre tus registros y puedes exportarlos o eliminarlos en cualquier momento.</p>
+          </div>
+        </div>
+
+        <div class="faq-item border border-surface rounded-xl overflow-hidden reveal delay-4">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface transition-colors duration-200">
+            <span class="font-semibold text-ink text-sm pr-4">¿Funciona para médicos fuera de Venezuela?</span>
+            <span class="faq-icon text-gold text-xl font-light flex-shrink-0">+</span>
+          </button>
+          <div class="faq-content px-6">
+            <p class="text-sm text-ink/55 leading-relaxed pb-5">Sí. ConsentPro está diseñado para Latinoamérica y España. Las plantillas se adaptan a la legislación de cada país. Si eres médico en Colombia, México, Perú, España o cualquier otro país hispanohablante, trabajamos contigo para que el consentimiento cumpla con tu marco legal local.</p>
+          </div>
+        </div>
+
+        <div class="faq-item border border-surface rounded-xl overflow-hidden reveal delay-5">
+          <button class="faq-btn w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface transition-colors duration-200">
+            <span class="font-semibold text-ink text-sm pr-4">¿Puedo probar ConsentPro antes de pagar?</span>
+            <span class="faq-icon text-gold text-xl font-light flex-shrink-0">+</span>
+          </button>
+          <div class="faq-content px-6">
+            <p class="text-sm text-ink/55 leading-relaxed pb-5">Sí. Solicitamos tu acceso a través del formulario y uno de nuestros asesores te contacta en menos de 24 horas para configurar tu cuenta de prueba personalizada para tu especialidad — sin tarjeta de crédito, sin compromiso.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FINAL CTA
+  ═══════════════════════════════════════════ -->
+  <section id="prueba-gratis" class="py-24 relative overflow-hidden" style="background:linear-gradient(135deg,#0f172a,#1e293b);">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,0.1),transparent 65%);"></div>
+      <div style="position:absolute;bottom:-100px;left:-60px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,0.07),transparent 70%);"></div>
+    </div>
+    <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10">
+      <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-8 reveal" style="background:linear-gradient(135deg,#C8A24A,#A8832A);box-shadow:0 0 0 12px rgba(200,162,74,0.15);">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 2L3 7.5V14c0 6.5 4.5 12.5 11 14.5C20.5 26.5 25 20.5 25 14V7.5L14 2z" fill="white" opacity="0.9"/><path d="M10 14l3 3 6-6" stroke="#C8A24A" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h2 class="font-display text-4xl lg:text-5xl font-bold text-white mb-5 reveal delay-1" style="letter-spacing:-0.02em;">
+        Protege tu consulta<br/>desde hoy mismo.
+      </h2>
+      <p class="text-white/55 text-lg leading-relaxed mb-10 reveal delay-2">
+        Únete a los médicos que ya digitalizaron sus consentimientos informados. Solicita tu acceso — te contactamos en menos de 24 horas para configurar todo juntos.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center reveal delay-3">
+        <button onclick="openModal()" class="btn-primary text-base px-10 py-4">
+          Solicitar acceso gratuito
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8H14M9 3.5l5 4.5-5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <a href="https://wa.me/584145173115?text=Hola%2C%20me%20interesa%20ConsentPro%20para%20mi%20consulta" target="_blank" class="btn-white text-base px-10 py-4">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1C4.6 1 1 4.6 1 9c0 1.5.4 2.9 1.1 4.1L1 17l4-1.1C6.1 16.6 7.5 17 9 17c4.4 0 8-3.6 8-8s-3.6-8-8-8zm4.2 11c-.2.5-1 1-1.5 1.1-.4 0-.8.1-2.6-.5-2.2-.8-3.6-3-3.7-3.1-.1-.2-1-1.3-1-2.5 0-1.2.6-1.7.8-2 .2-.2.5-.3.6-.3h.5c.1 0 .3 0 .4.3l.8 2c.1.1.1.3 0 .4l-.4.5c-.1.1-.2.3-.1.4.3.6.8 1.2 1.3 1.6.6.5 1.2.8 1.4.9.2.1.3.1.4 0l.5-.6c.1-.2.3-.2.5-.1l2 .9c.2.1.3.2.3.4.1.2-.1.7-.3 1.1z" fill="#25D366"/></svg>
+          Contactar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER SIMPLE
+  ═══════════════════════════════════════════ -->
+  <footer class="py-8 bg-navy border-t border-white/8">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A);">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 3.5v3.5c0 3.2 2.2 6 5.5 7 3.3-1 5.5-3.8 5.5-7V3.5L7 1z" fill="white"/><path d="M5 7l1.5 1.5L10 5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <span class="font-display font-bold text-white" style="letter-spacing:-0.02em;">ConsentPro</span>
+      </div>
+      <p class="text-white/30 text-xs">© 2025 ConsentPro. Todos los derechos reservados. · Respaldado por <a href="../index.html#asesoria-legal" class="text-gold/60 hover:text-gold transition-colors duration-200">Abg. José Manuel Rojas</a></p>
+      <div class="flex gap-5">
+        <a href="../index.html" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">Inicio</a>
+        <a href="../index.html#precios" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">Precios</a>
+        <a href="/cdn-cgi/l/email-protection#debfbcb9b4b1adbbb3acb1b4bfad9eb9b3bfb7b2f0bdb1b3" class="text-white/30 hover:text-white/60 text-xs transition-colors duration-200">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ═══════════════════════════════════════════
+       MODAL — FORMULARIO DE ACCESO → GOOGLE SHEETS
+       
+       CONFIGURACIÓN REQUERIDA:
+       1. Ir a script.google.com
+       2. Crear nuevo proyecto
+       3. Pegar el código del Apps Script (ver abajo)
+       4. Publicar como Web App → "Cualquiera"
+       5. Reemplazar GOOGLE_SCRIPT_URL con la URL generada
+  ═══════════════════════════════════════════ -->
+  <div id="modal-overlay" class="modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="modal-box" id="modal-box">
+
+      <!-- Header del modal -->
+      <div class="flex items-center justify-between px-7 pt-7 pb-5" style="border-bottom:1px solid #E2E8F0;">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A);">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1L2 4.5v4.5c0 4 2.8 7.5 7 9 4.2-1.5 7-5 7-9V4.5L9 1z" fill="white"/><path d="M6.5 9l1.8 1.8 3.2-3.2" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-ink text-lg">Solicitar acceso gratuito</h3>
+            <p class="text-xs text-ink/45">Te contactamos en menos de 24 horas</p>
+          </div>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-surface flex items-center justify-center hover:bg-ink/10 transition-colors duration-200" aria-label="Cerrar">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="#374151" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <div id="form-container" class="px-7 py-6">
+        <form id="access-form" onsubmit="handleSubmit(event)">
+
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="form-label">Nombre <span class="text-red-400">*</span></label>
+              <input type="text" name="nombre" class="form-input" placeholder="Dr. Juan García" required/>
+            </div>
+            <div>
+              <label class="form-label">Apellido <span class="text-red-400">*</span></label>
+              <input type="text" name="apellido" class="form-input" placeholder="García López" required/>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Especialidad médica <span class="text-red-400">*</span></label>
+            <select name="especialidad" class="form-input" required>
+              <option value="" disabled selected>Selecciona tu especialidad</option>
+              <option>Ginecología y Obstetricia</option>
+              <option>Odontología</option>
+              <option>Medicina Estética</option>
+              <option>Cirugía Plástica</option>
+              <option>Dermatología</option>
+              <option>Traumatología</option>
+              <option>Cardiología</option>
+              <option>Pediatría</option>
+              <option>Psicología / Psiquiatría</option>
+              <option>Nutrición</option>
+              <option>Fisioterapia</option>
+              <option>Medicina General</option>
+              <option>Oftalmología</option>
+              <option>Otra especialidad</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Correo electrónico <span class="text-red-400">*</span></label>
+            <input type="email" name="email" class="form-input" placeholder="doctor@ejemplo.com" required/>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">WhatsApp <span class="text-red-400">*</span></label>
+            <input type="tel" name="whatsapp" class="form-input" placeholder="+58 414 000 0000" required/>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">País</label>
+            <select name="pais" class="form-input">
+              <option value="" disabled selected>¿Desde dónde nos escribes?</option>
+              <option>Venezuela</option>
+              <option>Colombia</option>
+              <option>México</option>
+              <option>Argentina</option>
+              <option>Perú</option>
+              <option>Chile</option>
+              <option>España</option>
+              <option>Ecuador</option>
+              <option>Otro</option>
+            </select>
+          </div>
+
+          <div class="mb-6">
+            <label class="form-label">¿Cuántos pacientes atiendes por mes? (aproximado)</label>
+            <select name="pacientes_mes" class="form-input">
+              <option value="" disabled selected>Selecciona un rango</option>
+              <option>Menos de 30</option>
+              <option>30 – 100</option>
+              <option>100 – 300</option>
+              <option>Más de 300</option>
+            </select>
+          </div>
+
+          <!-- Error message -->
+          <div id="form-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600"></div>
+
+          <button type="submit" id="submit-btn" class="btn-primary w-full justify-center text-base py-3.5">
+            <span id="btn-text">Solicitar acceso gratuito</span>
+            <svg id="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8H14M9 3.5l5 4.5-5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg id="btn-spinner" class="hidden animate-spin" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a6 6 0 0 1 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+
+          <p class="text-center text-xs text-ink/35 mt-4">
+            Sin tarjeta de crédito · Sin compromiso · Respondemos en &lt;24h
+          </p>
+        </form>
+      </div>
+
+      <!-- Estado de éxito -->
+      <div id="success-state" class="hidden px-7 py-12 flex-col items-center text-center">
+        <div class="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center" style="background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 0 0 12px rgba(34,197,94,0.1);">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14l7 7 11-11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-display text-2xl font-bold text-ink mb-3">¡Solicitud enviada! 🎉</h3>
+        <p class="text-ink/55 leading-relaxed mb-2">Recibimos tu solicitud. Nos pondremos en contacto contigo por <strong class="text-ink">WhatsApp y correo</strong> en menos de 24 horas para configurar tu cuenta.</p>
+        <p class="text-xs text-ink/35 mb-8">Revisa también tu carpeta de spam si no ves el correo.</p>
+        <button onclick="closeModal()" class="btn-outline">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════ -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ─────────────────────────────────────────────
+    // CONFIGURACIÓN GOOGLE SHEETS
+    // ─────────────────────────────────────────────
+    // PASO 1: Ve a https://script.google.com
+    // PASO 2: Crea un nuevo proyecto
+    // PASO 3: Pega este código en el editor:
+    //
+    //   function doPost(e) {
+    //     const sheet = SpreadsheetApp.openById('TU_SPREADSHEET_ID').getActiveSheet();
+    //     const data = JSON.parse(e.postData.contents);
+    //     sheet.appendRow([
+    //       new Date(),
+    //       data.nombre,
+    //       data.apellido,
+    //       data.especialidad,
+    //       data.email,
+    //       data.whatsapp,
+    //       data.pais,
+    //       data.pacientes_mes,
+    //       data.origen
+    //     ]);
+    //     return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
+    //       .setMimeType(ContentService.MimeType.JSON);
+    //   }
+    //
+    // PASO 4: Implementar > Implementación nueva > App web
+    //         Ejecutar como: Yo · Quién tiene acceso: Cualquiera
+    // PASO 5: Copia la URL y pégala aquí abajo:
+    // ─────────────────────────────────────────────
+    const GOOGLE_SCRIPT_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
+    // Ejemplo: 'https://script.google.com/macros/s/AKfycb.../exec'
+    // ─────────────────────────────────────────────
+
+    // Modal
+    function openModal() {
+      document.getElementById('modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Form submission → Google Sheets
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('access-form');
+      const btn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnArrow = document.getElementById('btn-arrow');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const errorDiv = document.getElementById('form-error');
+
+      // Loading state
+      btn.disabled = true;
+      btnText.textContent = 'Enviando...';
+      btnArrow.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+
+      const formData = new FormData(form);
+      const data = {
+        nombre: formData.get('nombre'),
+        apellido: formData.get('apellido'),
+        especialidad: formData.get('especialidad'),
+        email: formData.get('email'),
+        whatsapp: formData.get('whatsapp'),
+        pais: formData.get('pais') || 'No indicado',
+        pacientes_mes: formData.get('pacientes_mes') || 'No indicado',
+        origen: 'ConsentPro - Página Médicos',
+      };
+
+      try {
+        if (GOOGLE_SCRIPT_URL === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') {
+          // Demo mode: show success without actual submit
+          await new Promise(r => setTimeout(r, 1200));
+          showSuccess();
+          return;
+        }
+
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        showSuccess();
+      } catch (err) {
+        btn.disabled = false;
+        btnText.textContent = 'Solicitar acceso gratuito';
+        btnArrow.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
+        errorDiv.textContent = 'Hubo un error al enviar. Escríbenos directamente por WhatsApp.';
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    function showSuccess() {
+      document.getElementById('form-container').classList.add('hidden');
+      const success = document.getElementById('success-state');
+      success.classList.remove('hidden');
+      success.classList.add('flex');
+    }
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 30);
+    }, { passive: true });
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale')
+      .forEach(el => revealObserver.observe(el));
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const content = item.querySelector('.faq-content');
+        const isOpen = item.classList.contains('open');
+        /
