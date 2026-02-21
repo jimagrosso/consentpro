@@ -274,6 +274,19 @@
     const btn = document.getElementById('btn-crear');
     btn.disabled = true; btn.textContent = 'Creando...';
 
+    // ── VERIFICAR LÍMITE FREEMIUM (3 gratis) ─────────────
+    const { data: perfil } = await sb.from('perfiles').select('plan, consentimientos_usados').eq('id', currentUser.id).single();
+    const usados = perfil?.consentimientos_usados || 0;
+    const plan = perfil?.plan || 'gratuito';
+
+    if (plan === 'gratuito' && usados >= 3) {
+      // Redirigir a página de pago
+      mostrarModalPago(usados);
+      btn.disabled = false; btn.textContent = 'Crear y enviar consentimiento';
+      return;
+    }
+    // ─────────────────────────────────────────────────────
+
     const nombre = document.getElementById('pac-nombre').value.trim();
     const telefono = document.getElementById('pac-telefono').value.trim();
     const email = document.getElementById('pac-email').value.trim();
@@ -304,12 +317,24 @@
       return;
     }
 
+    // Incrementar contador de uso
+    await sb.from('perfiles').upsert({ id: currentUser.id, consentimientos_usados: usados + 1 });
+
     consentimientoId = data.id;
     const baseUrl = window.location.origin + window.location.pathname.replace('nuevo.html','');
     const linkFirma = `${baseUrl}firmar.html?t=${token}`;
 
     document.getElementById('link-firma').textContent = linkFirma;
-    document.getElementById('exito-msg').textContent = `Consentimiento para ${nombre} creado exitosamente.`;
+
+    // Mostrar aviso de consentimientos restantes si es plan gratuito
+    const restantes = 3 - (usados + 1);
+    let msgExtra = '';
+    if (plan === 'gratuito' && restantes > 0) {
+      msgExtra = ` · Te quedan ${restantes} consentimiento${restantes > 1 ? 's' : ''} gratuito${restantes > 1 ? 's' : ''}.`;
+    } else if (plan === 'gratuito' && restantes === 0) {
+      msgExtra = ' · Has usado los 3 gratuitos. El próximo requerirá suscripción.';
+    }
+    document.getElementById('exito-msg').textContent = `Consentimiento para ${nombre} creado.${msgExtra}`;
 
     const telLimpio = telefono.replace(/\D/g,'');
     const msgWA = encodeURIComponent(`Hola ${nombre}, le comparto el enlace para firmar su consentimiento informado: ${linkFirma}`);
@@ -321,6 +346,30 @@
     document.getElementById('dot-2').className = 'step-dot done';
     document.getElementById('dot-3').className = 'step-dot done';
     document.getElementById('step-label').textContent = '✓ Consentimiento creado';
+  }
+
+  function mostrarModalPago(usados) {
+    // Crear modal de upgrade
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px';
+    modal.innerHTML = `
+      <div style="background:#111827;border:1px solid rgba(200,162,74,.3);border-radius:20px;padding:36px;max-width:420px;width:100%;text-align:center">
+        <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#C8A24A,#A8832A);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7v7c0 5.5 3.5 10 10 11 6.5-1 10-5.5 10-11V7L12 2z" fill="#0b1120"/><path d="M8 12l3 3 5-6" stroke="#C8A24A" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#f1f5f9;margin-bottom:10px">Prueba gratuita completada</h3>
+        <p style="font-size:.875rem;color:rgba(226,232,240,.5);margin-bottom:6px">Has usado tus <strong style="color:#C8A24A">3 consentimientos gratuitos</strong>.</p>
+        <p style="font-size:.875rem;color:rgba(226,232,240,.5);margin-bottom:28px">Elige tu plan para continuar creando consentimientos ilimitados con validez jurídica.</p>
+        <div style="background:rgba(200,162,74,.07);border:1px solid rgba(200,162,74,.2);border-radius:12px;padding:20px;margin-bottom:20px">
+          <p style="font-size:1.6rem;font-weight:700;color:#C8A24A;margin-bottom:4px">$30 <span style="font-size:.9rem;font-weight:400;color:rgba(226,232,240,.4)">/ 100 consentimientos</span></p>
+          <p style="font-size:.75rem;color:rgba(226,232,240,.4)">Incluye asesoría jurídica + PDF legal</p>
+        </div>
+        <a href="https://consentpro.net/precios.html" style="display:block;padding:14px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;border-radius:12px;text-decoration:none;margin-bottom:12px;font-family:'DM Sans',sans-serif">
+          Ver planes y contratar →
+        </a>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;color:rgba(226,232,240,.35);cursor:pointer;font-size:.8rem;font-family:'DM Sans',sans-serif">Cancelar</button>
+      </div>`;
+    document.body.appendChild(modal);
   }
 
   function copiarLink() {
