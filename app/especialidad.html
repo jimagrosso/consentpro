@@ -200,37 +200,39 @@
     const templates = getTemplatesForSpecialty(especialidad);
     if (!templates || templates.length === 0) return;
 
-    for (const tpl of templates) {
-      // Idempotente: verificar si ya existe este catalog_id para este médico
-      const { data: exists } = await sb
-        .from('plantillas')
-        .select('id, descripcion')
-        .eq('medico_id', userId)
-        .eq('catalog_id', tpl.catalog_id)
-        .single();
+    // Una sola query para ver cuáles ya existen
+    const { data: existentes } = await sb.from('plantillas')
+      .select('id, catalog_id, descripcion')
+      .eq('medico_id', userId)
+      .in('catalog_id', templates.map(t => t.catalog_id));
 
-      if (!exists) {
-        await sb.from('plantillas').insert({
-          medico_id: userId,
-          catalog_id: tpl.catalog_id,
-          titulo: tpl.titulo,
-          tipo_procedimiento: tpl.tipo_procedimiento,
-          nombre_procedimiento: tpl.nombre_procedimiento,
-          descripcion: tpl.descripcion,
-          specialty_tags: tpl.specialty_tags,
-          activa: true,
-          es_catalogo: true,
-          version: tpl.version || 1,
-          locale: tpl.locale || 'es-LATAM'
-        });
-      } else if (!exists.descripcion) {
-        await sb.from('plantillas').update({
-          descripcion: tpl.descripcion,
-          nombre_procedimiento: tpl.nombre_procedimiento,
-          tipo_procedimiento: tpl.tipo_procedimiento
-        }).eq('id', exists.id);
-      }
+    const existenteMap = {};
+    (existentes || []).forEach(e => { existenteMap[e.catalog_id] = e; });
+
+    // Insertar las que no existen — en una sola llamada
+    const porInsertar = templates.filter(t => !existenteMap[t.catalog_id]);
+    if (porInsertar.length > 0) {
+      await sb.from('plantillas').insert(porInsertar.map(tpl => ({
+        medico_id: userId, catalog_id: tpl.catalog_id,
+        titulo: tpl.titulo, tipo_procedimiento: tpl.tipo_procedimiento,
+        nombre_procedimiento: tpl.nombre_procedimiento,
+        descripcion: tpl.descripcion, specialty_tags: tpl.specialty_tags,
+        activa: true, es_catalogo: true,
+        version: tpl.version || 1, locale: tpl.locale || 'es-LATAM'
+      })));
     }
+
+    // Actualizar descripciones vacías — en paralelo
+    const porActualizar = templates.filter(t =>
+      existenteMap[t.catalog_id] && !existenteMap[t.catalog_id].descripcion
+    );
+    await Promise.all(porActualizar.map(tpl =>
+      sb.from('plantillas').update({
+        descripcion: tpl.descripcion,
+        nombre_procedimiento: tpl.nombre_procedimiento,
+        tipo_procedimiento: tpl.tipo_procedimiento
+      }).eq('id', existenteMap[tpl.catalog_id].id)
+    ));
   }
 
   async function guardar() {

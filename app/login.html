@@ -157,14 +157,20 @@
     document.addEventListener('DOMContentLoaded', () => switchTab('registro'));
   }
 
-  // Redirigir si ya está logueado
+  // Redirigir si ya está logueado — guard para evitar doble ejecución
+  let _redirecting = false;
+
   sb.auth.getSession().then(({data:{session}}) => {
-    if (session) checkAndRedirect(session.user);
+    if (session && !_redirecting) {
+      _redirecting = true;
+      checkAndRedirect(session.user);
+    }
   });
 
   // Listener para OAuth callback (Google)
   sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session) {
+    if (event === 'SIGNED_IN' && session && !_redirecting) {
+      _redirecting = true;
       cpShow('Iniciando sesión...', 'Verificando tu perfil');
       await checkAndRedirect(session.user);
     }
@@ -175,16 +181,22 @@
     // Actualizamos el mensaje del loading que ya está activo desde el login
     cpMsg('Verificando tu perfil...', 'Cargando tu información');
 
+    // Timeout de seguridad: si algo cuelga, redirige al dashboard en 8s
+    const safetyTimer = setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 8000);
+
     const { data: perfil } = await sb.from('perfiles')
       .select('especialidad')
       .eq('id', user.id)
       .single();
 
     if (!perfil || !perfil.especialidad) {
+      clearTimeout(safetyTimer);
       cpMsg('Redirigiendo...', 'Configurando tu cuenta');
       window.location.href = 'especialidad.html';
     } else {
-      // Si tiene especialidad pero aún no tiene plantillas → seed silencioso
+      // Si tiene especialidad pero aún no tiene plantillas → seed silencioso (sin bloquear)
       if (typeof seedTemplatesForUser === 'function') {
         const { count } = await sb.from('plantillas')
           .select('id', { count: 'exact', head: true })
@@ -194,6 +206,7 @@
           await seedTemplatesForUser(user.id, perfil.especialidad);
         }
       }
+      clearTimeout(safetyTimer);
       cpMsg('Entrando a tu panel...', '');
       window.location.href = 'dashboard.html';
     }
@@ -204,28 +217,39 @@
     if (typeof getTemplatesForSpecialty !== 'function') return;
     const templates = getTemplatesForSpecialty(especialidad);
     if (!templates || templates.length === 0) return;
-    for (const tpl of templates) {
-      const { data: exists } = await sb.from('plantillas').select('id, descripcion')
-        .eq('medico_id', userId).eq('catalog_id', tpl.catalog_id).single();
-      if (!exists) {
-        // No existe → insertar completa
-        await sb.from('plantillas').insert({
-          medico_id: userId, catalog_id: tpl.catalog_id,
-          titulo: tpl.titulo, tipo_procedimiento: tpl.tipo_procedimiento,
-          nombre_procedimiento: tpl.nombre_procedimiento,
-          descripcion: tpl.descripcion, specialty_tags: tpl.specialty_tags,
-          activa: true, es_catalogo: true,
-          version: tpl.version || 1, locale: tpl.locale || 'es-LATAM'
-        });
-      } else if (!exists.descripcion) {
-        // Existe pero sin descripción → actualizar
-        await sb.from('plantillas').update({
-          descripcion: tpl.descripcion,
-          nombre_procedimiento: tpl.nombre_procedimiento,
-          tipo_procedimiento: tpl.tipo_procedimiento
-        }).eq('id', exists.id);
-      }
+    // Verificar cuáles ya existen — una sola query en vez de N queries
+    const { data: existentes } = await sb.from('plantillas')
+      .select('id, catalog_id, descripcion')
+      .eq('medico_id', userId)
+      .in('catalog_id', templates.map(t => t.catalog_id));
+
+    const existenteMap = {};
+    (existentes || []).forEach(e => { existenteMap[e.catalog_id] = e; });
+
+    // Insertar solo las que no existen — en paralelo
+    const porInsertar = templates.filter(t => !existenteMap[t.catalog_id]);
+    if (porInsertar.length > 0) {
+      await sb.from('plantillas').insert(porInsertar.map(tpl => ({
+        medico_id: userId, catalog_id: tpl.catalog_id,
+        titulo: tpl.titulo, tipo_procedimiento: tpl.tipo_procedimiento,
+        nombre_procedimiento: tpl.nombre_procedimiento,
+        descripcion: tpl.descripcion, specialty_tags: tpl.specialty_tags,
+        activa: true, es_catalogo: true,
+        version: tpl.version || 1, locale: tpl.locale || 'es-LATAM'
+      })));
     }
+
+    // Actualizar descripciones vacías — en paralelo
+    const porActualizar = templates.filter(t =>
+      existenteMap[t.catalog_id] && !existenteMap[t.catalog_id].descripcion
+    );
+    await Promise.all(porActualizar.map(tpl =>
+      sb.from('plantillas').update({
+        descripcion: tpl.descripcion,
+        nombre_procedimiento: tpl.nombre_procedimiento,
+        tipo_procedimiento: tpl.tipo_procedimiento
+      }).eq('id', existenteMap[tpl.catalog_id].id)
+    ));
   }
 
   function switchTab(tab) {
