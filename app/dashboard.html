@@ -90,7 +90,7 @@
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 5v5M5 7.5h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Nuevo consentimiento
     </a>
-    <a href="consentimientos.html" class="nav-item">
+    <a id="tour-mis-consent" href="consentimientos.html" class="nav-item">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="1" width="11" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 7.5h5M5 10h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
       Mis consentimientos
     </a>
@@ -116,14 +116,14 @@
       <p style="font-size:.75rem;color:rgba(226,232,240,.4);margin-bottom:4px" id="greeting">Buenos días</p>
       <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#f1f5f9" id="header-nombre">Cargando...</h1>
     </div>
-    <a href="nuevo.html" class="btn-gold">
+    <a id="tour-btn-nuevo" href="nuevo.html" class="btn-gold">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       Nuevo consentimiento
     </a>
   </div>
 
   <!-- Stats -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div id="tour-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     <div class="stat-card">
       <p style="font-size:.7rem;font-weight:700;color:rgba(226,232,240,.4);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px">Total</p>
       <p id="stat-total" style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:#f1f5f9">—</p>
@@ -176,7 +176,7 @@
   </div>
 
   <!-- Tabla recientes -->
-  <div style="background:rgba(21,31,53,.6);border:1px solid var(--border);border-radius:18px;overflow:hidden">
+  <div id="tour-tabla" style="background:rgba(21,31,53,.6);border:1px solid var(--border);border-radius:18px;overflow:hidden">
     <div class="flex items-center justify-between px-6 py-4" style="border-bottom:1px solid var(--border)">
       <h2 style="font-size:.95rem;font-weight:700;color:#f1f5f9">Consentimientos recientes</h2>
       <a href="consentimientos.html" style="font-size:.78rem;color:var(--gold);text-decoration:none;font-weight:600">Ver todos →</a>
@@ -314,6 +314,13 @@
     // ──────────────────────────────────────────────────────────
 
     cpHide();
+
+    // ── Disparar tour si es la primera vez ──────────────────
+    if (window._iniciarTourSiCorresponde) {
+      window._iniciarTourSiCorresponde(user.id);
+    }
+    // ────────────────────────────────────────────────────────
+
     // Tabla
     if (lista.length === 0) {
       document.getElementById('tabla-body').style.display = 'none';
@@ -670,6 +677,199 @@
     </div>
   </div>
 </div>
+
+
+<!-- ══════════════════════════════════════════════
+     TOUR GUIADO — Driver.js (solo primera vez)
+══════════════════════════════════════════════ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.iife.js"></script>
+<style>
+  /* ── Personalización del tour al estilo ConsentPro ── */
+  .driver-popover {
+    background: #111827 !important;
+    border: 1px solid rgba(200,162,74,.35) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(200,162,74,.1) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    padding: 24px !important;
+    max-width: 320px !important;
+  }
+  .driver-popover-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #f1f5f9 !important;
+    margin-bottom: 10px !important;
+  }
+  .driver-popover-description {
+    font-size: .84rem !important;
+    color: rgba(226,232,240,.65) !important;
+    line-height: 1.6 !important;
+  }
+  .driver-popover-progress-text {
+    font-size: .7rem !important;
+    color: rgba(200,162,74,.7) !important;
+    font-weight: 600 !important;
+  }
+  /* Botones */
+  .driver-popover-footer button {
+    border-radius: 10px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: .8rem !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all .2s !important;
+  }
+  .driver-popover-next-btn {
+    background: linear-gradient(135deg,#C8A24A,#A8832A) !important;
+    color: #0b1120 !important;
+  }
+  .driver-popover-next-btn:hover {
+    opacity: .9 !important;
+    transform: translateY(-1px) !important;
+  }
+  .driver-popover-prev-btn {
+    background: rgba(255,255,255,.06) !important;
+    color: rgba(226,232,240,.7) !important;
+    border: 1px solid rgba(255,255,255,.1) !important;
+  }
+  .driver-popover-prev-btn:hover {
+    background: rgba(255,255,255,.1) !important;
+    color: #f1f5f9 !important;
+  }
+  .driver-popover-close-btn {
+    color: rgba(226,232,240,.4) !important;
+    font-size: 1.1rem !important;
+    transition: color .2s !important;
+  }
+  .driver-popover-close-btn:hover { color: #f1f5f9 !important; }
+  /* Flecha del popover */
+  .driver-popover-arrow-side-left.driver-popover-arrow { border-right-color: #111827 !important; }
+  .driver-popover-arrow-side-right.driver-popover-arrow { border-left-color: #111827 !important; }
+  .driver-popover-arrow-side-top.driver-popover-arrow { border-bottom-color: #111827 !important; }
+  .driver-popover-arrow-side-bottom.driver-popover-arrow { border-top-color: #111827 !important; }
+  /* Overlay */
+  .driver-overlay { background: rgba(5,8,18,.85) !important; }
+  /* Resaltado dorado */
+  .driver-active-element {
+    box-shadow: 0 0 0 4px rgba(200,162,74,.4), 0 0 30px rgba(200,162,74,.15) !important;
+    border-radius: 14px !important;
+  }
+  /* Badge de paso en el título */
+  .cp-tour-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .cp-tour-step-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold, #C8A24A);
+  }
+</style>
+
+<script>
+(function initTour() {
+  // ── Solo ejecutar cuando el DOM + datos están listos ────
+  window._iniciarTourSiCorresponde = async function(userId) {
+    const KEY = 'cp_tour_done_' + userId;
+    if (localStorage.getItem(KEY)) return; // Ya lo vio
+
+    // Espera breve para que el dashboard cargue visualmente
+    await new Promise(r => setTimeout(r, 900));
+
+    const { driver } = window.driver || {};
+    if (!driver) return;
+
+    const driverObj = driver({
+      animate: true,
+      smoothScroll: true,
+      allowClose: true,
+      overlayOpacity: 0.82,
+      stagePadding: 10,
+      stageRadius: 14,
+      doneBtnText: '¡Listo! 🎉',
+      nextBtnText: 'Siguiente →',
+      prevBtnText: '← Atrás',
+      showProgress: true,
+      progressText: 'Paso {{current}} de {{total}}',
+      onDestroyStarted: () => {
+        localStorage.setItem(KEY, 'true');
+        driverObj.destroy();
+      },
+      steps: [
+        {
+          // Paso 1 — Bienvenida: apunta al header del panel
+          element: '#header-nombre',
+          popover: {
+            title: '👋 Bienvenido a ConsentPro',
+            description: 'Este es tu panel principal. Desde aquí controlas todo: consentimientos, estadísticas y acciones rápidas. Te mostramos lo esencial en 5 pasos.',
+            side: 'bottom',
+            align: 'start',
+          }
+        },
+        {
+          // Paso 2 — Crear consentimiento
+          element: '#tour-btn-nuevo',
+          popover: {
+            title: '📋 Crear un consentimiento',
+            description: 'Haz clic aquí para generar un nuevo formulario. Incluye firma digital, foto de verificación y se envía al paciente por WhatsApp o email.',
+            side: 'bottom',
+            align: 'end',
+          }
+        },
+        {
+          // Paso 3 — Estadísticas
+          element: '#tour-stats',
+          popover: {
+            title: '📊 Tus métricas en tiempo real',
+            description: 'Aquí verás cuántos consentimientos has generado, cuántos están firmados, pendientes y cuántos creaste este mes.',
+            side: 'bottom',
+            align: 'start',
+          }
+        },
+        {
+          // Paso 4 — Consentimientos disponibles
+          element: '#card-disponibles',
+          popover: {
+            title: '⚡ Consentimientos disponibles',
+            description: 'Esta barra te indica cuántos consentimientos te quedan según tu plan. Cuando se agoten, podrás renovar desde la sección de precios.',
+            side: 'top',
+            align: 'start',
+          }
+        },
+        {
+          // Paso 5 — Tabla de consentimientos
+          element: '#tour-tabla',
+          popover: {
+            title: '📁 Tus consentimientos guardados',
+            description: 'Aquí aparecen los más recientes. Haz clic en cualquiera para ver el detalle, descargar el PDF firmado o reenviar al paciente.',
+            side: 'top',
+            align: 'start',
+          }
+        },
+        {
+          // Paso 6 — Mis consentimientos en sidebar
+          element: '#tour-mis-consent',
+          popover: {
+            title: '🗂 Historial completo',
+            description: 'En "Mis consentimientos" encuentras todos tus formularios con búsqueda, filtros por estado y paginación. Accede cuando quieras.',
+            side: 'right',
+            align: 'start',
+          }
+        },
+      ]
+    });
+
+    driverObj.drive();
+    localStorage.setItem(KEY, 'true');
+  };
+})();
+</script>
 
 </body>
 </html>
