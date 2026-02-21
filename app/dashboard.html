@@ -28,6 +28,31 @@
     .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:400px 100%;animation:shimmer 1.5s infinite;border-radius:8px}
     @keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
     @media(max-width:768px){.sidebar{width:100%;min-height:auto;position:relative;flex-direction:row;flex-wrap:wrap;padding:16px}.main{margin-left:0;padding:16px}}
+
+    /* ── MODAL DETALLE ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+    .modal-box{background:#111827;border:1px solid rgba(200,162,74,.25);border-radius:20px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;position:relative}
+    .modal-box::-webkit-scrollbar{width:4px}
+    .modal-box::-webkit-scrollbar-thumb{background:rgba(200,162,74,.3);border-radius:99px}
+    .modal-header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#111827;z-index:2;border-radius:20px 20px 0 0}
+    .modal-body{padding:24px}
+    .modal-close{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(226,232,240,.5);transition:.2s;flex-shrink:0}
+    .modal-close:hover{background:rgba(255,255,255,.1);color:#e2e8f0}
+    .detail-section{margin-bottom:20px}
+    .detail-label{font-size:.62rem;font-weight:700;color:rgba(200,162,74,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+    .detail-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem}
+    .detail-row:last-child{border-bottom:none}
+    .detail-row span:first-child{color:rgba(226,232,240,.4)}
+    .detail-row span:last-child{color:#f1f5f9;font-weight:500;text-align:right;max-width:60%}
+    .img-box{border-radius:12px;overflow:hidden;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.07)}
+    .img-box img{width:100%;height:100%;object-fit:cover;display:block}
+    .img-empty{padding:30px;color:rgba(226,232,240,.2);font-size:.78rem;text-align:center}
+    .table-row{cursor:pointer}
+    .btn-detail{padding:6px 14px;border-radius:8px;background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.25);color:var(--gold);font-size:.72rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s}
+    .btn-detail:hover{background:rgba(200,162,74,.18)}
+    .btn-dl-pdf{width:100%;padding:13px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.88rem;border-radius:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:16px;transition:.3s}
+    .btn-dl-pdf:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,162,74,.35)}
+    .btn-dl-pdf:disabled{opacity:.5;cursor:not-allowed;transform:none}
   </style>
 </head>
 <body>
@@ -196,14 +221,18 @@
         enviado: '<span class="badge badge-enviado">Enviado</span>',
         firmado: '<span class="badge badge-firmado">Firmado</span>'
       };
+      // Guardar lista global para el modal
+      window._consentList = lista;
+
       document.getElementById('tabla-body').innerHTML = recientes.map(c => `
-        <div class="table-row px-6 py-4 flex items-center justify-between">
+        <div class="table-row px-6 py-4 flex items-center justify-between" onclick="abrirModal('${c.id}')" title="Ver detalle">
           <div>
             <p style="font-size:.875rem;font-weight:600;color:#f1f5f9;margin-bottom:3px">${c.paciente_nombre}</p>
             <p style="font-size:.75rem;color:rgba(226,232,240,.4)">${c.tipo_procedimiento || 'Sin procedimiento'} · ${formatDate(c.created_at)}</p>
           </div>
           <div class="flex items-center gap-3">
             ${badges[c.estado] || badges.pendiente}
+            <button class="btn-detail" onclick="event.stopPropagation();abrirModal('${c.id}')">Ver →</button>
           </div>
         </div>
       `).join('');
@@ -219,7 +248,282 @@
     window.location.href = 'login.html';
   }
 
+  // ── MODAL DETALLE ─────────────────────────────────────
+  let _modalData = null;
+
+  function abrirModal(id) {
+    const c = (window._consentList || []).find(x => x.id === id);
+    if (!c) return;
+    _modalData = c;
+
+    // Nombre y badge
+    document.getElementById('modal-paciente-nombre').textContent = c.paciente_nombre || '—';
+    const badgeMap = {
+      firmado: '<span class="badge badge-firmado">✓ Firmado</span>',
+      enviado: '<span class="badge badge-enviado">Enviado · pendiente de firma</span>',
+      pendiente: '<span class="badge badge-pendiente">Pendiente</span>'
+    };
+    document.getElementById('modal-badge').outerHTML = (badgeMap[c.estado] || badgeMap.pendiente).replace('id=""','').replace('<span','<span id="modal-badge"');
+    document.getElementById('modal-fecha-firma').textContent = c.firmado_at
+      ? 'Firmado el ' + new Date(c.firmado_at).toLocaleString('es-ES', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+      : '';
+
+    // Procedimiento
+    document.getElementById('modal-proc-tipo').textContent = c.tipo_procedimiento || '';
+    document.getElementById('modal-proc-nombre').textContent = c.nombre_procedimiento || c.tipo_procedimiento || '—';
+    document.getElementById('modal-proc-desc').textContent = c.descripcion_procedimiento || 'Sin descripción adicional.';
+
+    // Datos paciente
+    document.getElementById('modal-nombre').textContent = c.paciente_nombre || '—';
+    document.getElementById('modal-cedula').textContent = c.paciente_cedula || 'No proporcionada';
+    document.getElementById('modal-email').textContent = c.paciente_email || 'No proporcionado';
+    document.getElementById('modal-telefono').textContent = c.paciente_telefono || 'No proporcionado';
+    const metodos = { whatsapp: 'WhatsApp', email: 'Email', tablet: 'En sala (tablet)' };
+    document.getElementById('modal-metodo').textContent = metodos[c.metodo_envio] || c.metodo_envio || '—';
+    document.getElementById('modal-created').textContent = formatDate(c.created_at);
+
+    // Foto
+    const fotoBox = document.getElementById('modal-foto-box');
+    if (c.foto_paciente) {
+      fotoBox.innerHTML = `<img src="${c.foto_paciente}" alt="Foto del paciente" style="object-fit:cover;width:100%;height:100%"/>`;
+    } else {
+      fotoBox.innerHTML = '<p class="img-empty">Sin foto</p>';
+    }
+
+    // Firma
+    const firmaBox = document.getElementById('modal-firma-box');
+    if (c.firma_data) {
+      firmaBox.innerHTML = `<img src="${c.firma_data}" alt="Firma digital" style="object-fit:contain;width:100%;height:100%;padding:8px"/>`;
+    } else {
+      firmaBox.innerHTML = '<p class="img-empty" style="color:rgba(15,23,42,.3)">Sin firma</p>';
+    }
+
+    // Hash SHA-256
+    if (c.hash_sha256) {
+      document.getElementById('modal-hash-section').style.display = 'block';
+      document.getElementById('modal-hash').textContent = c.hash_sha256;
+    } else {
+      document.getElementById('modal-hash-section').style.display = 'none';
+    }
+
+    // Link de firma
+    const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', '');
+    const link = `${baseUrl}firmar.html?t=${c.token_firma}`;
+    document.getElementById('modal-link-input').value = link;
+    // Ocultar link si ya está firmado
+    document.getElementById('modal-link-section').style.display = c.estado === 'firmado' ? 'none' : 'block';
+
+    // Mostrar modal
+    document.getElementById('modal-detalle').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function cerrarModal(e) {
+    if (e && e.target !== document.getElementById('modal-detalle')) return;
+    document.getElementById('modal-detalle').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function copiarLinkModal() {
+    const val = document.getElementById('modal-link-input').value;
+    navigator.clipboard.writeText(val).then(() => {
+      const btn = event.target;
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = 'Copiar', 2000);
+    });
+  }
+
+  async function descargarPDFModal() {
+    if (!_modalData) return;
+    const btn = document.getElementById('btn-modal-pdf');
+    btn.disabled = true; btn.textContent = 'Generando PDF...';
+
+    const c = _modalData;
+    // Cargar jsPDF dinámicamente si no está cargado
+    if (!window.jspdf) {
+      await new Promise(res => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = res; document.head.appendChild(s);
+      });
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, mg = 20;
+
+    // Fondo
+    doc.setFillColor(15, 23, 42); doc.rect(0, 0, W, 297, 'F');
+    // Header
+    doc.setFillColor(200, 162, 74); doc.rect(0, 0, W, 28, 'F');
+    doc.setTextColor(15, 23, 42); doc.setFontSize(16); doc.setFont('helvetica', 'bold');
+    doc.text('ConsentPro', mg, 12);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+    doc.text('Plataforma Internacional de Consentimiento Digital', mg, 18);
+    doc.setFontSize(7); doc.text('Documento con validez jurídica · SHA-256 verificado', mg, 23);
+
+    // Título
+    doc.setTextColor(200, 162, 74); doc.setFontSize(14); doc.setFont('helvetica', 'bold');
+    doc.text('CONSENTIMIENTO INFORMADO', mg, 40);
+    doc.setDrawColor(200, 162, 74); doc.setLineWidth(0.4); doc.line(mg, 43, W - mg, 43);
+
+    let y = 52;
+    // Procedimiento
+    doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text('PROCEDIMIENTO', mg, y); y += 6;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(241, 245, 249);
+    doc.text(c.nombre_procedimiento || c.tipo_procedimiento || '—', mg, y); y += 5;
+    if (c.descripcion_procedimiento) {
+      doc.setFontSize(8); doc.setTextColor(148, 163, 184);
+      const dl = doc.splitTextToSize(c.descripcion_procedimiento, W - mg*2);
+      doc.text(dl, mg, y); y += dl.length * 4 + 4;
+    }
+
+    // Datos paciente
+    y += 4; doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
+    doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text('DATOS DEL PACIENTE', mg, y); y += 7;
+    doc.setFont('helvetica', 'normal');
+    const campos = [
+      ['Nombre completo', c.paciente_nombre],
+      ['Cédula / ID', c.paciente_cedula || 'No proporcionada'],
+      ['Email', c.paciente_email || 'No proporcionado'],
+      ['Teléfono', c.paciente_telefono || 'No proporcionado'],
+      ['Estado', c.estado === 'firmado' ? 'FIRMADO' : 'Pendiente de firma'],
+      ['Fecha de firma', c.firmado_at ? new Date(c.firmado_at).toLocaleString('es-ES') : 'No firmado aún'],
+    ];
+    campos.forEach(([label, val]) => {
+      doc.setFontSize(7); doc.setTextColor(100, 116, 139); doc.text(label, mg, y);
+      doc.setFontSize(9); doc.setTextColor(226, 232, 240); doc.text(String(val || '—'), mg + 50, y);
+      y += 7;
+    });
+
+    // Firma
+    if (c.firma_data) {
+      y += 4; doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
+      doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+      doc.text('FIRMA DIGITAL', mg, y); y += 7;
+      try { doc.addImage(c.firma_data, 'PNG', mg, y, 80, 28); } catch(e){}
+      // Foto al lado
+      if (c.foto_paciente) {
+        doc.setTextColor(200, 162, 74); doc.setFontSize(8);
+        doc.text('FOTO DE VERIFICACIÓN', mg + 90, y - 7);
+        try { doc.addImage(c.foto_paciente, 'JPEG', mg + 90, y, 40, 30); } catch(e){}
+      }
+      y += 36;
+    }
+
+    // Hash
+    if (c.hash_sha256) {
+      doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
+      doc.setFontSize(7); doc.setTextColor(100, 116, 139);
+      doc.text('Hash SHA-256: ' + c.hash_sha256.substring(0,48) + '...', mg, y);
+    }
+
+    // Footer
+    doc.setDrawColor(200, 162, 74); doc.setLineWidth(0.3); doc.line(mg, 275, W-mg, 275);
+    doc.setFontSize(6.5); doc.setTextColor(100, 116, 139); doc.setFont('helvetica', 'normal');
+    doc.text('Generado por ConsentPro · consentpro.net', mg, 281);
+
+    const nombre = (c.paciente_nombre || 'paciente').replace(/\s+/g,'_');
+    doc.save(`ConsentPro_${nombre}_${new Date().toISOString().split('T')[0]}.pdf`);
+
+    btn.disabled = false; btn.textContent = '⬇ Descargar PDF del consentimiento';
+  }
+
+  // Cerrar modal con ESC
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') cerrarModal(); });
+
   init();
 </script>
+
+<!-- ══════════════════════════════════
+     MODAL DETALLE CONSENTIMIENTO
+══════════════════════════════════ -->
+<div id="modal-detalle" class="modal-overlay" style="display:none" onclick="cerrarModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <p style="font-size:.62rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Detalle del consentimiento</p>
+        <p id="modal-paciente-nombre" style="font-size:1rem;font-weight:700;color:#f1f5f9;font-family:'Playfair Display',serif">—</p>
+      </div>
+      <button class="modal-close" onclick="cerrarModal()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Estado -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <span id="modal-badge" class="badge">—</span>
+        <span id="modal-fecha-firma" style="font-size:.75rem;color:rgba(226,232,240,.35)"></span>
+      </div>
+
+      <!-- Procedimiento -->
+      <div class="detail-section">
+        <p class="detail-label">Procedimiento</p>
+        <div style="background:rgba(200,162,74,.05);border:1px solid rgba(200,162,74,.15);border-radius:10px;padding:14px;margin-bottom:4px">
+          <p id="modal-proc-tipo" style="font-size:.65rem;font-weight:700;color:rgba(200,162,74,.7);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px"></p>
+          <p id="modal-proc-nombre" style="font-size:.95rem;font-weight:600;color:#f1f5f9;margin-bottom:6px"></p>
+          <p id="modal-proc-desc" style="font-size:.78rem;color:rgba(226,232,240,.5);line-height:1.5"></p>
+        </div>
+      </div>
+
+      <!-- Datos paciente -->
+      <div class="detail-section">
+        <p class="detail-label">Datos del paciente</p>
+        <div class="detail-row"><span>Nombre</span><span id="modal-nombre">—</span></div>
+        <div class="detail-row"><span>Cédula / ID</span><span id="modal-cedula">—</span></div>
+        <div class="detail-row"><span>Email</span><span id="modal-email">—</span></div>
+        <div class="detail-row"><span>Teléfono</span><span id="modal-telefono">—</span></div>
+        <div class="detail-row"><span>Método de envío</span><span id="modal-metodo">—</span></div>
+        <div class="detail-row"><span>Creado</span><span id="modal-created">—</span></div>
+      </div>
+
+      <!-- Foto + Firma lado a lado -->
+      <div class="detail-section">
+        <p class="detail-label">Verificación biométrica</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <p style="font-size:.68rem;color:rgba(226,232,240,.3);margin-bottom:6px;text-align:center">Foto del paciente</p>
+            <div class="img-box" style="height:130px" id="modal-foto-box">
+              <p class="img-empty">Sin foto</p>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:.68rem;color:rgba(226,232,240,.3);margin-bottom:6px;text-align:center">Firma digital</p>
+            <div class="img-box" style="height:130px;background:#f8fafc" id="modal-firma-box">
+              <p class="img-empty" style="color:rgba(15,23,42,.3)">Sin firma</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hash SHA-256 -->
+      <div class="detail-section" id="modal-hash-section" style="display:none">
+        <p class="detail-label">Sellado de integridad</p>
+        <div style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.15);border-radius:10px;padding:12px">
+          <p style="font-size:.65rem;color:rgba(34,197,94,.6);margin-bottom:4px">✓ Documento sellado SHA-256</p>
+          <p id="modal-hash" style="font-size:.65rem;color:rgba(226,232,240,.3);word-break:break-all;font-family:monospace"></p>
+        </div>
+      </div>
+
+      <!-- Link de firma -->
+      <div class="detail-section" id="modal-link-section">
+        <p class="detail-label">Enlace de firma</p>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input id="modal-link-input" readonly style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:9px 12px;font-size:.73rem;color:rgba(226,232,240,.5);font-family:monospace;outline:none"/>
+          <button onclick="copiarLinkModal()" style="padding:9px 14px;border-radius:8px;background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.25);color:var(--gold);font-size:.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">Copiar</button>
+        </div>
+      </div>
+
+      <!-- Descargar PDF -->
+      <button class="btn-dl-pdf" id="btn-modal-pdf" onclick="descargarPDFModal()">
+        ⬇ Descargar PDF del consentimiento
+      </button>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
