@@ -340,24 +340,51 @@
 
   // ─── CÁMARA ─────────────────────────────────────
   async function activarCamara() {
+    const btnActivar = document.getElementById('btn-activar-cam');
+    btnActivar.textContent = '⏳ Activando...';
+    btnActivar.disabled = true;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 480 }, audio: false });
+      // Intentar cámara frontal primero, si falla usar cualquier cámara
+      let constraints = { video: { facingMode: 'user' }, audio: false };
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch(e1) {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      }
       const video = document.getElementById('video');
       video.srcObject = stream;
+      // Forzar play (necesario en iOS Safari y algunos Android)
+      await video.play().catch(() => {});
+      // Esperar a que el video tenga dimensiones reales
+      await new Promise(resolve => {
+        if (video.readyState >= 2 && video.videoWidth > 0) { resolve(); return; }
+        const check = () => {
+          if (video.videoWidth > 0) { resolve(); }
+          else { requestAnimationFrame(check); }
+        };
+        video.onloadedmetadata = check;
+        video.oncanplay = check;
+        requestAnimationFrame(check);
+      });
       document.getElementById('cam-overlay').style.display = 'none';
       document.getElementById('btn-activar-cam').style.display = 'none';
       document.getElementById('btn-tomar-foto').style.display = 'block';
     } catch(e) {
-      alert('No se pudo acceder a la cámara. Por favor permite el acceso en tu navegador.');
+      btnActivar.textContent = '📷 Activar cámara';
+      btnActivar.disabled = false;
+      alert('No se pudo acceder a la cámara: ' + (e.message || e) + '\n\nPermite el acceso en tu navegador y vuelve a intentar.');
     }
   }
 
   function tomarFoto() {
     const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas-photo');
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
-    canvas.getContext('2d').drawImage(video, 0, 0);
+    const w = video.videoWidth || 640;
+    const h = video.videoHeight || 480;
+    // Crear canvas off-screen (no depender del hidden canvas del DOM)
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    canvas.getContext('2d').drawImage(video, 0, 0, w, h);
     fotoDataURL = canvas.toDataURL('image/jpeg', 0.85);
 
     // Detener cámara
