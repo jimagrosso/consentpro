@@ -541,6 +541,24 @@
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
   }
 
+  // ─── Normalizar imagen (elimina EXIF, garantiza JPEG limpio) ───
+  function normalizarImagen(dataURL, maxW, maxH) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        res(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = rej;
+      img.src = dataURL;
+    });
+  }
+
   // ─── DESCARGAR PDF ───────────────────────────────
   async function descargarPDF() {
     const btn = document.getElementById('btn-descargar-pdf');
@@ -664,10 +682,13 @@
     }
     if (necesitaFoto) {
       const xFoto = necesitaFirma ? mg + 90 : mg;
-      const yFoto = necesitaFirma ? y : y;
       doc.setFontSize(7); doc.setTextColor(100, 116, 139);
-      doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', xFoto, necesitaFirma ? y : y); 
-      try { doc.addImage(fotoDataURL, 'JPEG', xFoto, necesitaFirma ? y + 5 : y + 5, 40, 30); } catch(e) {}
+      doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', xFoto, y);
+      try {
+        // Normalizar foto a través de canvas para eliminar EXIF y garantizar compatibilidad
+        const fotoNorm = await normalizarImagen(fotoDataURL, 300, 300);
+        doc.addImage(fotoNorm, 'JPEG', xFoto, y + 5, 40, 30);
+      } catch(e) { console.warn('Foto no insertada:', e); }
     }
     y += 40;
 

@@ -431,9 +431,9 @@
 
     // Foto
     const fw = document.getElementById('modal-foto-wrap');
-    if (c.foto_paciente_url) {
+    if (c.foto_paciente) {
       fw.style.display = 'block';
-      document.getElementById('modal-foto').src = c.foto_paciente_url;
+      document.getElementById('modal-foto').src = c.foto_paciente;
     } else { fw.style.display = 'none'; }
 
     // Link firma
@@ -546,8 +546,8 @@
       if (d.firma_hash) campo('Hash de integridad (SHA-256)', d.firma_hash);
 
       // ── FIRMA + FOTO — asegurar que quepan juntas ──────────
-      const tieneFirma = !!d.firma_imagen_base64;
-      const tieneFoto  = !!d.foto_paciente_url;
+      const tieneFirma = !!d.firma_data;
+      const tieneFoto  = !!d.foto_paciente;
       const alturaBloque = (tieneFirma ? 42 : 0) + (tieneFoto ? 42 : 0) + 16;
       if (y + alturaBloque > SAFE) nuevaPagina();
 
@@ -559,21 +559,19 @@
         try {
           doc.setFontSize(6.5); doc.setTextColor(100,116,139);
           doc.text('FIRMA DIGITAL DEL PACIENTE', mg, y); nl(4);
-          doc.addImage(d.firma_imagen_base64,'PNG', mg, y, 70, 28);
+          doc.addImage(d.firma_data,'PNG', mg, y, 70, 28);
           if (tieneFoto) {
             // Foto al lado derecho
-            const img = await loadImg(d.foto_paciente_url);
             doc.text('FOTO DE VERIFICACIÓN', mg+80, y-4);
-            doc.addImage(img,'JPEG', mg+80, y, 30, 30);
+            doc.addImage(d.foto_paciente,'JPEG', mg+80, y, 30, 30);
           }
           nl(36);
         } catch(e){}
       } else if (tieneFoto) {
         try {
-          const img = await loadImg(d.foto_paciente_url);
           doc.setFontSize(6.5); doc.setTextColor(100,116,139);
           doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', mg, y); nl(4);
-          doc.addImage(img,'JPEG', mg, y, 30, 30);
+          doc.addImage(d.foto_paciente,'JPEG', mg, y, 30, 30);
           nl(36);
         } catch(e){}
       }
