@@ -503,11 +503,13 @@
     #hero-content { transition: transform 0.1s linear; }
 
     /* ── Mobile nav ── */
+    .nav-hamburger { display: flex; }
+    @media(min-width:768px) { .nav-hamburger { display: none !important; } }
     #mobile-menu {
-      display: none;
+      display: none !important;
     }
     #mobile-menu.open {
-      display: block;
+      display: block !important;
       animation: menuSlideDown 0.25s ease;
     }
     @keyframes menuSlideDown {
@@ -610,7 +612,7 @@
         </div>
 
         <!-- Mobile hamburger -->
-        <button onclick="window._cpMenuToggle()" style="background:none;border:none;cursor:pointer;padding:10px;margin:-10px;display:flex;align-items:center" class="md:hidden" aria-label="Menú">
+        <button onclick="window._cpMenuToggle()" style="background:none;border:none;cursor:pointer;padding:10px;margin:-10px;display:flex;align-items:center" class="nav-hamburger" aria-label="Menú">
           <svg id="icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/></svg>
           <svg id="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none"><path d="M5 5l14 14M19 5L5 19" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
@@ -618,7 +620,7 @@
     </div>
 
     <!-- Mobile menu -->
-    <div id="mobile-menu" class="md:hidden absolute top-full left-0 right-0 px-6 py-5" style="background:rgba(11,17,32,.98);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px)">
+    <div id="mobile-menu" class="absolute top-full left-0 right-0 px-6 py-5" style="background:rgba(11,17,32,.98);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px)">
       <div class="flex flex-col gap-1">
         <a href="producto.html" style="padding:12px 4px;font-size:.9rem;color:rgba(226,232,240,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05);display:block;transition:.2s" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='rgba(226,232,240,.7)'">Producto</a>
         <a href="soluciones/medicos.html" style="padding:12px 4px;font-size:.9rem;color:rgba(226,232,240,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05);display:block;transition:.2s" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='rgba(226,232,240,.7)'">Soluciones — Médicos y Clínicas</a>
@@ -1738,147 +1740,94 @@
        - Scale hover effect
   ═══════════════════════════════════════════════════════ -->
   <section id="precios" class="py-28 bg-white" aria-labelledby="pricing-title">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
 
       <div class="text-center mb-16">
         <div class="gold-divider mx-auto mb-5 reveal"></div>
-        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Precios</p>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Planes Prepago</p>
         <h2 id="pricing-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
-          <!-- [i18n] -->
-          Precios simples y transparentes.
+          Paga una vez.<br/>Usa cuando quieras.
         </h2>
-        <p class="text-ink/55 text-lg max-w-xl mx-auto mb-8 reveal delay-3">
-          <!-- [i18n] -->
-          Sin cargos ocultos. 3 consentimientos gratuitos para empezar — sin tarjeta de crédito.
+        <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
+          Sin suscripciones. Sin sorpresas. Empieza con 3 gratis, compra más cuando los necesites.
         </p>
-
-        <!-- Billing toggle -->
-        <div class="flex items-center justify-center gap-3 reveal delay-4">
-          <!-- [i18n] billing labels -->
-          <span id="toggle-monthly" class="text-sm font-medium text-ink">Mensual</span>
-          <div class="toggle-track" id="billing-toggle" role="switch" aria-checked="false" aria-label="Toggle annual billing" tabindex="0">
-            <div class="toggle-thumb"></div>
-          </div>
-          <span id="toggle-annual" class="text-sm font-medium text-ink/50">Anual
-            <span class="ml-1 text-xs bg-gold/15 text-gold-dark px-2 py-0.5 rounded-full font-semibold">Ahorra 20%</span>
-          </span>
-        </div>
       </div>
 
       <!-- Pricing cards -->
-      <div class="grid md:grid-cols-3 gap-6 items-center max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-6 items-stretch max-w-5xl mx-auto">
 
-        <!-- Starter -->
-        <div class="pricing-card reveal delay-1">
-          <div class="mb-6">
-            <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-2">Starter</p>
+        <!-- Esencial -->
+        <div class="pricing-card reveal delay-1" style="display:flex;flex-direction:column">
+          <div style="flex:1">
+            <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-2">Esencial</p>
             <div class="flex items-end gap-1 mb-1">
-              <span class="font-display text-4xl font-bold text-ink">€49</span>
-              <span class="text-ink/40 text-sm mb-1">/ mo</span>
+              <span class="font-display text-4xl font-bold text-ink">$12</span>
+              <span class="text-ink/40 text-sm mb-1">USD</span>
             </div>
-            <!-- [i18n] -->
-            <p class="text-xs text-ink/50">Hasta 3 usuarios · 5.000 consentimientos/mes</p>
+            <p class="text-xs text-ink/50 mb-6">30 consentimientos · Pago único</p>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>30 consentimientos digitales</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>Firma digital + foto biométrica</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>Sellado SHA-256</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>PDF con valor jurídico</li>
+              <li class="flex items-start gap-2 text-sm text-ink/30"><span class="mt-0.5 text-ink/25">—</span>Asesoría jurídica</li>
+              <li class="flex items-start gap-2 text-sm text-ink/30"><span class="mt-0.5 text-ink/25">—</span>Soporte prioritario</li>
+            </ul>
           </div>
-          <a href="#" class="btn-outline w-full text-center text-sm block mb-8">Start free trial</a>
-          <ul class="space-y-3">
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Digital consent collection
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Plantillas GDPR y CCPA
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Registro de auditoría básico
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Soporte por correo electrónico
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/30">
-              <span class="mt-0.5 text-ink/25">—</span>Acceso a API
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/30">
-              <span class="mt-0.5 text-ink/25">—</span>Marca blanca
-            </li>
-          </ul>
+          <a href="https://buy.stripe.com/aFa8wQgfZ56Rgu85Wy5c40o" target="_blank" class="btn-outline w-full text-center text-sm block">Comprar $12</a>
         </div>
 
-        <!-- Professional — Featured -->
-        <div class="pricing-card featured reveal delay-2">
-          <!-- Top badge -->
+        <!-- Prepago 100 — Featured -->
+        <div class="pricing-card featured reveal delay-2" style="display:flex;flex-direction:column">
           <div class="absolute -top-3 left-1/2 -translate-x-1/2">
             <span class="bg-ink text-white text-xs font-semibold px-4 py-1.5 rounded-full tracking-wide shadow-deep">Más popular</span>
           </div>
-          <div class="mb-6 pt-4">
-            <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-2">Professional</p>
+          <div style="flex:1">
+            <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-2 pt-4">Prepago 100</p>
             <div class="flex items-end gap-1 mb-1">
-              <span class="font-display text-4xl font-bold text-ink">€149</span>
-              <span class="text-ink/40 text-sm mb-1">/ mo</span>
+              <span class="font-display text-4xl font-bold text-ink">$30</span>
+              <span class="text-ink/40 text-sm mb-1">USD</span>
             </div>
-            <!-- [i18n] -->
-            <p class="text-xs text-ink/50">Hasta 15 usuarios · 50.000 consentimientos/mes</p>
+            <p class="text-xs text-ink/50 mb-6">100 consentimientos · Pago único</p>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-2 text-sm text-ink/70"><span class="pricing-check mt-0.5">✓</span>100 consentimientos digitales</li>
+              <li class="flex items-start gap-2 text-sm text-ink/70"><span class="pricing-check mt-0.5">✓</span>Firma digital + foto biométrica</li>
+              <li class="flex items-start gap-2 text-sm text-ink/70"><span class="pricing-check mt-0.5">✓</span>Sellado SHA-256</li>
+              <li class="flex items-start gap-2 text-sm text-ink/70"><span class="pricing-check mt-0.5">✓</span>PDF con valor jurídico</li>
+              <li class="flex items-start gap-2 text-sm text-ink/70"><span class="pricing-check mt-0.5">✓</span>1 asesoría jurídica en línea</li>
+              <li class="flex items-start gap-2 text-sm text-ink/30"><span class="mt-0.5 text-ink/25">—</span>Soporte prioritario</li>
+            </ul>
           </div>
-          <a href="#" class="btn-primary w-full text-center text-sm block mb-8">Start free trial</a>
-          <ul class="space-y-3">
-            <li class="flex items-start gap-2 text-sm text-ink/70">
-              <span class="pricing-check mt-0.5">✓</span>Todo lo de Starter
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/70">
-              <span class="pricing-check mt-0.5">✓</span>Todas las normativas globales (GDPR, CCPA, LGPD, PDPA…)
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/70">
-              <span class="pricing-check mt-0.5">✓</span>API completa y webhooks
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/70">
-              <span class="pricing-check mt-0.5">✓</span>Registros de auditoría avanzados
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/70">
-              <span class="pricing-check mt-0.5">✓</span>Gestión de derechos ARSF
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/70">
-              <span class="pricing-check mt-0.5">✓</span>Soporte prioritario
-            </li>
-          </ul>
+          <a href="app/login.html#registro" class="btn-primary w-full text-center text-sm block">Prueba gratis →</a>
+          <p class="text-center text-xs text-ink/40 mt-2">3 gratis · luego $30 por 100</p>
         </div>
 
-        <!-- Enterprise -->
-        <div class="pricing-card reveal delay-3">
-          <div class="mb-6">
-            <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-2">Enterprise</p>
+        <!-- Premium 300 -->
+        <div class="pricing-card reveal delay-3" style="display:flex;flex-direction:column">
+          <div style="flex:1">
+            <p class="text-xs font-semibold text-ink/40 uppercase tracking-widest mb-2">Premium 300</p>
             <div class="flex items-end gap-1 mb-1">
-              <span class="font-display text-4xl font-bold text-ink">A medida</span>
+              <span class="font-display text-4xl font-bold text-ink">$79</span>
+              <span class="text-ink/40 text-sm mb-1">USD</span>
             </div>
-            <!-- [i18n] -->
-            <p class="text-xs text-ink/50">Usuarios ilimitados · Consentimientos ilimitados</p>
+            <p class="text-xs text-ink/50 mb-6">300 consentimientos · Pago único</p>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>300 consentimientos digitales</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>Firma digital + foto biométrica</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>Sellado SHA-256</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>PDF con valor jurídico</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>Asesoría jurídica ilimitada</li>
+              <li class="flex items-start gap-2 text-sm text-ink/65"><span class="pricing-check mt-0.5">✓</span>Soporte prioritario 24h</li>
+            </ul>
           </div>
-          <a href="/cdn-cgi/l/email-protection#74071518110734171b1a07111a0004061b5a1d1b" class="btn-outline w-full text-center text-sm block mb-8">Contactar ventas</a>
-          <ul class="space-y-3">
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Todo lo de Professional
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Marca blanca y dominio personalizado
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Opción de despliegue on-premise
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>SLA disponibilidad 99,99%
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Gestor de éxito dedicado
-            </li>
-            <li class="flex items-start gap-2 text-sm text-ink/65">
-              <span class="pricing-check mt-0.5">✓</span>Soporte de integración personalizada
-            </li>
-          </ul>
+          <a href="https://buy.stripe.com/dRmaEY7JtarbdhW70C5c40q" target="_blank" class="btn-outline w-full text-center text-sm block">Comprar $79</a>
         </div>
+
       </div>
 
-      <!-- Pricing footer note -->
       <p class="text-center text-xs text-ink/35 mt-10 reveal">
-        <!-- [i18n] -->
-        Todos los precios excluyen impuestos aplicables. El precio Enterprise se determina según volumen y requerimientos.
-        <a href="precios.html" class="underline hover:text-gold transition-colors">Ver detalles completos de precios.</a>
+        Pagos seguros con Stripe · Sin suscripción · Los consentimientos no expiran.
+        <a href="precios.html" class="underline hover:text-gold transition-colors">Ver todos los detalles.</a>
       </p>
     </div>
   </section>
