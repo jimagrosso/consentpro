@@ -228,8 +228,8 @@
   }
 
   async function guardar() {
-    cpShow('Guardando tu especialidad...','Preparando tus plantillas');
     if (!especialidadSeleccionada || especialidadSeleccionada === '__otra__') return;
+    cpShow('Guardando tu especialidad...','Preparando tus plantillas');
     const btn = document.getElementById('btn-continuar');
     btn.disabled = true;
     btn.textContent = 'Guardando...';
@@ -256,6 +256,7 @@
     }, { onConflict: 'id' });
 
     if (error) {
+      cpHide();
       btn.disabled = false;
       btn.textContent = 'Ir a mi panel →';
       alert('Error al guardar. Intenta de nuevo.');
