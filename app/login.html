@@ -165,19 +165,23 @@
   // Listener para OAuth callback (Google)
   sb.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_IN' && session) {
+      cpShow('Iniciando sesión...', 'Verificando tu perfil');
       await checkAndRedirect(session.user);
     }
   });
 
   // Verificar si el usuario tiene especialidad → redirigir
   async function checkAndRedirect(user) {
-    cpShow('Preparando tu panel...','Cargando tu información');
+    // Actualizamos el mensaje del loading que ya está activo desde el login
+    cpMsg('Verificando tu perfil...', 'Cargando tu información');
+
     const { data: perfil } = await sb.from('perfiles')
       .select('especialidad')
       .eq('id', user.id)
       .single();
 
     if (!perfil || !perfil.especialidad) {
+      cpMsg('Redirigiendo...', 'Configurando tu cuenta');
       window.location.href = 'especialidad.html';
     } else {
       // Si tiene especialidad pero aún no tiene plantillas → seed silencioso
@@ -186,9 +190,11 @@
           .select('id', { count: 'exact', head: true })
           .eq('medico_id', user.id);
         if (!count || count === 0) {
+          cpMsg('Preparando tus plantillas...', 'Solo un momento');
           await seedTemplatesForUser(user.id, perfil.especialidad);
         }
       }
+      cpMsg('Entrando a tu panel...', '');
       window.location.href = 'dashboard.html';
     }
   }
