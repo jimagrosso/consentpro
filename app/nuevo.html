@@ -36,9 +36,23 @@
     select.input-field option{background:#1e293b;color:#e2e8f0}
     textarea.input-field{resize:vertical;min-height:90px}
     @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:16px}}
+
+    /* ── Loading overlay global ─────────────────────── */
+    #cp-loading{position:fixed;inset:0;z-index:9999;background:rgba(11,17,32,.92);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;pointer-events:none;transition:opacity .25s ease}
+    #cp-loading.show{opacity:1;pointer-events:all}
+    #cp-loading .cp-spinner{width:44px;height:44px;border:3px solid rgba(200,162,74,.2);border-top-color:#C8A24A;border-radius:50%;animation:cpSpin .75s linear infinite}
+    #cp-loading .cp-msg{font-size:.95rem;font-weight:600;color:#f1f5f9;text-align:center;letter-spacing:.01em}
+    #cp-loading .cp-sub{font-size:.78rem;color:rgba(226,232,240,.4);text-align:center;margin-top:-12px}
+    @keyframes cpSpin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
+  <!-- Loading overlay global -->
+  <div id="cp-loading">
+    <div class="cp-spinner"></div>
+    <p class="cp-msg" id="cp-loading-msg">Cargando...</p>
+    <p class="cp-sub" id="cp-loading-sub">Un momento, por favor</p>
+  </div>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
@@ -227,6 +241,18 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="plantillas-catalogo.js"></script>
 <script>
+
+  // ── Loading overlay ──────────────────────────────────────────
+  function cpShow(msg, sub) {
+    document.getElementById('cp-loading-msg').textContent = msg || 'Cargando...';
+    document.getElementById('cp-loading-sub').textContent = sub || 'Un momento, por favor';
+    document.getElementById('cp-loading').classList.add('show');
+  }
+  function cpHide() { document.getElementById('cp-loading').classList.remove('show'); }
+  function cpMsg(msg, sub) {
+    document.getElementById('cp-loading-msg').textContent = msg;
+    if (sub !== undefined) document.getElementById('cp-loading-sub').textContent = sub;
+  }
   const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -363,7 +389,7 @@
 
   async function crearConsentimiento() {
     const btn = document.getElementById('btn-crear');
-    btn.disabled = true; btn.textContent = 'Creando...';
+    btn.disabled = true; btn.textContent = 'Creando...'; cpShow('Creando consentimiento...','Generando enlace de firma');
 
     // ── VERIFICAR LÍMITE SEGÚN PLAN ─────────────────────
     const { data: perfil } = await sb.from('perfiles')

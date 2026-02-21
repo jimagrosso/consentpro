@@ -53,9 +53,23 @@
     .btn-dl-pdf{width:100%;padding:13px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.88rem;border-radius:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:16px;transition:.3s}
     .btn-dl-pdf:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,162,74,.35)}
     .btn-dl-pdf:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+    /* ── Loading overlay global ─────────────────────── */
+    #cp-loading{position:fixed;inset:0;z-index:9999;background:rgba(11,17,32,.92);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;pointer-events:none;transition:opacity .25s ease}
+    #cp-loading.show{opacity:1;pointer-events:all}
+    #cp-loading .cp-spinner{width:44px;height:44px;border:3px solid rgba(200,162,74,.2);border-top-color:#C8A24A;border-radius:50%;animation:cpSpin .75s linear infinite}
+    #cp-loading .cp-msg{font-size:.95rem;font-weight:600;color:#f1f5f9;text-align:center;letter-spacing:.01em}
+    #cp-loading .cp-sub{font-size:.78rem;color:rgba(226,232,240,.4);text-align:center;margin-top:-12px}
+    @keyframes cpSpin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
+  <!-- Loading overlay global -->
+  <div id="cp-loading">
+    <div class="cp-spinner"></div>
+    <p class="cp-msg" id="cp-loading-msg">Cargando...</p>
+    <p class="cp-sub" id="cp-loading-sub">Un momento, por favor</p>
+  </div>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
@@ -195,6 +209,18 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+
+  // ── Loading overlay ──────────────────────────────────────────
+  function cpShow(msg, sub) {
+    document.getElementById('cp-loading-msg').textContent = msg || 'Cargando...';
+    document.getElementById('cp-loading-sub').textContent = sub || 'Un momento, por favor';
+    document.getElementById('cp-loading').classList.add('show');
+  }
+  function cpHide() { document.getElementById('cp-loading').classList.remove('show'); }
+  function cpMsg(msg, sub) {
+    document.getElementById('cp-loading-msg').textContent = msg;
+    if (sub !== undefined) document.getElementById('cp-loading-sub').textContent = sub;
+  }
   const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -204,6 +230,7 @@
   document.getElementById('greeting').textContent = hora < 12 ? 'Buenos días' : hora < 18 ? 'Buenas tardes' : 'Buenas noches';
 
   async function init() {
+    cpShow('Cargando tu panel...','');
     const { data: { session } } = await sb.auth.getSession();
     if (!session) { window.location.href = 'login.html'; return; }
 
@@ -286,6 +313,7 @@
     }
     // ──────────────────────────────────────────────────────────
 
+    cpHide();
     // Tabla
     if (lista.length === 0) {
       document.getElementById('tabla-body').style.display = 'none';
