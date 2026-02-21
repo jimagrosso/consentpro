@@ -132,6 +132,35 @@
     </div>
   </div>
 
+  <!-- Barra de consentimientos disponibles -->
+  <div id="card-disponibles" style="display:none;margin-bottom:28px;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:rgba(21,31,53,.7)">
+    <div style="padding:20px 24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#C8A24A,#A8832A);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="#0b1120" stroke-width="1.5"/><path d="M7.5 5v5M5 7.5h5" stroke="#0b1120" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p id="disp-titulo" style="font-size:.82rem;font-weight:700;color:#f1f5f9;line-height:1.2">— consentimientos disponibles</p>
+            <p id="disp-subtitulo" style="font-size:.7rem;color:rgba(226,232,240,.4);margin-top:2px">Plan gratuito</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <span id="disp-fraccion" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold)">—</span>
+          <a id="disp-btn" href="../precios.html" style="display:none;padding:8px 16px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.75rem;border-radius:10px;text-decoration:none;white-space:nowrap">Renovar plan →</a>
+        </div>
+      </div>
+      <!-- Barra de progreso -->
+      <div style="height:8px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden">
+        <div id="disp-barra" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#C8A24A,#A8832A);transition:width .6s ease;width:100%"></div>
+      </div>
+      <p id="disp-alerta" style="display:none;font-size:.72rem;color:#fbbf24;margin-top:10px;display:flex;align-items:center;gap:5px">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L1 10h10L6 1z" stroke="#fbbf24" stroke-width="1.2"/><path d="M6 5v3M6 9.5v.1" stroke="#fbbf24" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span id="disp-alerta-texto"></span>
+      </p>
+    </div>
+  </div>
+
   <!-- Tabla recientes -->
   <div style="background:rgba(21,31,53,.6);border:1px solid var(--border);border-radius:18px;overflow:hidden">
     <div class="flex items-center justify-between px-6 py-4" style="border-bottom:1px solid var(--border)">
@@ -215,6 +244,47 @@
     document.getElementById('stat-firmados').textContent = firmados;
     document.getElementById('stat-pendientes').textContent = pendientes;
     document.getElementById('stat-mes').textContent = esteMes;
+
+    // ── BARRA DE CONSENTIMIENTOS DISPONIBLES ──────────────────
+    const disponibles = perfil?.consentimientos_disponibles ?? 3;
+    const usados      = perfil?.consentimientos_usados      ?? 0;
+    const restantes   = Math.max(0, disponibles - usados);
+    const planNombre  = (perfil?.plan === 'premium') ? 'Plan Premium 300' :
+                        (perfil?.plan === 'prepago')  ? 'Plan Prepago'     : 'Plan Gratuito';
+    const pct = disponibles > 0 ? (restantes / disponibles) * 100 : 0;
+
+    // Color de la barra según % restante
+    const barColor = pct > 30 ? 'linear-gradient(90deg,#C8A24A,#A8832A)'
+                   : pct > 10 ? 'linear-gradient(90deg,#f59e0b,#d97706)'
+                   :            'linear-gradient(90deg,#ef4444,#dc2626)';
+
+    document.getElementById('card-disponibles').style.display = 'block';
+    document.getElementById('disp-fraccion').textContent  = restantes + ' / ' + disponibles;
+    document.getElementById('disp-titulo').textContent    = restantes === 1
+      ? '1 consentimiento disponible'
+      : restantes + ' consentimientos disponibles';
+    document.getElementById('disp-subtitulo').textContent = planNombre;
+    document.getElementById('disp-barra').style.width     = pct.toFixed(1) + '%';
+    document.getElementById('disp-barra').style.background = barColor;
+
+    // Alerta si queda poco
+    const alertEl  = document.getElementById('disp-alerta');
+    const alertTxt = document.getElementById('disp-alerta-texto');
+    const btnRenov = document.getElementById('disp-btn');
+
+    if (restantes === 0) {
+      alertEl.style.display  = 'flex';
+      alertTxt.textContent   = 'Has usado todos tus consentimientos. Renueva tu plan para continuar.';
+      btnRenov.style.display = 'inline-block';
+    } else if (restantes <= 5) {
+      alertEl.style.display  = 'flex';
+      alertTxt.textContent   = `Solo te quedan ${restantes}. Considera renovar pronto.`;
+      if (perfil?.plan === 'gratuito') btnRenov.style.display = 'inline-block';
+    } else if (perfil?.plan === 'gratuito') {
+      btnRenov.style.display = 'inline-block';
+      document.getElementById('disp-btn').textContent = 'Ver planes →';
+    }
+    // ──────────────────────────────────────────────────────────
 
     // Tabla
     if (lista.length === 0) {
