@@ -147,6 +147,14 @@
     }
     .reveal-scale.revealed { opacity: 1; transform: scale(1); }
 
+    /* Hero elements visible immediately — above the fold, no observer needed */
+    #hero .reveal, #hero .reveal-left, #hero .reveal-right, #hero .reveal-scale,
+    #hero-content .reveal, #hero-content .reveal-right {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
     /* Stagger delays */
     .delay-1 { transition-delay: 0.08s; }
     .delay-2 { transition-delay: 0.18s; }
@@ -625,8 +633,7 @@
         <!-- CTA buttons -->
         <div class="hidden md:flex items-center gap-3">
           <!-- [i18n] CTA buttons -->
-          <a href="/login" class="btn-outline text-sm">Iniciar sesión</a>
-          <a href="#precios" class="btn-primary text-sm">
+          <a href="/app/login.html" class="btn-outline text-sm">Iniciar sesión</a>          <a href="/app/login.html#registro" class="btn-primary text-sm">
             Prueba gratuita
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -657,7 +664,7 @@
         <a href="#asesoria-legal" class="nav-link text-sm">Asesoría Legal</a>
         <a href="#precios" class="nav-link text-sm">Precios</a>
         <div class="flex flex-col gap-2 pt-2 border-t border-surface">
-          <a href="/login" class="btn-outline text-sm text-center">Iniciar sesión</a>
+          <a href="/app/login.html" class="btn-outline text-sm text-center">Iniciar sesión</a>
           <a href="#precios" class="btn-primary text-sm text-center">Prueba gratuita</a>
         </div>
       </div>
@@ -2023,7 +2030,7 @@
             <li><a href="/seguridad" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Seguridad</a></li>
             <li><a href="/blog" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Blog</a></li>
             <li><a href="/empleos" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Empleos</a></li>
-            <li><a href="/login" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Iniciar sesión</a></li>
+            <li><a href="/app/login.html" class="text-white/40 hover:text-gold text-sm transition-colors duration-200">Iniciar sesión</a></li>
           </ul>
         </div>
       </div>
