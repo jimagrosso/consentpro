@@ -328,10 +328,11 @@
     currentUser = session.user;
 
     // Sidebar info
-    const { data: perfil } = await sb.from('perfiles').select('nombre_completo, especialidad').eq('id', currentUser.id).single();
+    const { data: perfil } = await sb.from('perfiles').select('nombre_completo, especialidad, plan, pacientes_disponibles, pacientes_usados').eq('id', currentUser.id).single();
     const nom = perfil?.nombre_completo || currentUser.email;
     document.getElementById('sidebar-nombre').textContent = nom.length > 22 ? nom.slice(0,22)+'…' : nom;
     document.getElementById('sidebar-esp').textContent = perfil?.especialidad || '';
+    window._perfilPac = perfil;
 
     await cargarPacientes();
   }
@@ -586,6 +587,18 @@
     const nombre = document.getElementById('f-nombre').value.trim();
     if (!nombre) { alert('El nombre del paciente es obligatorio'); return; }
 
+    // ── Verificar cuota solo en NUEVOS pacientes ──
+    if (!editingId) {
+      const perfil = window._perfilPac;
+      const usados     = perfil?.pacientes_usados     ?? 0;
+      const disponibles = perfil?.pacientes_disponibles ?? 3;
+      const plan       = perfil?.plan || 'gratuito';
+      if (usados >= disponibles) {
+        mostrarModalPagoPacientes(usados, disponibles, plan);
+        return;
+      }
+    }
+
     cpShow(editingId ? 'Actualizando paciente...' : 'Guardando paciente...');
 
     const ciudadPais = document.getElementById('f-ciudad').value.trim().split(',');
@@ -631,6 +644,13 @@
       return;
     }
 
+    // Incrementar contador solo en nuevo paciente
+    if (!editingId) {
+      const nuevoUsados = (window._perfilPac?.pacientes_usados ?? 0) + 1;
+      await sb.from('perfiles').update({ pacientes_usados: nuevoUsados }).eq('id', currentUser.id);
+      if (window._perfilPac) window._perfilPac.pacientes_usados = nuevoUsados;
+    }
+
     cerrarModal();
     await cargarPacientes();
   }
@@ -639,6 +659,51 @@
     await sb.auth.signOut();
     window.location.href = 'login.html';
   }
+
+  // ── MODAL UPGRADE PACIENTES ─────────────────────────────────
+  function mostrarModalPagoPacientes(usados, disponibles, plan) {
+    const planLabels = {
+      gratuito: 'Plan Gratuito (3 pacientes)',
+      prepago:  'Plan Esencial (100 pacientes)',
+      premium:  'Plan Pro (300 pacientes)'
+    };
+    const overlay = document.createElement('div');
+    overlay.id = 'modal-upgrade-pac';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(5,8,18,.9);z-index:300;display:flex;align-items:center;justify-content:center;padding:24px';
+    overlay.innerHTML = `
+      <div style="background:#0f172a;border:1px solid rgba(200,162,74,.25);border-radius:20px;padding:36px;max-width:480px;width:100%;text-align:center">
+        <div style="width:56px;height:56px;border-radius:14px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#818cf8" stroke-width="1.8"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#818cf8" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#f1f5f9;margin-bottom:8px">Límite de pacientes alcanzado</h2>
+        <p style="font-size:.85rem;color:rgba(226,232,240,.5);margin-bottom:6px">Has registrado ${usados} de ${disponibles} pacientes de tu plan actual.</p>
+        <p style="font-size:.85rem;color:rgba(226,232,240,.5);margin-bottom:28px">Elige un plan para continuar registrando historias médicas.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+          <div style="background:rgba(21,31,53,.8);border:1px solid var(--border);border-radius:14px;padding:16px 20px;text-align:left">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-weight:700;color:#f1f5f9;font-size:.9rem">Plan Esencial</span>
+              <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold)">$12<span style="font-size:.7rem;font-weight:400;color:rgba(226,232,240,.4)">/mes</span></span>
+            </div>
+            <p style="font-size:.75rem;color:rgba(226,232,240,.45)">100 consentimientos + 100 pacientes · cuota anual</p>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(200,162,74,.08),rgba(200,162,74,.03));border:1px solid rgba(200,162,74,.25);border-radius:14px;padding:16px 20px;text-align:left;position:relative">
+            <span style="position:absolute;top:-10px;right:16px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-size:.62rem;font-weight:700;padding:3px 10px;border-radius:99px">MÁS POPULAR</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-weight:700;color:#f1f5f9;font-size:.9rem">Plan Pro</span>
+              <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold)">$30<span style="font-size:.7rem;font-weight:400;color:rgba(226,232,240,.4)">/mes</span></span>
+            </div>
+            <p style="font-size:.75rem;color:rgba(226,232,240,.45)">300 consentimientos + 300 pacientes · asesoría jurídica · cuota anual</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:center">
+          <button onclick="document.getElementById('modal-upgrade-pac').remove()" style="padding:10px 20px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(226,232,240,.5);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.85rem">Cancelar</button>
+          <a href="../precios.html" style="padding:10px 24px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.85rem;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:6px">Ver planes <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></a>
+        </div>
+        <p style="font-size:.62rem;color:rgba(226,232,240,.2);margin-top:16px">* La cuota de pacientes es anual y se renueva cada año a partir de tu fecha de activación, independientemente del uso.</p>
+      </div>`;
+    document.body.appendChild(overlay);
+  }
+  // ─────────────────────────────────────────────────────────────
 
   init();
 </script>
