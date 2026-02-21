@@ -182,6 +182,12 @@
 
     // Cargar perfil
     const { data: perfil } = await sb.from('perfiles').select('*').eq('id', user.id).single();
+
+    // Si no tiene especialidad → pantalla de onboarding
+    if (!perfil || !perfil.especialidad) {
+      window.location.href = 'especialidad.html';
+      return;
+    }
     const nombre = perfil?.nombre || user.email.split('@')[0];
     const apellido = perfil?.apellido || '';
     const nombreCompleto = `Dr. ${nombre} ${apellido}`.trim();

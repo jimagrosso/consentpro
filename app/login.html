@@ -4,11 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ConsentPro · Acceder</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'DM Sans',sans-serif;background:#0b1120;color:#e2e8f0;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    body{font-family:'DM Sans',sans-serif;background:#0b1120;color:#e2e8f0;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:24px}
     :root{--gold:#C8A24A;--navy:#0b1120;--border:rgba(255,255,255,0.08)}
     .bg-glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,.07),transparent 65%);pointer-events:none}
     .card{background:rgba(21,31,53,.8);border:1px solid rgba(200,162,74,.2);border-radius:24px;backdrop-filter:blur(20px);width:100%;max-width:440px;padding:40px;box-shadow:0 40px 100px rgba(0,0,0,.4)}
@@ -20,12 +19,19 @@
     .btn-gold{width:100%;padding:14px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.9rem;border-radius:12px;border:none;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(200,162,74,.3);font-family:'DM Sans',sans-serif}
     .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,162,74,.45)}
     .btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-google{width:100%;padding:13px;background:#fff;color:#1f2937;font-weight:600;font-size:.875rem;border-radius:12px;border:none;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:10px;font-family:'DM Sans',sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+    .btn-google:hover{background:#f3f4f6;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+    .btn-google:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .divider{display:flex;align-items:center;gap:12px;margin:20px 0}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+    .divider span{font-size:.72rem;color:rgba(226,232,240,.3);font-weight:500;letter-spacing:.04em;white-space:nowrap}
     .alert{padding:12px 16px;border-radius:12px;font-size:.8rem;line-height:1.5;margin-bottom:16px}
     .alert-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
     .alert-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac}
     select.input-field option{background:#1e293b;color:#e2e8f0}
     @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
     .card{animation:fadeIn .5s ease}
+    .space-y-4>*+*{margin-top:16px}
   </style>
 </head>
 <body>
@@ -33,15 +39,15 @@
 
 <div class="card">
   <!-- Logo -->
-  <div class="flex items-center gap-3 mb-8 justify-center">
-    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A)">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center">
+    <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#C8A24A,#A8832A);display:flex;align-items:center;justify-content:center">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5L2 5v5c0 4.5 3 8 7 9 4-1 7-4.5 7-9V5L9 1.5z" fill="#0b1120"/><path d="M6 9l2.5 2.5L12 7" stroke="#C8A24A" stroke-width="1.5" stroke-linecap="round"/></svg>
     </div>
     <span style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#fff">ConsentPro</span>
   </div>
 
   <!-- Tabs -->
-  <div class="flex gap-2 mb-7 p-1 rounded-xl" style="background:rgba(11,17,32,.5);border:1px solid var(--border)">
+  <div style="display:flex;gap:8px;margin-bottom:28px;padding:4px;border-radius:14px;background:rgba(11,17,32,.5);border:1px solid var(--border)">
     <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Iniciar sesión</button>
     <button class="tab-btn" id="tab-registro" onclick="switchTab('registro')">Crear cuenta</button>
   </div>
@@ -49,66 +55,52 @@
   <!-- Alert -->
   <div id="alert" class="alert" style="display:none"></div>
 
+  <!-- BOTÓN GOOGLE (visible en ambos tabs) -->
+  <button class="btn-google" id="btn-google" onclick="loginGoogle()">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.96L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+    Continuar con Google
+  </button>
+
+  <div class="divider"><span>o continúa con email</span></div>
+
   <!-- LOGIN FORM -->
   <form id="form-login" onsubmit="handleLogin(event)">
     <div class="space-y-4">
       <div>
-        <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">Email</label>
+        <label style="font-size:.72rem;font-weight:600;color:rgba(226,232,240,.45);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:7px">Email</label>
         <input type="email" id="login-email" class="input-field" placeholder="dr.ejemplo@clinica.com" required/>
       </div>
       <div>
-        <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">Contraseña</label>
+        <label style="font-size:.72rem;font-weight:600;color:rgba(226,232,240,.45);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:7px">Contraseña</label>
         <input type="password" id="login-pass" class="input-field" placeholder="••••••••" required/>
       </div>
-      <button type="submit" class="btn-gold mt-2" id="btn-login">
-        Entrar al panel
-      </button>
+      <button type="submit" class="btn-gold" id="btn-login">Entrar al panel</button>
     </div>
   </form>
 
   <!-- REGISTRO FORM -->
   <form id="form-registro" style="display:none" onsubmit="handleRegistro(event)">
     <div class="space-y-4">
-      <div class="grid grid-cols-2 gap-3">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
-          <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">Nombre</label>
+          <label style="font-size:.72rem;font-weight:600;color:rgba(226,232,240,.45);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:7px">Nombre</label>
           <input type="text" id="reg-nombre" class="input-field" placeholder="Carlos" required/>
         </div>
         <div>
-          <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">Apellido</label>
+          <label style="font-size:.72rem;font-weight:600;color:rgba(226,232,240,.45);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:7px">Apellido</label>
           <input type="text" id="reg-apellido" class="input-field" placeholder="Rodríguez" required/>
         </div>
       </div>
       <div>
-        <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">Email profesional</label>
+        <label style="font-size:.72rem;font-weight:600;color:rgba(226,232,240,.45);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:7px">Email profesional</label>
         <input type="email" id="reg-email" class="input-field" placeholder="dr.rodriguez@clinica.com" required/>
       </div>
       <div>
-        <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">Especialidad</label>
-        <select id="reg-especialidad" class="input-field" required>
-          <option value="">Selecciona tu especialidad</option>
-          <option>Medicina General</option>
-          <option>Ginecología y Obstetricia</option>
-          <option>Cirugía General</option>
-          <option>Pediatría</option>
-          <option>Cardiología</option>
-          <option>Ortopedia y Traumatología</option>
-          <option>Dermatología</option>
-          <option>Oftalmología</option>
-          <option>Odontología</option>
-          <option>Medicina Estética</option>
-          <option>Anestesiología</option>
-          <option>Neurología</option>
-          <option>Oncología</option>
-          <option>Otra especialidad</option>
-        </select>
-      </div>
-      <div>
-        <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">Contraseña</label>
+        <label style="font-size:.72rem;font-weight:600;color:rgba(226,232,240,.45);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:7px">Contraseña</label>
         <input type="password" id="reg-pass" class="input-field" placeholder="Mínimo 8 caracteres" minlength="8" required/>
       </div>
       <div>
-        <label style="font-size:.75rem;font-weight:600;color:rgba(226,232,240,.5);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:8px">País</label>
+        <label style="font-size:.72rem;font-weight:600;color:rgba(226,232,240,.45);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:7px">País</label>
         <select id="reg-pais" class="input-field">
           <option value="Venezuela">Venezuela</option>
           <option value="Colombia">Colombia</option>
@@ -118,13 +110,11 @@
           <option value="Otro">Otro</option>
         </select>
       </div>
-      <button type="submit" class="btn-gold mt-2" id="btn-registro">
-        Crear mi cuenta
-      </button>
+      <button type="submit" class="btn-gold" id="btn-registro">Crear mi cuenta</button>
     </div>
   </form>
 
-  <p class="mt-6 text-center" style="font-size:.72rem;color:rgba(226,232,240,.25)">
+  <p style="margin-top:20px;text-align:center;font-size:.7rem;color:rgba(226,232,240,.2)">
     Respaldado por el Abg. José Manuel Rojas · Datos cifrados AES-256
   </p>
 </div>
@@ -135,15 +125,36 @@
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  // Si la URL tiene #registro, mostrar pestaña de crear cuenta
+  // Tab desde URL
   if (window.location.hash === '#registro') {
     document.addEventListener('DOMContentLoaded', () => switchTab('registro'));
   }
 
   // Redirigir si ya está logueado
   sb.auth.getSession().then(({data:{session}}) => {
-    if(session) window.location.href = 'dashboard.html';
+    if (session) checkAndRedirect(session.user);
   });
+
+  // Listener para OAuth callback (Google)
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await checkAndRedirect(session.user);
+    }
+  });
+
+  // Verificar si el usuario tiene especialidad → redirigir
+  async function checkAndRedirect(user) {
+    const { data: perfil } = await sb.from('perfiles')
+      .select('especialidad')
+      .eq('id', user.id)
+      .single();
+
+    if (!perfil || !perfil.especialidad) {
+      window.location.href = 'especialidad.html';
+    } else {
+      window.location.href = 'dashboard.html';
+    }
+  }
 
   function switchTab(tab) {
     const isLogin = tab === 'login';
@@ -162,21 +173,37 @@
   }
   function hideAlert() { document.getElementById('alert').style.display = 'none'; }
 
+  async function loginGoogle() {
+    document.getElementById('btn-google').disabled = true;
+    document.getElementById('btn-google').textContent = 'Conectando...';
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + window.location.pathname
+      }
+    });
+    if (error) {
+      showAlert('Error al conectar con Google. Intenta de nuevo.');
+      document.getElementById('btn-google').disabled = false;
+      document.getElementById('btn-google').innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.96L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg> Continuar con Google`;
+    }
+  }
+
   async function handleLogin(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-login');
     btn.disabled = true; btn.textContent = 'Entrando...';
     hideAlert();
-    const { error } = await sb.auth.signInWithPassword({
+    const { data, error } = await sb.auth.signInWithPassword({
       email: document.getElementById('login-email').value.trim(),
       password: document.getElementById('login-pass').value
     });
-    if(error) {
+    if (error) {
       showAlert('Email o contraseña incorrectos. Verifica tus datos.');
       btn.disabled = false; btn.textContent = 'Entrar al panel';
     } else {
-      btn.textContent = '✓ Redirigiendo...';
-      window.location.href = 'dashboard.html';
+      btn.textContent = '✓ Verificando perfil...';
+      await checkAndRedirect(data.user);
     }
   }
 
@@ -189,28 +216,28 @@
     const apellido = document.getElementById('reg-apellido').value.trim();
     const email = document.getElementById('reg-email').value.trim();
     const pass = document.getElementById('reg-pass').value;
-    const especialidad = document.getElementById('reg-especialidad').value;
     const pais = document.getElementById('reg-pais').value;
 
     const { data, error } = await sb.auth.signUp({
       email, password: pass,
-      options: { data: { nombre, apellido, especialidad, pais } }
+      options: { data: { nombre, apellido, pais } }
     });
 
-    if(error) {
-      showAlert(error.message.includes('already') ? 'Ya existe una cuenta con ese email.' : 'Error al crear cuenta: ' + error.message);
+    if (error) {
+      showAlert(error.message.includes('already') ? 'Ya existe una cuenta con ese email.' : 'Error: ' + error.message);
       btn.disabled = false; btn.textContent = 'Crear mi cuenta';
     } else {
-      // Insert perfil
-      if(data.user) {
+      // Crear perfil SIN especialidad → irá a pantalla de selección
+      if (data.user) {
         await sb.from('perfiles').upsert({
-          id: data.user.id, email, nombre, apellido, especialidad, pais,
+          id: data.user.id, email, nombre, apellido, pais,
           plan: 'gratuito',
           consentimientos_disponibles: 3,
           consentimientos_usados: 0
+          // especialidad intencionalmeente vacía → redirigirá a especialidad.html
         });
       }
-      showAlert('¡Cuenta creada! Revisa tu email para confirmar y luego inicia sesión.', 'success');
+      showAlert('¡Cuenta creada! Revisa tu email para confirmar, luego inicia sesión.', 'success');
       btn.disabled = false; btn.textContent = 'Crear mi cuenta';
       setTimeout(() => switchTab('login'), 3000);
     }
