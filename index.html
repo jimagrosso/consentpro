@@ -610,13 +610,9 @@
         </div>
 
         <!-- Mobile hamburger -->
-        <button id="menu-btn" class="md:hidden p-2 rounded-lg hover:bg-surface transition-colors" aria-label="Toggle menu" aria-expanded="false">
-          <svg id="icon-open" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M3 5h14M3 10h14M3 15h14" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <svg id="icon-close" class="hidden" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M5 5l10 10M15 5L5 15" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+        <button onclick="window._cpMenuToggle()" style="background:none;border:none;cursor:pointer;padding:10px;margin:-10px;display:flex;align-items:center" class="md:hidden" aria-label="Menú">
+          <svg id="icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg id="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none"><path d="M5 5l14 14M19 5L5 19" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
       </div>
     </div>
@@ -684,8 +680,8 @@
           <!-- CTA row -->
           <div class="flex flex-col sm:flex-row gap-4 mb-12 reveal delay-3">
             <!-- [i18n] CTA buttons -->
-            <a href="#precios" class="btn-primary">
-              Prueba gratuita 14 días
+            <a href="app/login.html#registro" class="btn-primary">
+              Prueba gratis
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
                 <path d="M2 7.5H13M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -695,7 +691,7 @@
                 <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/>
                 <path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="currentColor"/>
               </svg>
-              Ver demo de 2 minutos
+              Ver demo
             </a>
           </div>
 
@@ -1753,7 +1749,7 @@
         </h2>
         <p class="text-ink/55 text-lg max-w-xl mx-auto mb-8 reveal delay-3">
           <!-- [i18n] -->
-          Sin cargos ocultos. Cancela cuando quieras. Comienza con 14 días gratis — sin tarjeta de crédito.
+          Sin cargos ocultos. 3 consentimientos gratuitos para empezar — sin tarjeta de crédito.
         </p>
 
         <!-- Billing toggle -->
@@ -1901,11 +1897,11 @@
       </h2>
       <p class="text-ink/55 text-lg mb-10 reveal delay-1">
         <!-- [i18n] -->
-        Únete a más de 2.400 organizaciones que confían en ConsentPro para el compliance digital. 14 días gratis — sin tarjeta, sin compromiso.
+        Únete a más de 2.400 organizaciones que confían en ConsentPro para el compliance digital. 3 consentimientos gratuitos — sin tarjeta, sin compromiso.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center reveal delay-2">
-        <a href="#precios" class="btn-primary text-base px-8 py-3">
-          Comenzar prueba gratuita
+        <a href="app/login.html#registro" class="btn-primary text-base px-8 py-3">
+          Empezar gratis
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M2 8H14M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -2057,6 +2053,28 @@
   ═══════════════════════════════════════════════════════ -->
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ── DOM ready ──────────────────────────────────────────────────
+    // ── Mobile menu toggle — global so onclick="" always works ──
+    window._cpMenuToggle = function() {
+      const menu = document.getElementById('mobile-menu');
+      const iconOpen = document.getElementById('icon-open');
+      const iconClose = document.getElementById('icon-close');
+      if (!menu) return;
+      const isOpen = menu.classList.toggle('open');
+      iconOpen.style.display = isOpen ? 'none' : 'flex';
+      iconClose.style.display = isOpen ? 'flex' : 'none';
+    };
+    // Close menu when any link inside it is clicked
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('mobile-menu');
+      if (menu && menu.classList.contains('open') && e.target.tagName === 'A') {
+        menu.classList.remove('open');
+        const iconOpen = document.getElementById('icon-open');
+        const iconClose = document.getElementById('icon-close');
+        if(iconOpen) iconOpen.style.display = 'flex';
+        if(iconClose) iconClose.style.display = 'none';
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
 
       // ══════════════════════════════════════
@@ -2102,35 +2120,6 @@
         }
       };
       window.addEventListener('scroll', onScroll, { passive: true });
-
-
-      // ══════════════════════════════════════
-      // 3. MOBILE MENU toggle
-      // ══════════════════════════════════════
-      const menuBtn = document.getElementById('menu-btn');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const iconOpen = document.getElementById('icon-open');
-      const iconClose = document.getElementById('icon-close');
-      let menuOpen = false;
-
-      menuBtn.addEventListener('click', () => {
-        menuOpen = !menuOpen;
-        mobileMenu.classList.toggle('open', menuOpen);
-        iconOpen.style.display = menuOpen ? 'none' : 'block';
-        iconClose.style.display = menuOpen ? 'block' : 'none';
-        menuBtn.setAttribute('aria-expanded', menuOpen);
-      });
-
-      // Close mobile menu on nav link click
-      mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          menuOpen = false;
-          mobileMenu.classList.remove('open');
-          iconOpen.style.display = 'block';
-          iconClose.style.display = 'none';
-          menuBtn.setAttribute('aria-expanded', 'false');
-        });
-      });
 
 
       // ══════════════════════════════════════
