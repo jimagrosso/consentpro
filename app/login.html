@@ -135,6 +135,11 @@
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+  // Si la URL tiene #registro, mostrar pestaña de crear cuenta
+  if (window.location.hash === '#registro') {
+    document.addEventListener('DOMContentLoaded', () => switchTab('registro'));
+  }
+
   // Redirigir si ya está logueado
   sb.auth.getSession().then(({data:{session}}) => {
     if(session) window.location.href = 'dashboard.html';
