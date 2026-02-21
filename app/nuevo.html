@@ -415,7 +415,16 @@
     const cedula = document.getElementById('pac-cedula').value.trim();
     const tipoProcedimiento = document.getElementById('proc-tipo').value;
     const nombreProcedimiento = document.getElementById('proc-nombre').value.trim();
-    const descripcion = document.getElementById('proc-descripcion').value.trim();
+    let descripcion = document.getElementById('proc-descripcion').value.trim();
+
+    // Fallback: si no se escribió descripción manual, usar la de la plantilla seleccionada
+    if (!descripcion) {
+      const selPlantilla = document.getElementById('sel-plantilla');
+      if (selPlantilla && selPlantilla.value && misPlantillas?.length) {
+        const tpl = misPlantillas.find(t => t.id === selPlantilla.value);
+        if (tpl?.descripcion) descripcion = tpl.descripcion;
+      }
+    }
 
     const token = crypto.randomUUID();
 
