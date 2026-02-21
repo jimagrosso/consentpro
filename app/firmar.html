@@ -505,24 +505,72 @@
     document.getElementById('btn-firmar-final').disabled = !ok;
   }
 
+  // ─── Helper: base64 dataURL → Blob ──────────────
+  function dataURLtoBlob(dataURL) {
+    const [header, data] = dataURL.split(',');
+    const mime = header.match(/:(.*?);/)[1];
+    const binary = atob(data);
+    const arr = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+
+  // ─── Helper: subir archivo a Storage ─────────────
+  async function subirStorage(blob, path) {
+    const { data, error } = await sb.storage
+      .from('consentimientos-media')
+      .upload(path, blob, { upsert: true, contentType: blob.type });
+    if (error) throw error;
+    const { data: urlData } = sb.storage
+      .from('consentimientos-media')
+      .getPublicUrl(path);
+    return urlData.publicUrl;
+  }
+
   // ─── GUARDAR FIRMA ───────────────────────────────
   async function firmarConsentimiento() {
     const btn = document.getElementById('btn-firmar-final');
     btn.disabled = true;
-    btn.textContent = 'Guardando...';
+    btn.textContent = 'Subiendo archivos...';
 
     firmaDataURL = document.getElementById('firma-canvas').toDataURL('image/png');
 
     const ahora = new Date().toISOString();
     const hash = await generarHash(firmaDataURL + fotoDataURL + ahora);
+    const id   = consentimientoData.id;
+
+    // ── Subir foto a Storage (si existe) ──
+    let fotoUrl = null;
+    if (fotoDataURL) {
+      try {
+        btn.textContent = 'Subiendo foto...';
+        const fotoBlob = dataURLtoBlob(fotoDataURL);
+        fotoUrl = await subirStorage(fotoBlob, `fotos/${id}.jpg`);
+      } catch(e) {
+        console.warn('Error subiendo foto, guardando base64:', e);
+        fotoUrl = fotoDataURL; // fallback a base64
+      }
+    }
+
+    // ── Subir firma a Storage ──
+    let firmaUrl = firmaDataURL; // fallback
+    try {
+      btn.textContent = 'Subiendo firma...';
+      const firmaBlob = dataURLtoBlob(firmaDataURL);
+      firmaUrl = await subirStorage(firmaBlob, `firmas/${id}.png`);
+    } catch(e) {
+      console.warn('Error subiendo firma, guardando base64:', e);
+    }
+
+    btn.textContent = 'Guardando...';
 
     const { error } = await sb.from('consentimientos').update({
       estado: 'firmado',
-      firma_data: firmaDataURL,
-      foto_paciente: fotoDataURL,
+      firma_data: firmaUrl,
+      foto_paciente: fotoUrl,
       firmado_at: ahora,
       hash_sha256: hash
-    }).eq('id', consentimientoData.id);
+    }).eq('id', id);
 
     if (error) {
       alert('Error al guardar: ' + error.message);
@@ -539,6 +587,22 @@
     const enc = new TextEncoder().encode(texto);
     const buf = await crypto.subtle.digest('SHA-256', enc);
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // ─── Cargar imagen desde URL → base64 (para Storage URLs) ───
+  function cargarImagenUrl(url) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = img.width; c.height = img.height;
+        c.getContext('2d').drawImage(img, 0, 0);
+        res(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = rej;
+      img.src = url;
+    });
   }
 
   // ─── Normalizar imagen (elimina EXIF, garantiza JPEG limpio) ───
@@ -685,8 +749,9 @@
       doc.setFontSize(7); doc.setTextColor(100, 116, 139);
       doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', xFoto, y);
       try {
-        // Normalizar foto a través de canvas para eliminar EXIF y garantizar compatibilidad
-        const fotoNorm = await normalizarImagen(fotoDataURL, 300, 300);
+        // Soporta tanto URL pública como base64 (consentimientos viejos)
+        const fotoSrc = fotoDataURL.startsWith('http') ? await cargarImagenUrl(fotoDataURL) : fotoDataURL;
+        const fotoNorm = await normalizarImagen(fotoSrc, 300, 300);
         doc.addImage(fotoNorm, 'JPEG', xFoto, y + 5, 40, 30);
       } catch(e) { console.warn('Foto no insertada:', e); }
     }

@@ -559,21 +559,26 @@
         try {
           doc.setFontSize(6.5); doc.setTextColor(100,116,139);
           doc.text('FIRMA DIGITAL DEL PACIENTE', mg, y); nl(4);
-          doc.addImage(d.firma_data,'PNG', mg, y, 70, 28);
+          // Soporta URL pública (Storage nuevo) o base64 (legado)
+          const firmaSrc = d.firma_data.startsWith('http') ? await loadImg(d.firma_data) : d.firma_data;
+          doc.addImage(firmaSrc,'PNG', mg, y, 70, 28);
           if (tieneFoto) {
-            // Foto al lado derecho
+            const fotoSrc = d.foto_paciente.startsWith('http') ? await loadImg(d.foto_paciente) : d.foto_paciente;
+            const fotoNorm2 = await normalizarImg(fotoSrc, 300, 300);
             doc.text('FOTO DE VERIFICACIÓN', mg+80, y-4);
-            doc.addImage(d.foto_paciente,'JPEG', mg+80, y, 30, 30);
+            doc.addImage(fotoNorm2,'JPEG', mg+80, y, 30, 30);
           }
           nl(36);
-        } catch(e){}
+        } catch(e){ console.warn('Firma/foto error:', e); }
       } else if (tieneFoto) {
         try {
+          const fotoSrc = d.foto_paciente.startsWith('http') ? await loadImg(d.foto_paciente) : d.foto_paciente;
+          const fotoNorm2 = await normalizarImg(fotoSrc, 300, 300);
           doc.setFontSize(6.5); doc.setTextColor(100,116,139);
           doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', mg, y); nl(4);
-          doc.addImage(d.foto_paciente,'JPEG', mg, y, 30, 30);
+          doc.addImage(fotoNorm2,'JPEG', mg, y, 30, 30);
           nl(36);
-        } catch(e){}
+        } catch(e){ console.warn('Foto error:', e); }
       }
 
       // Footer
@@ -599,6 +604,21 @@
       const img = new Image(); img.crossOrigin='anonymous';
       img.onload = () => { const c=document.createElement('canvas'); c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); res(c.toDataURL('image/jpeg')); };
       img.onerror = rej; img.src = url;
+    });
+  }
+  function normalizarImg(dataURL, maxW, maxH) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        res(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = rej; img.src = dataURL;
     });
   }
 

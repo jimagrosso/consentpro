@@ -409,6 +409,21 @@
     });
   }
 
+  function cargarImagenUrl(url) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = img.width; c.height = img.height;
+        c.getContext('2d').drawImage(img, 0, 0);
+        res(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = rej;
+      img.src = url;
+    });
+  }
+
   function normalizarImagen(dataURL, maxW, maxH) {
     return new Promise((res, rej) => {
       const img = new Image();
@@ -507,7 +522,8 @@
         doc.setFontSize(7); doc.setTextColor(100,116,139);
         doc.text('FOTO DE VERIFICACIÓN', xF, yLabel);
         try {
-          const fotoNorm = await normalizarImagen(c.foto_paciente, 300, 300);
+          const fotoSrc = c.foto_paciente.startsWith('http') ? await cargarImagenUrl(c.foto_paciente) : c.foto_paciente;
+          const fotoNorm = await normalizarImagen(fotoSrc, 300, 300);
           doc.addImage(fotoNorm, 'JPEG', xF, c.firma_data ? y : y + 4, 40, 30);
         } catch(e){ console.warn('Foto no insertada:', e); }
       }
