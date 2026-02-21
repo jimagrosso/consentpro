@@ -479,10 +479,18 @@
       const d = consentActual;
       const doc = new jsPDF({ unit:'mm', format:'a4' });
       const W = 210, mg = 20, cw = W - mg*2;
+      const PAGE_H = 297, SAFE = 272;
       let y = 20;
-      const nl = (h=6) => { y += h; if(y > 270){ doc.addPage(); y = 20; } };
 
-      doc.setFillColor(11,17,32); doc.rect(0,0,W,297,'F');
+      function pintarFondo() {
+        doc.setFillColor(11,17,32); doc.rect(0,0,W,PAGE_H,'F');
+      }
+      function nuevaPagina() {
+        doc.addPage(); pintarFondo(); y = 20;
+      }
+      const nl = (h=6) => { y += h; if(y > SAFE) nuevaPagina(); };
+
+      pintarFondo();
       doc.setFillColor(20,30,50); doc.rect(0,0,W,42,'F');
       doc.setTextColor(200,162,74); doc.setFont('helvetica','bold'); doc.setFontSize(18);
       doc.text('ConsentPro', mg, 18);
@@ -537,24 +545,34 @@
       campo('Método de envío', d.metodo_envio);
       if (d.firma_hash) campo('Hash de integridad (SHA-256)', d.firma_hash);
 
-      // Firma imagen
-      if (d.firma_imagen_base64) {
-        try {
-          nl(4);
-          doc.setTextColor(130,140,160); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
-          doc.text('FIRMA DEL PACIENTE', mg, y); nl(5);
-          doc.addImage(d.firma_imagen_base64,'PNG', mg, y, 70, 28);
-          nl(34);
-        } catch(e){}
-      }
+      // ── FIRMA + FOTO — asegurar que quepan juntas ──────────
+      const tieneFirma = !!d.firma_imagen_base64;
+      const tieneFoto  = !!d.foto_paciente_url;
+      const alturaBloque = (tieneFirma ? 42 : 0) + (tieneFoto ? 42 : 0) + 16;
+      if (y + alturaBloque > SAFE) nuevaPagina();
 
-      // Foto paciente
-      if (d.foto_paciente_url) {
+      nl(4);
+      doc.setTextColor(130,140,160); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+      doc.text('FIRMA Y VERIFICACIÓN', mg, y); nl(7);
+
+      if (tieneFirma) {
+        try {
+          doc.setFontSize(6.5); doc.setTextColor(100,116,139);
+          doc.text('FIRMA DIGITAL DEL PACIENTE', mg, y); nl(4);
+          doc.addImage(d.firma_imagen_base64,'PNG', mg, y, 70, 28);
+          if (tieneFoto) {
+            // Foto al lado derecho
+            const img = await loadImg(d.foto_paciente_url);
+            doc.text('FOTO DE VERIFICACIÓN', mg+80, y-4);
+            doc.addImage(img,'JPEG', mg+80, y, 30, 30);
+          }
+          nl(36);
+        } catch(e){}
+      } else if (tieneFoto) {
         try {
           const img = await loadImg(d.foto_paciente_url);
-          nl(4);
-          doc.setTextColor(130,140,160); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
-          doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', mg, y); nl(5);
+          doc.setFontSize(6.5); doc.setTextColor(100,116,139);
+          doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', mg, y); nl(4);
           doc.addImage(img,'JPEG', mg, y, 30, 30);
           nl(36);
         } catch(e){}

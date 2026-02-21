@@ -549,11 +549,29 @@
 
     const d = consentimientoData;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const W = 210, mg = 20;
+    const W = 210, mg = 20, cw = W - mg*2;
+    const PAGE_H = 297, MARGIN_BOTTOM = 25, SAFE = PAGE_H - MARGIN_BOTTOM;
 
-    // Fondo
-    doc.setFillColor(15, 23, 42);
-    doc.rect(0, 0, W, 297, 'F');
+    // ── Pintar fondo oscuro en cada página ──────────────────
+    function pintarFondo() {
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, W, PAGE_H, 'F');
+    }
+
+    // ── Salto de página con fondo ────────────────────────────
+    function nuevaPagina() {
+      doc.addPage();
+      pintarFondo();
+      y = 20;
+    }
+
+    // ── Verificar espacio antes de cada bloque ───────────────
+    function checkY(needed) {
+      if (y + needed > SAFE) nuevaPagina();
+    }
+
+    // Página 1: fondo
+    pintarFondo();
 
     // Header dorado
     doc.setFillColor(200, 162, 74);
@@ -570,80 +588,104 @@
     doc.setTextColor(200, 162, 74);
     doc.setFontSize(14); doc.setFont('helvetica', 'bold');
     doc.text('CONSENTIMIENTO INFORMADO', mg, 40);
-
     doc.setDrawColor(200, 162, 74);
     doc.setLineWidth(0.4);
     doc.line(mg, 43, W - mg, 43);
 
-    // Datos del procedimiento
     let y = 52;
+
+    // ── PROCEDIMIENTO ────────────────────────────────────────
+    checkY(20);
     doc.setTextColor(226, 232, 240);
     doc.setFontSize(8); doc.setFont('helvetica', 'bold');
     doc.text('PROCEDIMIENTO', mg, y); y += 6;
     doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
     doc.setTextColor(241, 245, 249);
-    doc.text((d.nombre_procedimiento || d.tipo_procedimiento || 'Procedimiento médico'), mg, y); y += 5;
-    doc.setFontSize(8); doc.setTextColor(148, 163, 184);
+    doc.text((d.nombre_procedimiento || d.tipo_procedimiento || 'Procedimiento médico'), mg, y); y += 6;
     if (d.descripcion_procedimiento) {
-      const lines = doc.splitTextToSize(d.descripcion_procedimiento, W - mg*2);
-      doc.text(lines, mg, y); y += lines.length * 4 + 4;
+      doc.setFontSize(8); doc.setTextColor(148, 163, 184);
+      const descLines = doc.splitTextToSize(d.descripcion_procedimiento, cw);
+      // Escribir línea a línea con salto de página
+      descLines.forEach(line => {
+        checkY(6);
+        doc.text(line, mg, y); y += 4.5;
+      });
+      y += 3;
     }
 
-    // Datos paciente
-    y += 4;
+    // ── DATOS DEL PACIENTE ───────────────────────────────────
+    checkY(45);
     doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
     doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
     doc.text('DATOS DEL PACIENTE', mg, y); y += 7;
     doc.setFont('helvetica', 'normal'); doc.setTextColor(226, 232, 240);
     const campos = [
-      ['Nombre completo', d.paciente_nombre],
-      ['Cédula / ID', d.paciente_cedula || 'No proporcionada'],
-      ['Correo electrónico', d.paciente_email || 'No proporcionado'],
-      ['Fecha de firma', new Date(d.firmado_at || Date.now()).toLocaleString('es-VE')]
+      ['Nombre completo',    d.paciente_nombre],
+      ['Cédula / ID',        d.paciente_cedula || 'No proporcionada'],
+      ['Correo electrónico', d.paciente_email  || 'No proporcionado'],
+      ['Fecha de firma',     new Date(d.firmado_at || Date.now()).toLocaleString('es-VE')]
     ];
     campos.forEach(([label, val]) => {
+      checkY(8);
       doc.setFontSize(7); doc.setTextColor(100, 116, 139); doc.text(label, mg, y);
       doc.setFontSize(9); doc.setTextColor(226, 232, 240); doc.text(val || '—', mg + 45, y);
       y += 7;
     });
 
-    // Texto legal
+    // ── TEXTO LEGAL ──────────────────────────────────────────
+    checkY(20);
     y += 4;
     doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
     doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
     doc.text('DECLARACIÓN DE CONSENTIMIENTO', mg, y); y += 7;
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(148, 163, 184);
     const textoLegal = 'Yo, el/la abajo firmante, en pleno uso de mis facultades mentales y sin ningún tipo de coacción, declaro que he recibido información clara, comprensible y suficiente respecto al procedimiento médico, tratamiento o intervención que se me ha propuesto. Se me ha explicado el objetivo, los beneficios esperados, los riesgos posibles —tanto frecuentes como poco comunes—, las alternativas razonables disponibles, así como las consecuencias de no realizar el procedimiento. También se me ha informado acerca de los cuidados o recomendaciones posteriores al procedimiento. He tenido la oportunidad de formular todas las preguntas que consideré pertinentes, las cuales han sido respondidas de manera satisfactoria y con la claridad necesaria. Entiendo que, aunque se esperan resultados favorables, no se puede garantizar un resultado específico debido a la variabilidad individual de cada paciente. Manifiesto que comprendo plenamente que este consentimiento es voluntario, que puedo revocarlo total o parcialmente en cualquier momento antes de la realización del procedimiento, y que mi decisión de otorgarlo o no no afectará la calidad de la atención que recibiré. Autorizo expresamente la realización del procedimiento descrito y acepto que, si durante su ejecución se presentara alguna circunstancia imprevista que deba ser atendida para preservar mi salud, integridad o seguridad, el equipo médico adopte las medidas adicionales que considere necesarias. Asimismo, autorizo la captura de fotografías, imágenes, videos y/o datos clínicos relevantes, cuando así se requiera para fines de documentación médica, evaluación de evolución, trazabilidad de procedimientos, o como evidencia en el historial clínico. Entiendo que estos registros forman parte de mi expediente clínico y que se manejarán conforme a las leyes y normas aplicables de protección de datos personales. Reconozco que entiendo el contenido de este documento, que se me ha explicado con claridad, y que he tenido la oportunidad de discutirlo en términos comprensibles. Firmo este consentimiento con la convicción de haber sido suficientemente informado/a. Este documento constituye mi consentimiento libre, voluntario e informado, con firma digital que tiene validez jurídica conforme a la legislación aplicable.';
-    const legalLines = doc.splitTextToSize(textoLegal, W - mg*2);
-    doc.text(legalLines, mg, y); y += legalLines.length * 4 + 8;
+    const legalLines = doc.splitTextToSize(textoLegal, cw);
+    legalLines.forEach(line => {
+      checkY(6);
+      doc.text(line, mg, y); y += 4.5;
+    });
+    y += 6;
 
-    // Imagen de firma
-    if (firmaDataURL) {
-      doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
-      doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
-      doc.text('FIRMA DIGITAL DEL PACIENTE', mg, y); y += 7;
-      try {
-        doc.addImage(firmaDataURL, 'PNG', mg, y, 80, 28);
-      } catch(e) {}
-      y += 34;
+    // ── FIRMA + FOTO (siempre juntas, en la misma sección) ───
+    const necesitaFirma = !!firmaDataURL;
+    const necesitaFoto  = !!fotoDataURL;
+    const bloqueAltura  = 8 + 7 + (necesitaFirma ? 34 : 0) + (necesitaFoto ? 34 : 0) + 10;
+    checkY(bloqueAltura);  // Si no cabe todo → nueva página
+
+    doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
+    doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text('FIRMA Y VERIFICACIÓN DEL PACIENTE', mg, y); y += 9;
+
+    if (necesitaFirma) {
+      doc.setFontSize(7); doc.setTextColor(100, 116, 139);
+      doc.text('FIRMA DIGITAL', mg, y); y += 5;
+      try { doc.addImage(firmaDataURL, 'PNG', mg, y, 80, 28); } catch(e) {}
     }
-
-    // Foto del paciente
-    if (fotoDataURL) {
-      doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
-      doc.text('FOTO DE VERIFICACIÓN DEL PACIENTE', mg + 90, y - 34);
-      try {
-        doc.addImage(fotoDataURL, 'JPEG', mg + 90, y - 28, 40, 30);
-      } catch(e) {}
+    if (necesitaFoto) {
+      const xFoto = necesitaFirma ? mg + 90 : mg;
+      const yFoto = necesitaFirma ? y : y;
+      doc.setFontSize(7); doc.setTextColor(100, 116, 139);
+      doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', xFoto, necesitaFirma ? y : y); 
+      try { doc.addImage(fotoDataURL, 'JPEG', xFoto, necesitaFirma ? y + 5 : y + 5, 40, 30); } catch(e) {}
     }
+    y += 40;
 
-    // Footer con hash
-    y += 8;
-    doc.setDrawColor(200, 162, 74); doc.setLineWidth(0.3);
-    doc.line(mg, 275, W-mg, 275);
-    doc.setFontSize(6.5); doc.setTextColor(100, 116, 139); doc.setFont('helvetica', 'normal');
-    doc.text('Documento generado por ConsentPro · consentpro.net', mg, 280);
-    doc.text('Hash SHA-256: ' + (d.hash_sha256 ? d.hash_sha256.substring(0, 48) + '...' : 'Verificando...'), mg, 285);
+    // ── FOOTER en cada página ────────────────────────────────
+    const totalPags = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPags; i++) {
+      doc.setPage(i);
+      doc.setFillColor(20, 30, 50);
+      doc.rect(0, PAGE_H - 16, W, 16, 'F');
+      doc.setDrawColor(200, 162, 74); doc.setLineWidth(0.3);
+      doc.line(mg, PAGE_H - 16, W-mg, PAGE_H - 16);
+      doc.setFontSize(6.5); doc.setTextColor(100, 116, 139); doc.setFont('helvetica', 'normal');
+      doc.text('Documento generado por ConsentPro · consentpro.net', mg, PAGE_H - 9);
+      doc.text(`Pág. ${i}/${totalPags}`, W-mg, PAGE_H - 9, { align: 'right' });
+      if (d.hash_sha256) {
+        doc.text('SHA-256: ' + d.hash_sha256.substring(0, 52) + '...', mg, PAGE_H - 5);
+      }
+    }
 
     doc.save(`Consentimiento_${(d.paciente_nombre || 'paciente').replace(/\s+/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
 
