@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConsentPro · Mis Consentimientos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:#0b1120;color:#e2e8f0;min-height:100vh}
+    :root{--gold:#C8A24A;--border:rgba(255,255,255,0.07)}
+    .sidebar{width:240px;background:rgba(17,24,39,.95);border-right:1px solid var(--border);min-height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;padding:24px 16px;z-index:30}
+    .main{margin-left:240px;padding:32px;max-width:1100px}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;font-size:.85rem;font-weight:500;color:rgba(226,232,240,.5);cursor:pointer;transition:all .2s;text-decoration:none;margin-bottom:2px}
+    .nav-item:hover{background:rgba(255,255,255,.04);color:#e2e8f0}
+    .nav-item.active{background:rgba(200,162,74,.1);color:var(--gold);border:1px solid rgba(200,162,74,.2)}
+    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:.68rem;font-weight:700;letter-spacing:.04em}
+    .badge-pendiente{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
+    .badge-firmado{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.25)}
+    .badge-enviado{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.25)}
+    .row{border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer}
+    .row:hover{background:rgba(200,162,74,.04)}
+    .input-field{padding:9px 14px;background:rgba(11,17,32,.7);border:1px solid var(--border);border-radius:10px;color:#e2e8f0;font-size:.875rem;font-family:'DM Sans',sans-serif;transition:border-color .2s;outline:none}
+    .input-field:focus{border-color:rgba(200,162,74,.5)}
+    .input-field::placeholder{color:rgba(226,232,240,.2)}
+    .btn-gold{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.85rem;border-radius:10px;border:none;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(200,162,74,.3);text-decoration:none;font-family:'DM Sans',sans-serif}
+    .btn-gold:hover{transform:translateY(-2px)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:transparent;color:rgba(226,232,240,.6);font-weight:500;font-size:.8rem;border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+    .btn-ghost:hover{border-color:rgba(200,162,74,.3);color:var(--gold)}
+    .filter-btn{padding:7px 16px;border-radius:99px;font-size:.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:rgba(226,232,240,.45);font-family:'DM Sans',sans-serif;transition:all .2s}
+    .filter-btn.active{background:rgba(200,162,74,.12);border-color:rgba(200,162,74,.35);color:var(--gold)}
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+    .modal-box{background:#111827;border:1px solid rgba(200,162,74,.2);border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:28px}
+    .detail-label{font-size:.62rem;font-weight:700;color:rgba(200,162,74,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+    .detail-value{font-size:.88rem;color:#f1f5f9;line-height:1.5}
+    .btn-dl-pdf{width:100%;padding:13px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.88rem;border-radius:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;transition:.3s}
+    .btn-dl-pdf:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,162,74,.35)}
+    .btn-dl-pdf:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .btn-wa{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:linear-gradient(135deg,#25d366,#128C7E);color:#fff;font-weight:700;font-size:.8rem;border-radius:10px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:.3s}
+    .btn-wa:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,211,102,.3)}
+    @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:16px}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="flex items-center gap-2.5 mb-6 px-2">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 3 2 5.5 5.5 6.5C10.5 13.5 12.5 11 12.5 8V4L7 1z" fill="#0b1120"/></svg>
+    </div>
+    <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;color:#fff">ConsentPro</span>
+  </div>
+  <p style="font-size:.6rem;font-weight:700;color:rgba(226,232,240,.25);letter-spacing:.1em;text-transform:uppercase;padding:0 14px;margin-bottom:8px">PRINCIPAL</p>
+  <a href="dashboard.html" class="nav-item">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+    Panel principal
+  </a>
+  <a href="nuevo.html" class="nav-item">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 5v5M5 7.5h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Nuevo consentimiento
+  </a>
+  <a href="consentimientos.html" class="nav-item active">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="1" width="11" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h5M5 7.5h5M5 10h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+    Mis consentimientos
+  </a>
+  <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:auto">
+    <div class="px-2 mb-3">
+      <p id="sidebar-nombre" style="font-size:.82rem;font-weight:600;color:#f1f5f9"></p>
+      <p id="sidebar-esp" style="font-size:.72rem;color:rgba(226,232,240,.4)"></p>
+    </div>
+    <button onclick="logout()" class="nav-item w-full" style="color:rgba(239,68,68,.6)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2H2.5A1.5 1.5 0 001 3.5v7A1.5 1.5 0 002.5 12H5M9.5 10l3-3-3-3M12.5 7H5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Cerrar sesión
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-7 flex-wrap gap-4">
+    <div>
+      <a href="dashboard.html" style="font-size:.8rem;color:rgba(226,232,240,.4);text-decoration:none">← Panel</a>
+      <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#f1f5f9;margin-top:6px">Mis consentimientos</h1>
+      <p id="subtitulo" style="font-size:.85rem;color:rgba(226,232,240,.4);margin-top:3px">Cargando...</p>
+    </div>
+    <a href="nuevo.html" class="btn-gold">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Nuevo consentimiento
+    </a>
+  </div>
+
+  <!-- Búsqueda y filtros -->
+  <div class="flex items-center gap-3 mb-5 flex-wrap">
+    <div style="position:relative;flex:1;min-width:200px">
+      <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="rgba(226,232,240,.3)" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="rgba(226,232,240,.3)" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input id="buscar" type="text" class="input-field" placeholder="Buscar por paciente o procedimiento..." style="padding-left:36px;width:100%" oninput="filtrar()"/>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+      <button class="filter-btn active" onclick="setFiltro('todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setFiltro('enviado',this)">Enviados</button>
+      <button class="filter-btn" onclick="setFiltro('firmado',this)">Firmados</button>
+      <button class="filter-btn" onclick="setFiltro('pendiente',this)">Pendientes</button>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div style="background:rgba(21,31,53,.6);border:1px solid var(--border);border-radius:18px;overflow:hidden">
+    <!-- Cabecera -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 130px 110px 80px;padding:12px 24px;border-bottom:1px solid var(--border)">
+      <p style="font-size:.65rem;font-weight:700;color:rgba(226,232,240,.3);letter-spacing:.08em;text-transform:uppercase">Paciente</p>
+      <p style="font-size:.65rem;font-weight:700;color:rgba(226,232,240,.3);letter-spacing:.08em;text-transform:uppercase">Procedimiento</p>
+      <p style="font-size:.65rem;font-weight:700;color:rgba(226,232,240,.3);letter-spacing:.08em;text-transform:uppercase">Fecha</p>
+      <p style="font-size:.65rem;font-weight:700;color:rgba(226,232,240,.3);letter-spacing:.08em;text-transform:uppercase">Estado</p>
+      <p></p>
+    </div>
+
+    <!-- Skeleton loader -->
+    <div id="skeleton-rows">
+      <div style="padding:16px 24px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 130px 110px 80px;gap:12px;align-items:center">
+        <div class="skeleton" style="height:14px;width:140px"></div>
+        <div class="skeleton" style="height:14px;width:160px"></div>
+        <div class="skeleton" style="height:12px;width:80px"></div>
+        <div class="skeleton" style="height:20px;width:70px;border-radius:99px"></div>
+        <div></div>
+      </div>
+      <div style="padding:16px 24px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 130px 110px 80px;gap:12px;align-items:center">
+        <div class="skeleton" style="height:14px;width:120px"></div>
+        <div class="skeleton" style="height:14px;width:150px"></div>
+        <div class="skeleton" style="height:12px;width:80px"></div>
+        <div class="skeleton" style="height:20px;width:70px;border-radius:99px"></div>
+        <div></div>
+      </div>
+      <div style="padding:16px 24px;display:grid;grid-template-columns:1fr 1fr 130px 110px 80px;gap:12px;align-items:center">
+        <div class="skeleton" style="height:14px;width:130px"></div>
+        <div class="skeleton" style="height:14px;width:140px"></div>
+        <div class="skeleton" style="height:12px;width:80px"></div>
+        <div class="skeleton" style="height:20px;width:70px;border-radius:99px"></div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Lista real -->
+    <div id="lista-rows" style="display:none"></div>
+
+    <!-- Empty state -->
+    <div id="empty-state" style="display:none;padding:56px 24px;text-align:center">
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(200,162,74,.08);border:1px solid rgba(200,162,74,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="2" width="16" height="18" rx="2" stroke="rgba(200,162,74,.5)" stroke-width="1.5"/><path d="M7 7h8M7 11h8M7 15h4" stroke="rgba(200,162,74,.5)" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <p id="empty-msg" style="font-size:.9rem;font-weight:600;color:#f1f5f9;margin-bottom:6px">Sin resultados</p>
+      <p style="font-size:.8rem;color:rgba(226,232,240,.35)">Intenta con otro término o filtro</p>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div id="paginacion" style="display:none;margin-top:20px;display:flex;justify-content:center;gap:8px">
+    <button id="btn-prev" class="btn-ghost" onclick="cambiarPag(-1)">← Anterior</button>
+    <span id="pag-info" style="padding:9px 16px;font-size:.8rem;color:rgba(226,232,240,.45)"></span>
+    <button id="btn-next" class="btn-ghost" onclick="cambiarPag(1)">Siguiente →</button>
+  </div>
+</div>
+
+<!-- MODAL DETALLE -->
+<div id="modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)cerrarModal()">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;color:#f1f5f9">Detalle del consentimiento</h3>
+      <button onclick="cerrarModal()" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:none;cursor:pointer;color:rgba(226,232,240,.5);font-size:1.1rem;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+
+    <!-- Estado badge -->
+    <div class="mb-5">
+      <span id="modal-badge" class="badge"></span>
+    </div>
+
+    <!-- Grid datos paciente -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+      <div>
+        <p class="detail-label">Paciente</p>
+        <p id="modal-nombre" class="detail-value"></p>
+      </div>
+      <div>
+        <p class="detail-label">Documento</p>
+        <p id="modal-cedula" class="detail-value"></p>
+      </div>
+      <div>
+        <p class="detail-label">Teléfono / WhatsApp</p>
+        <p id="modal-telefono" class="detail-value"></p>
+      </div>
+      <div>
+        <p class="detail-label">Email</p>
+        <p id="modal-email" class="detail-value"></p>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-bottom:18px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div>
+          <p class="detail-label">Procedimiento</p>
+          <p id="modal-procedimiento" class="detail-value"></p>
+        </div>
+        <div>
+          <p class="detail-label">Tipo</p>
+          <p id="modal-tipo" class="detail-value"></p>
+        </div>
+      </div>
+      <div>
+        <p class="detail-label">Descripción / Información informada</p>
+        <p id="modal-descripcion" class="detail-value" style="font-size:.8rem;color:rgba(226,232,240,.6);max-height:100px;overflow-y:auto;line-height:1.6"></p>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-bottom:18px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <p class="detail-label">Método de envío</p>
+          <p id="modal-metodo" class="detail-value"></p>
+        </div>
+        <div>
+          <p class="detail-label">Creado</p>
+          <p id="modal-fecha" class="detail-value"></p>
+        </div>
+        <div id="modal-fecha-firma-wrap">
+          <p class="detail-label">Firmado el</p>
+          <p id="modal-fecha-firma" class="detail-value"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Foto del paciente -->
+    <div id="modal-foto-wrap" style="display:none;margin-bottom:18px">
+      <p class="detail-label">Foto de verificación</p>
+      <img id="modal-foto" src="" alt="Foto" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:2px solid rgba(200,162,74,.3)"/>
+    </div>
+
+    <!-- Enlace de firma -->
+    <div style="background:rgba(11,17,32,.6);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:16px">
+      <p style="font-size:.65rem;font-weight:700;color:rgba(226,232,240,.35);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px">Enlace de firma</p>
+      <div class="flex items-center gap-3 flex-wrap">
+        <p id="modal-link" style="font-size:.78rem;color:var(--gold);word-break:break-all;flex:1"></p>
+        <button onclick="copiarLink()" class="btn-ghost" style="flex-shrink:0">Copiar</button>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex flex-col gap-3">
+      <div class="flex gap-3 flex-wrap">
+        <a id="modal-wa" href="#" target="_blank" class="btn-wa" style="flex:1;justify-content:center">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C3.7 1 1 3.7 1 7c0 1.1.3 2.2.9 3.1L1 13l2.9-.9C4.8 12.7 5.9 13 7 13c3.3 0 6-2.7 6-6S10.3 1 7 1z" fill="white"/></svg>
+          Reenviar por WhatsApp
+        </a>
+        <button id="modal-btn-pdf" onclick="descargarPDF()" class="btn-dl-pdf" style="flex:1;margin-top:0" disabled>
+          Descargar PDF firmado
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  let currentUser = null;
+  let todosLos = [];
+  let filtrados  = [];
+  let filtroActivo = 'todos';
+  let paginaActual = 1;
+  const POR_PAGINA = 15;
+  let consentActual = null;
+
+  // ── INIT ────────────────────────────────────────────────────
+  async function init() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'login.html'; return; }
+    currentUser = session.user;
+
+    const { data: perfil } = await sb.from('perfiles').select('nombre,apellido,especialidad').eq('id', currentUser.id).single();
+    if (perfil) {
+      const nom = [perfil.nombre, perfil.apellido].filter(Boolean).join(' ');
+      document.getElementById('sidebar-nombre').textContent = nom || currentUser.email;
+      document.getElementById('sidebar-esp').textContent   = perfil.especialidad || '';
+    }
+
+    await cargarTodos();
+  }
+
+  async function cargarTodos() {
+    const { data, error } = await sb.from('consentimientos')
+      .select('*')
+      .eq('medico_id', currentUser.id)
+      .order('created_at', { ascending: false });
+
+    document.getElementById('skeleton-rows').style.display = 'none';
+    document.getElementById('lista-rows').style.display    = 'block';
+
+    if (error || !data) return;
+    todosLos = data;
+    document.getElementById('subtitulo').textContent = `${todosLos.length} consentimiento${todosLos.length !== 1 ? 's' : ''} en total`;
+    filtrar();
+  }
+
+  // ── FILTRAR / BUSCAR ────────────────────────────────────────
+  function filtrar() {
+    const q = document.getElementById('buscar').value.trim().toLowerCase();
+    filtrados = todosLos.filter(c => {
+      const matchEstado = filtroActivo === 'todos' || c.estado === filtroActivo;
+      const matchQ = !q ||
+        (c.paciente_nombre || '').toLowerCase().includes(q) ||
+        (c.nombre_procedimiento || '').toLowerCase().includes(q) ||
+        (c.paciente_cedula || '').toLowerCase().includes(q);
+      return matchEstado && matchQ;
+    });
+    paginaActual = 1;
+    renderTabla();
+  }
+
+  function setFiltro(f, btn) {
+    filtroActivo = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filtrar();
+  }
+
+  // ── RENDER TABLA ────────────────────────────────────────────
+  function renderTabla() {
+    const lista  = document.getElementById('lista-rows');
+    const empty  = document.getElementById('empty-state');
+    const pag    = document.getElementById('paginacion');
+
+    if (filtrados.length === 0) {
+      lista.innerHTML = '';
+      empty.style.display = 'block';
+      document.getElementById('empty-msg').textContent =
+        todosLos.length === 0 ? 'Aún no tienes consentimientos' : 'Sin resultados para esta búsqueda';
+      pag.style.display = 'none';
+      return;
+    }
+
+    empty.style.display = 'none';
+    const total_pags = Math.ceil(filtrados.length / POR_PAGINA);
+    const inicio = (paginaActual - 1) * POR_PAGINA;
+    const pagina = filtrados.slice(inicio, inicio + POR_PAGINA);
+
+    const badges = {
+      firmado:   '<span class="badge badge-firmado">✓ Firmado</span>',
+      enviado:   '<span class="badge badge-enviado">→ Enviado</span>',
+      pendiente: '<span class="badge badge-pendiente">⏳ Pendiente</span>',
+    };
+    const metodos = { whatsapp:'💬 WhatsApp', email:'📧 Email', tablet:'📱 En sala' };
+
+    lista.innerHTML = pagina.map(c => {
+      const fecha = new Date(c.created_at).toLocaleDateString('es-VE', { day:'2-digit', month:'short', year:'numeric' });
+      const badge = badges[c.estado] || `<span class="badge" style="background:rgba(255,255,255,.05);color:rgba(226,232,240,.4);border:1px solid var(--border)">${c.estado}</span>`;
+      return `<div class="row" style="padding:14px 24px;display:grid;grid-template-columns:1fr 1fr 130px 110px 80px;gap:8px;align-items:center" onclick="abrirDetalle('${c.id}')">
+        <div>
+          <p style="font-size:.875rem;font-weight:600;color:#f1f5f9;margin-bottom:2px">${c.paciente_nombre || '—'}</p>
+          <p style="font-size:.72rem;color:rgba(226,232,240,.35)">${c.paciente_cedula || ''}</p>
+        </div>
+        <div>
+          <p style="font-size:.82rem;color:rgba(226,232,240,.75);margin-bottom:2px">${c.nombre_procedimiento || c.tipo_procedimiento || '—'}</p>
+          <p style="font-size:.7rem;color:rgba(226,232,240,.3)">${metodos[c.metodo_envio] || c.metodo_envio || ''}</p>
+        </div>
+        <p style="font-size:.78rem;color:rgba(226,232,240,.45)">${fecha}</p>
+        <div>${badge}</div>
+        <div style="text-align:right">
+          <button style="padding:5px 12px;border-radius:8px;background:rgba(200,162,74,.08);border:1px solid rgba(200,162,74,.2);color:var(--gold);font-size:.7rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="event.stopPropagation();abrirDetalle('${c.id}')">Ver</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Paginación
+    if (total_pags > 1) {
+      pag.style.display = 'flex';
+      document.getElementById('pag-info').textContent = `Página ${paginaActual} de ${total_pags}`;
+      document.getElementById('btn-prev').disabled = paginaActual === 1;
+      document.getElementById('btn-next').disabled = paginaActual === total_pags;
+    } else {
+      pag.style.display = 'none';
+    }
+  }
+
+  function cambiarPag(dir) {
+    paginaActual += dir;
+    renderTabla();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── MODAL DETALLE ────────────────────────────────────────────
+  function abrirDetalle(id) {
+    const c = todosLos.find(x => x.id === id);
+    if (!c) return;
+    consentActual = c;
+
+    const badges = {
+      firmado:   ['badge-firmado',   '✓ Firmado'],
+      enviado:   ['badge-enviado',   '→ Enviado'],
+      pendiente: ['badge-pendiente', '⏳ Pendiente'],
+    };
+    const [cls, txt] = badges[c.estado] || ['', c.estado];
+    const badgeEl = document.getElementById('modal-badge');
+    badgeEl.className = 'badge ' + cls;
+    badgeEl.textContent = txt;
+
+    document.getElementById('modal-nombre').textContent      = c.paciente_nombre  || '—';
+    document.getElementById('modal-cedula').textContent      = c.paciente_cedula  || '—';
+    document.getElementById('modal-telefono').textContent    = c.paciente_telefono|| '—';
+    document.getElementById('modal-email').textContent       = c.paciente_email   || '—';
+    document.getElementById('modal-procedimiento').textContent = c.nombre_procedimiento || '—';
+    document.getElementById('modal-tipo').textContent        = c.tipo_procedimiento || '—';
+    document.getElementById('modal-descripcion').textContent = c.descripcion_procedimiento || '—';
+    document.getElementById('modal-metodo').textContent      = { whatsapp:'💬 WhatsApp', email:'📧 Email', tablet:'📱 En sala' }[c.metodo_envio] || c.metodo_envio || '—';
+    document.getElementById('modal-fecha').textContent       = new Date(c.created_at).toLocaleString('es-VE');
+
+    // Fecha firma
+    const ffw = document.getElementById('modal-fecha-firma-wrap');
+    if (c.firmado_en) {
+      ffw.style.display = 'block';
+      document.getElementById('modal-fecha-firma').textContent = new Date(c.firmado_en).toLocaleString('es-VE');
+    } else { ffw.style.display = 'none'; }
+
+    // Foto
+    const fw = document.getElementById('modal-foto-wrap');
+    if (c.foto_paciente_url) {
+      fw.style.display = 'block';
+      document.getElementById('modal-foto').src = c.foto_paciente_url;
+    } else { fw.style.display = 'none'; }
+
+    // Link firma
+    const base = window.location.origin + window.location.pathname.replace('consentimientos.html','');
+    const link = `${base}firmar.html?t=${c.token_firma}`;
+    document.getElementById('modal-link').textContent = link;
+
+    // WhatsApp
+    const tel = (c.paciente_telefono || '').replace(/\D/g,'');
+    const msg = encodeURIComponent(`Hola ${c.paciente_nombre || ''}, le comparto el enlace para firmar su consentimiento informado: ${link}`);
+    document.getElementById('modal-wa').href = `https://wa.me/${tel}?text=${msg}`;
+
+    // PDF
+    document.getElementById('modal-btn-pdf').disabled = c.estado !== 'firmado';
+
+    document.getElementById('modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.body.style.overflow = '';
+    consentActual = null;
+  }
+
+  function copiarLink() {
+    const txt = document.getElementById('modal-link').textContent;
+    navigator.clipboard.writeText(txt).then(() => {
+      const btn = event.target;
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = 'Copiar', 1800);
+    });
+  }
+
+  // ── PDF DESCARGA (igual que dashboard) ─────────────────────
+  async function descargarPDF() {
+    if (!consentActual || consentActual.estado !== 'firmado') return;
+    const btn = document.getElementById('modal-btn-pdf');
+    btn.disabled = true; btn.textContent = 'Generando PDF...';
+
+    try {
+      const { jsPDF } = window.jspdf;
+      const d = consentActual;
+      const doc = new jsPDF({ unit:'mm', format:'a4' });
+      const W = 210, mg = 20, cw = W - mg*2;
+      let y = 20;
+      const nl = (h=6) => { y += h; if(y > 270){ doc.addPage(); y = 20; } };
+
+      doc.setFillColor(11,17,32); doc.rect(0,0,W,297,'F');
+      doc.setFillColor(20,30,50); doc.rect(0,0,W,42,'F');
+      doc.setTextColor(200,162,74); doc.setFont('helvetica','bold'); doc.setFontSize(18);
+      doc.text('ConsentPro', mg, 18);
+      doc.setFontSize(9); doc.setTextColor(150,160,180);
+      doc.text('Consentimiento Informado Digital · Firma verificada', mg, 26);
+      doc.setFontSize(8);
+      doc.text(`Generado: ${new Date().toLocaleString('es-VE')}`, W-mg, 26, {align:'right'});
+      y = 52;
+
+      const seccion = (titulo) => {
+        nl(4); doc.setFillColor(200,162,74);
+        doc.rect(mg,y,2,5,'F');
+        doc.setTextColor(200,162,74); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+        doc.text(titulo, mg+5, y+4); nl(10);
+        doc.setTextColor(226,232,240); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+      };
+      const campo = (label, valor) => {
+        doc.setTextColor(130,140,160); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+        doc.text(label.toUpperCase(), mg, y);
+        doc.setTextColor(226,232,240); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        const lines = doc.splitTextToSize(valor || '—', cw);
+        doc.text(lines, mg, y+5); nl(5 + lines.length*5);
+      };
+
+      seccion('DATOS DEL PACIENTE');
+      campo('Nombre completo', d.paciente_nombre);
+      campo('Documento de identidad', d.paciente_cedula);
+      campo('Teléfono / WhatsApp', d.paciente_telefono);
+      campo('Correo electrónico', d.paciente_email);
+
+      seccion('PROCEDIMIENTO');
+      campo('Tipo de procedimiento', d.tipo_procedimiento);
+      campo('Nombre del procedimiento', d.nombre_procedimiento);
+      if (d.descripcion_procedimiento) {
+        const lines = doc.splitTextToSize(d.descripcion_procedimiento, cw);
+        doc.setTextColor(130,140,160); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+        doc.text('DESCRIPCIÓN / INFORMACIÓN INFORMADA', mg, y);
+        doc.setTextColor(200,210,220); doc.setFont('helvetica','normal'); doc.setFontSize(8);
+        doc.text(lines, mg, y+5); nl(5 + lines.length*5);
+      }
+
+      seccion('CONSENTIMIENTO INFORMADO');
+      const textoLegal = 'Yo, el/la abajo firmante, en pleno uso de mis facultades mentales y sin ningún tipo de coacción, declaro que he recibido información clara, comprensible y suficiente respecto al procedimiento médico, tratamiento o intervención que se me ha propuesto. Se me ha explicado el objetivo, los beneficios esperados, los riesgos posibles —tanto frecuentes como poco comunes—, las alternativas razonables disponibles, así como las consecuencias de no realizar el procedimiento. También se me ha informado acerca de los cuidados o recomendaciones posteriores al procedimiento. He tenido la oportunidad de formular todas las preguntas que consideré pertinentes, las cuales han sido respondidas de manera satisfactoria y con la claridad necesaria. Entiendo que, aunque se esperan resultados favorables, no se puede garantizar un resultado específico debido a la variabilidad individual de cada paciente. Manifiesto que comprendo plenamente que este consentimiento es voluntario, que puedo revocarlo total o parcialmente en cualquier momento antes de la realización del procedimiento, y que mi decisión de otorgarlo o no no afectará la calidad de la atención que recibiré. Autorizo expresamente la realización del procedimiento descrito y acepto que, si durante su ejecución se presentara alguna circunstancia imprevista que deba ser atendida para preservar mi salud, integridad o seguridad, el equipo médico adopte las medidas adicionales que considere necesarias. Asimismo, autorizo la captura de fotografías, imágenes, videos y/o datos clínicos relevantes, cuando así se requiera para fines de documentación médica, evaluación de evolución, trazabilidad de procedimientos, o como evidencia en el historial clínico. Entiendo que estos registros forman parte de mi expediente clínico y que se manejarán conforme a las leyes y normas aplicables de protección de datos personales. Reconozco que entiendo el contenido de este documento, que se me ha explicado con claridad, y que he tenido la oportunidad de discutirlo en términos comprensibles. Firmo este consentimiento con la convicción de haber sido suficientemente informado/a. Este documento constituye mi consentimiento libre, voluntario e informado, con firma digital que tiene validez jurídica conforme a la legislación aplicable.';
+      const legalLines = doc.splitTextToSize(textoLegal, cw);
+      doc.setTextColor(200,210,220); doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
+      doc.text(legalLines, mg, y); nl(legalLines.length*5 + 4);
+
+      seccion('VERIFICACIÓN Y FIRMA');
+      campo('Estado', '✓ Firmado digitalmente');
+      campo('Fecha de creación', new Date(d.created_at).toLocaleString('es-VE'));
+      if (d.firmado_en) campo('Fecha de firma', new Date(d.firmado_en).toLocaleString('es-VE'));
+      campo('Método de envío', d.metodo_envio);
+      if (d.firma_hash) campo('Hash de integridad (SHA-256)', d.firma_hash);
+
+      // Firma imagen
+      if (d.firma_imagen_base64) {
+        try {
+          nl(4);
+          doc.setTextColor(130,140,160); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+          doc.text('FIRMA DEL PACIENTE', mg, y); nl(5);
+          doc.addImage(d.firma_imagen_base64,'PNG', mg, y, 70, 28);
+          nl(34);
+        } catch(e){}
+      }
+
+      // Foto paciente
+      if (d.foto_paciente_url) {
+        try {
+          const img = await loadImg(d.foto_paciente_url);
+          nl(4);
+          doc.setTextColor(130,140,160); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+          doc.text('FOTO DE VERIFICACIÓN BIOMÉTRICA', mg, y); nl(5);
+          doc.addImage(img,'JPEG', mg, y, 30, 30);
+          nl(36);
+        } catch(e){}
+      }
+
+      // Footer
+      const totalPags = doc.getNumberOfPages();
+      for(let i=1;i<=totalPags;i++){
+        doc.setPage(i);
+        doc.setFillColor(20,30,50); doc.rect(0,285,W,12,'F');
+        doc.setTextColor(100,110,130); doc.setFont('helvetica','normal'); doc.setFontSize(7);
+        doc.text('ConsentPro · Consentimiento Informado Digital · consentpro.net', mg, 292);
+        doc.text(`Pág. ${i}/${totalPags}`, W-mg, 292, {align:'right'});
+      }
+
+      const nombreArchivo = `consentimiento_${(d.paciente_nombre||'paciente').replace(/\s+/g,'_')}_${new Date(d.created_at).toISOString().slice(0,10)}.pdf`;
+      doc.save(nombreArchivo);
+    } catch(err) {
+      alert('Error al generar PDF: ' + err.message);
+    }
+    btn.disabled = false; btn.textContent = 'Descargar PDF firmado';
+  }
+
+  function loadImg(url) {
+    return new Promise((res,rej) => {
+      const img = new Image(); img.crossOrigin='anonymous';
+      img.onload = () => { const c=document.createElement('canvas'); c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); res(c.toDataURL('image/jpeg')); };
+      img.onerror = rej; img.src = url;
+    });
+  }
+
+  async function logout() {
+    await sb.auth.signOut();
+    window.location.href = 'login.html';
+  }
+
+  init();
+</script>
+</body>
+</html>
