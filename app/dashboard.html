@@ -409,6 +409,23 @@
     });
   }
 
+  function normalizarImagen(dataURL, maxW, maxH) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+        if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        res(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = rej;
+      img.src = dataURL;
+    });
+  }
+
   async function descargarPDFModal() {
     if (!_modalData) return;
     const btn = document.getElementById('btn-modal-pdf');
@@ -473,17 +490,26 @@
       y += 7;
     });
 
-    // Firma
-    if (c.firma_data) {
+    // ── FIRMA + FOTO: garantizar que quepan en la página ──
+    if (c.firma_data || c.foto_paciente) {
+      const bloqueH = 8 + 7 + 36 + 10;
+      if (y + bloqueH > 270) { doc.addPage(); doc.setFillColor(11,17,32); doc.rect(0,0,W,297,'F'); y = 20; }
       y += 4; doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
       doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
-      doc.text('FIRMA DIGITAL', mg, y); y += 7;
-      try { doc.addImage(c.firma_data, 'PNG', mg, y, 80, 28); } catch(e){}
-      // Foto al lado
+      doc.text('FIRMA Y VERIFICACIÓN DEL PACIENTE', mg, y); y += 7;
+      if (c.firma_data) {
+        doc.setFontSize(7); doc.setTextColor(100,116,139); doc.text('FIRMA DIGITAL', mg, y); y += 4;
+        try { doc.addImage(c.firma_data, 'PNG', mg, y, 80, 28); } catch(e){}
+      }
       if (c.foto_paciente) {
-        doc.setTextColor(200, 162, 74); doc.setFontSize(8);
-        doc.text('FOTO DE VERIFICACIÓN', mg + 90, y - 7);
-        try { doc.addImage(c.foto_paciente, 'JPEG', mg + 90, y, 40, 30); } catch(e){}
+        const xF = c.firma_data ? mg + 90 : mg;
+        const yLabel = c.firma_data ? y - 4 : y;
+        doc.setFontSize(7); doc.setTextColor(100,116,139);
+        doc.text('FOTO DE VERIFICACIÓN', xF, yLabel);
+        try {
+          const fotoNorm = await normalizarImagen(c.foto_paciente, 300, 300);
+          doc.addImage(fotoNorm, 'JPEG', xF, c.firma_data ? y : y + 4, 40, 30);
+        } catch(e){ console.warn('Foto no insertada:', e); }
       }
       y += 36;
     }
