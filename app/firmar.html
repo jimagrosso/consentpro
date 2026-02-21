@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConsentPro · Firmar Consentimiento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;-webkit-font-smoothing:antialiased}
+    :root{--gold:#C8A24A;--gold2:#A8832A;--navy:#0f172a;--navy2:#1e293b;--border:rgba(255,255,255,0.08)}
+
+    .container{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+
+    /* Header */
+    .header{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+    .logo-box{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#C8A24A,#A8832A);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .header h1{font-family:'Playfair Display',serif;font-size:1.1rem;color:#f1f5f9}
+    .header p{font-size:.75rem;color:rgba(226,232,240,.45);margin-top:2px}
+
+    /* Cards */
+    .card{background:rgba(30,41,59,.6);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;backdrop-filter:blur(12px)}
+    .card-title{font-size:.65rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .card-title::before{content:'';display:block;width:20px;height:1px;background:var(--gold);opacity:.5}
+
+    /* Info rows */
+    .info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .info-row:last-child{border-bottom:none}
+    .info-label{font-size:.75rem;color:rgba(226,232,240,.4);min-width:120px}
+    .info-value{font-size:.82rem;color:#e2e8f0;text-align:right;font-weight:500}
+
+    /* Procedimiento */
+    .proc-box{background:rgba(200,162,74,.06);border:1px solid rgba(200,162,74,.2);border-radius:12px;padding:16px;margin-bottom:16px}
+    .proc-tipo{font-size:.65rem;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+    .proc-nombre{font-size:1rem;font-weight:600;color:#f1f5f9;margin-bottom:6px}
+    .proc-desc{font-size:.8rem;color:rgba(226,232,240,.6);line-height:1.6}
+
+    /* Texto legal */
+    .legal-text{font-size:.78rem;color:rgba(226,232,240,.55);line-height:1.7;background:rgba(15,23,42,.4);border-radius:10px;padding:16px;max-height:160px;overflow-y:auto;border:1px solid var(--border);margin-bottom:4px}
+    .legal-text::-webkit-scrollbar{width:4px}
+    .legal-text::-webkit-scrollbar-track{background:transparent}
+    .legal-text::-webkit-scrollbar-thumb{background:rgba(200,162,74,.3);border-radius:99px}
+
+    /* Steps */
+    .steps{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+    .step-pill{flex:1;min-width:80px;padding:8px 12px;border-radius:10px;text-align:center;font-size:.72rem;font-weight:600;border:1px solid var(--border);color:rgba(226,232,240,.3);background:rgba(30,41,59,.4);cursor:default;transition:.3s}
+    .step-pill.active{border-color:rgba(200,162,74,.5);color:var(--gold);background:rgba(200,162,74,.08)}
+    .step-pill.done{border-color:rgba(34,197,94,.4);color:#4ade80;background:rgba(34,197,94,.06)}
+
+    /* Cámara */
+    #video-container{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:4/3;margin-bottom:12px}
+    #video{width:100%;height:100%;object-fit:cover;display:block}
+    #canvas-photo{display:none}
+    #photo-preview{width:100%;border-radius:12px;display:none;margin-bottom:12px}
+    .cam-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.85)}
+    .cam-overlay p{font-size:.85rem;color:rgba(226,232,240,.5);text-align:center;padding:20px}
+
+    /* Firma canvas */
+    #firma-canvas{width:100%;height:180px;border-radius:12px;background:rgba(248,250,252,.97);cursor:crosshair;display:block;touch-action:none}
+    .firma-label{font-size:.72rem;color:rgba(226,232,240,.35);text-align:center;margin-top:6px}
+
+    /* Botones */
+    .btn-gold{width:100%;padding:15px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a;font-weight:700;font-size:.95rem;border-radius:12px;border:none;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;letter-spacing:.01em}
+    .btn-gold:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,162,74,.4)}
+    .btn-gold:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .btn-outline{width:100%;padding:12px;background:transparent;color:rgba(226,232,240,.6);font-size:.85rem;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:.25s;font-family:'DM Sans',sans-serif;margin-top:8px}
+    .btn-outline:hover{border-color:rgba(200,162,74,.3);color:var(--gold)}
+    .btn-sm{padding:9px 18px;border-radius:9px;font-size:.8rem;font-weight:600;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.25s}
+    .btn-cam{background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0f172a}
+    .btn-secondary{background:rgba(30,41,59,.8);color:rgba(226,232,240,.6);border:1px solid var(--border)}
+    .btn-row{display:flex;gap:8px;margin-top:8px}
+
+    /* Checkbox */
+    .check-row{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:10px;background:rgba(200,162,74,.04);border:1px solid rgba(200,162,74,.12);margin-bottom:12px;cursor:pointer}
+    .check-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:var(--gold);cursor:pointer}
+    .check-row label{font-size:.8rem;color:rgba(226,232,240,.65);line-height:1.5;cursor:pointer}
+    .check-row label strong{color:#e2e8f0}
+
+    /* Success */
+    #pantalla-exito{display:none;text-align:center;padding:40px 20px}
+    .exito-icon{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+    #pantalla-exito h2{font-family:'Playfair Display',serif;font-size:1.5rem;color:#f1f5f9;margin-bottom:10px}
+    #pantalla-exito p{font-size:.85rem;color:rgba(226,232,240,.5);margin-bottom:24px;line-height:1.6}
+
+    /* Loading */
+    #pantalla-loading{text-align:center;padding:80px 20px}
+    .spinner{width:40px;height:40px;border:3px solid rgba(200,162,74,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Error */
+    #pantalla-error{display:none;text-align:center;padding:60px 20px}
+    #pantalla-error h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:#f87171;margin-bottom:10px}
+    #pantalla-error p{font-size:.85rem;color:rgba(226,232,240,.5)}
+
+    .badge-legal{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.2);font-size:.68rem;font-weight:600;color:var(--gold);margin-bottom:14px}
+    .alert-info{font-size:.75rem;color:rgba(200,162,74,.7);background:rgba(200,162,74,.07);border:1px solid rgba(200,162,74,.15);border-radius:8px;padding:10px 14px;margin-top:10px}
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="logo-box">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2L2 5.5v5c0 4.5 3 8 8 9 5-1 8-4.5 8-9v-5L10 2z" fill="rgba(15,23,42,.8)" stroke="#0b1120" stroke-width=".5"/>
+        <path d="M6.5 10l2.5 2.5L13.5 7" stroke="#C8A24A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div>
+      <h1>ConsentPro</h1>
+      <p>Consentimiento Informado Digital</p>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="pantalla-loading">
+    <div class="spinner"></div>
+    <p style="font-size:.85rem;color:rgba(226,232,240,.4)">Cargando consentimiento...</p>
+  </div>
+
+  <!-- ERROR -->
+  <div id="pantalla-error">
+    <h2>Enlace inválido</h2>
+    <p>Este enlace no existe, ya fue utilizado o ha expirado.<br>Contacta a tu médico para recibir uno nuevo.</p>
+  </div>
+
+  <!-- FORMULARIO PRINCIPAL -->
+  <div id="pantalla-form" style="display:none">
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step-pill active" id="pill-1">1 · Información</div>
+      <div class="step-pill" id="pill-2">2 · Foto</div>
+      <div class="step-pill" id="pill-3">3 · Firma</div>
+      <div class="step-pill" id="pill-4">4 · Confirmar</div>
+    </div>
+
+    <!-- PASO 1: INFO -->
+    <div id="paso-1">
+      <div class="badge-legal">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L1 3v2.5c0 2 1.4 3.8 4 4.5 2.6-.7 4-2.5 4-4.5V3L5 1z" fill="#C8A24A"/></svg>
+        Documento con validez jurídica
+      </div>
+
+      <div class="card">
+        <p class="card-title">Procedimiento</p>
+        <div class="proc-box">
+          <p class="proc-tipo" id="info-tipo"></p>
+          <p class="proc-nombre" id="info-nombre"></p>
+          <p class="proc-desc" id="info-desc"></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Tus datos</p>
+        <div class="info-row"><span class="info-label">Nombre</span><span class="info-value" id="info-paciente"></span></div>
+        <div class="info-row"><span class="info-label">Cédula / ID</span><span class="info-value" id="info-cedula"></span></div>
+        <div class="info-row"><span class="info-label">Email</span><span class="info-value" id="info-email"></span></div>
+        <div class="info-row"><span class="info-label">Fecha</span><span class="info-value" id="info-fecha"></span></div>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Consentimiento informado</p>
+        <div class="legal-text" id="texto-legal">
+          Yo, el/la abajo firmante, en pleno uso de mis facultades mentales, declaro haber sido informado/a de manera clara, comprensible y suficiente sobre el procedimiento médico indicado, sus objetivos, beneficios, riesgos posibles, alternativas disponibles y las consecuencias de no realizarlo.<br><br>
+          He tenido la oportunidad de formular todas las preguntas que he considerado necesarias y han sido respondidas satisfactoriamente. Entiendo que este consentimiento es voluntario y que puedo revocarlo en cualquier momento antes del procedimiento, sin que ello afecte la calidad de mi atención.<br><br>
+          Autorizo expresamente la realización del procedimiento descrito, así como cualquier actuación médica adicional que pudiera ser necesaria durante su ejecución para preservar mi salud e integridad.<br><br>
+          Este documento constituye mi consentimiento libre, voluntario e informado, firmado digitalmente con validez jurídica conforme a la legislación vigente.
+        </div>
+        <p class="alert-info">Desplázate para leer el texto completo antes de continuar.</p>
+      </div>
+
+      <button class="btn-gold" onclick="irPaso(2)">Entendido, continuar →</button>
+    </div>
+
+    <!-- PASO 2: FOTO -->
+    <div id="paso-2" style="display:none">
+      <div class="card">
+        <p class="card-title">Foto de verificación</p>
+        <p style="font-size:.8rem;color:rgba(226,232,240,.5);margin-bottom:14px">Necesitamos una foto tuya para verificar tu identidad. Mira a la cámara y asegúrate de tener buena iluminación.</p>
+
+        <div id="video-container">
+          <video id="video" playsinline autoplay muted></video>
+          <div class="cam-overlay" id="cam-overlay">
+            <p>Presiona "Activar cámara" para comenzar</p>
+          </div>
+        </div>
+
+        <img id="photo-preview" alt="Tu foto"/>
+
+        <div class="btn-row">
+          <button class="btn-sm btn-cam" id="btn-activar-cam" onclick="activarCamara()">📷 Activar cámara</button>
+          <button class="btn-sm btn-cam" id="btn-tomar-foto" onclick="tomarFoto()" style="display:none">✓ Tomar foto</button>
+          <button class="btn-sm btn-secondary" id="btn-repetir-foto" onclick="repetirFoto()" style="display:none">↺ Repetir</button>
+        </div>
+        <p class="alert-info" style="margin-top:10px">Tu foto queda registrada en el consentimiento como verificación biométrica.</p>
+      </div>
+
+      <button class="btn-gold" id="btn-paso2-next" onclick="irPaso(3)" disabled>Continuar →</button>
+      <button class="btn-outline" onclick="irPaso(1)">← Atrás</button>
+    </div>
+
+    <!-- PASO 3: FIRMA -->
+    <div id="paso-3" style="display:none">
+      <div class="card">
+        <p class="card-title">Firma digital</p>
+        <p style="font-size:.8rem;color:rgba(226,232,240,.5);margin-bottom:12px">Firma en el recuadro blanco con tu dedo o mouse:</p>
+        <canvas id="firma-canvas"></canvas>
+        <p class="firma-label">← Firma aquí →</p>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn-sm btn-secondary" onclick="limpiarFirma()">🗑 Limpiar</button>
+        </div>
+      </div>
+
+      <button class="btn-gold" id="btn-paso3-next" onclick="irPaso(4)" disabled>Continuar →</button>
+      <button class="btn-outline" onclick="irPaso(2)">← Atrás</button>
+    </div>
+
+    <!-- PASO 4: CONFIRMAR -->
+    <div id="paso-4" style="display:none">
+      <div class="card">
+        <p class="card-title">Confirmar y firmar</p>
+        <p style="font-size:.82rem;color:rgba(226,232,240,.6);margin-bottom:18px;line-height:1.6">Al firmar confirmas que leíste el consentimiento, que la foto es tuya y que firmas voluntariamente.</p>
+
+        <label class="check-row">
+          <input type="checkbox" id="check1" onchange="verificarChecks()"/>
+          <label for="check1">He leído el documento completo y <strong>entiendo el procedimiento</strong> y sus riesgos.</label>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="check2" onchange="verificarChecks()"/>
+          <label for="check2">Confirmo que la foto y firma son mías y que <strong>doy mi consentimiento voluntariamente</strong>.</label>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="check3" onchange="verificarChecks()"/>
+          <label for="check3">Entiendo que este documento tiene <strong>validez jurídica</strong> y constituye mi firma legal.</label>
+        </label>
+      </div>
+
+      <button class="btn-gold" id="btn-firmar-final" onclick="firmarConsentimiento()" disabled>
+        ✓ Firmar y completar consentimiento
+      </button>
+      <button class="btn-outline" onclick="irPaso(3)">← Atrás</button>
+    </div>
+
+  </div><!-- /pantalla-form -->
+
+  <!-- ÉXITO -->
+  <div id="pantalla-exito">
+    <div class="exito-icon">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M6 16l7 7 13-13" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2>¡Consentimiento firmado!</h2>
+    <p>Tu firma ha sido registrada exitosamente.<br>El médico recibirá el documento con tu firma digital,<br>foto de verificación y sellado SHA-256.</p>
+    <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:16px;margin-bottom:24px">
+      <p style="font-size:.78rem;color:rgba(34,197,94,.8);margin-bottom:4px">✓ Documento firmado y sellado</p>
+      <p style="font-size:.78rem;color:rgba(34,197,94,.8);margin-bottom:4px">✓ Foto de verificación registrada</p>
+      <p style="font-size:.78rem;color:rgba(34,197,94,.8)">✓ Hash SHA-256 generado</p>
+    </div>
+    <button class="btn-gold" id="btn-descargar-pdf" onclick="descargarPDF()">⬇ Descargar mi copia en PDF</button>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ─── Estado global ──────────────────────────────
+  let consentimientoData = null;
+  let fotoDataURL = null;
+  let firmaDataURL = null;
+  let stream = null;
+  let firmaHaTrazado = false;
+  const { jsPDF } = window.jspdf;
+
+  // ─── Cargar consentimiento ──────────────────────
+  async function cargarConsentimiento() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('t');
+    if (!token) { mostrarError(); return; }
+
+    const { data, error } = await sb
+      .from('consentimientos')
+      .select('*')
+      .eq('token_firma', token)
+      .single();
+
+    if (error || !data) { mostrarError(); return; }
+    if (data.estado === 'firmado') {
+      mostrarYaFirmado(); return;
+    }
+
+    consentimientoData = data;
+    poblarInfo(data);
+    document.getElementById('pantalla-loading').style.display = 'none';
+    document.getElementById('pantalla-form').style.display = 'block';
+  }
+
+  function poblarInfo(d) {
+    document.getElementById('info-tipo').textContent = d.tipo_procedimiento || 'Procedimiento médico';
+    document.getElementById('info-nombre').textContent = d.nombre_procedimiento || d.tipo_procedimiento || '';
+    document.getElementById('info-desc').textContent = d.descripcion_procedimiento || 'Sin descripción adicional.';
+    document.getElementById('info-paciente').textContent = d.paciente_nombre || '—';
+    document.getElementById('info-cedula').textContent = d.paciente_cedula || '—';
+    document.getElementById('info-email').textContent = d.paciente_email || '—';
+    document.getElementById('info-fecha').textContent = new Date().toLocaleDateString('es-VE', {day:'2-digit',month:'long',year:'numeric'});
+  }
+
+  function mostrarError() {
+    document.getElementById('pantalla-loading').style.display = 'none';
+    document.getElementById('pantalla-error').style.display = 'block';
+  }
+
+  function mostrarYaFirmado() {
+    document.getElementById('pantalla-loading').style.display = 'none';
+    document.getElementById('pantalla-error').style.display = 'block';
+    document.querySelector('#pantalla-error h2').textContent = 'Ya firmado';
+    document.querySelector('#pantalla-error p').textContent = 'Este consentimiento ya fue firmado anteriormente. Contacta a tu médico si tienes dudas.';
+  }
+
+  // ─── Navegación entre pasos ──────────────────────
+  function irPaso(n) {
+    [1,2,3,4].forEach(i => {
+      document.getElementById('paso-' + i).style.display = i === n ? 'block' : 'none';
+      const pill = document.getElementById('pill-' + i);
+      if (i < n) pill.className = 'step-pill done';
+      else if (i === n) pill.className = 'step-pill active';
+      else pill.className = 'step-pill';
+    });
+    if (n === 3) iniciarFirmaCanvas();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  // ─── CÁMARA ─────────────────────────────────────
+  async function activarCamara() {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 480 }, audio: false });
+      const video = document.getElementById('video');
+      video.srcObject = stream;
+      document.getElementById('cam-overlay').style.display = 'none';
+      document.getElementById('btn-activar-cam').style.display = 'none';
+      document.getElementById('btn-tomar-foto').style.display = 'block';
+    } catch(e) {
+      alert('No se pudo acceder a la cámara. Por favor permite el acceso en tu navegador.');
+    }
+  }
+
+  function tomarFoto() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas-photo');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    fotoDataURL = canvas.toDataURL('image/jpeg', 0.85);
+
+    // Detener cámara
+    if (stream) stream.getTracks().forEach(t => t.stop());
+
+    // Mostrar preview
+    const preview = document.getElementById('photo-preview');
+    preview.src = fotoDataURL;
+    preview.style.display = 'block';
+    document.getElementById('video-container').style.display = 'none';
+    document.getElementById('btn-tomar-foto').style.display = 'none';
+    document.getElementById('btn-repetir-foto').style.display = 'block';
+    document.getElementById('btn-paso2-next').disabled = false;
+  }
+
+  function repetirFoto() {
+    fotoDataURL = null;
+    document.getElementById('photo-preview').style.display = 'none';
+    document.getElementById('video-container').style.display = 'block';
+    document.getElementById('cam-overlay').style.display = 'flex';
+    document.getElementById('btn-activar-cam').style.display = 'block';
+    document.getElementById('btn-repetir-foto').style.display = 'none';
+    document.getElementById('btn-paso2-next').disabled = true;
+  }
+
+  // ─── FIRMA CANVAS ────────────────────────────────
+  function iniciarFirmaCanvas() {
+    const canvas = document.getElementById('firma-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Ajustar tamaño real del canvas
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * (window.devicePixelRatio || 1);
+    canvas.height = 180 * (window.devicePixelRatio || 1);
+    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // Placeholder text
+    ctx.fillStyle = 'rgba(15,23,42,.18)';
+    ctx.font = '14px DM Sans';
+    ctx.textAlign = 'center';
+    ctx.fillText('Firma aquí', rect.width / 2, 95);
+
+    let dibujando = false;
+    let ultimoX = 0, ultimoY = 0;
+
+    function getPos(e) {
+      const r = canvas.getBoundingClientRect();
+      const src = e.touches ? e.touches[0] : e;
+      return { x: src.clientX - r.left, y: src.clientY - r.top };
+    }
+
+    function iniciar(e) {
+      e.preventDefault();
+      if (!firmaHaTrazado) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        firmaHaTrazado = true;
+      }
+      dibujando = true;
+      const {x, y} = getPos(e);
+      ultimoX = x; ultimoY = y;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    }
+
+    function dibujar(e) {
+      e.preventDefault();
+      if (!dibujando) return;
+      const {x, y} = getPos(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      ultimoX = x; ultimoY = y;
+      document.getElementById('btn-paso3-next').disabled = false;
+    }
+
+    function terminar(e) {
+      if (e) e.preventDefault();
+      dibujando = false;
+    }
+
+    canvas.addEventListener('mousedown', iniciar);
+    canvas.addEventListener('mousemove', dibujar);
+    canvas.addEventListener('mouseup', terminar);
+    canvas.addEventListener('mouseleave', terminar);
+    canvas.addEventListener('touchstart', iniciar, {passive:false});
+    canvas.addEventListener('touchmove', dibujar, {passive:false});
+    canvas.addEventListener('touchend', terminar, {passive:false});
+  }
+
+  function limpiarFirma() {
+    const canvas = document.getElementById('firma-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    firmaHaTrazado = false;
+    document.getElementById('btn-paso3-next').disabled = true;
+
+    // Volver a poner placeholder
+    const rect = canvas.getBoundingClientRect();
+    ctx.fillStyle = 'rgba(15,23,42,.18)';
+    ctx.font = '14px DM Sans';
+    ctx.textAlign = 'center';
+    ctx.fillText('Firma aquí', rect.width / 2, 95);
+  }
+
+  function verificarChecks() {
+    const ok = document.getElementById('check1').checked
+            && document.getElementById('check2').checked
+            && document.getElementById('check3').checked;
+    document.getElementById('btn-firmar-final').disabled = !ok;
+  }
+
+  // ─── GUARDAR FIRMA ───────────────────────────────
+  async function firmarConsentimiento() {
+    const btn = document.getElementById('btn-firmar-final');
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+
+    firmaDataURL = document.getElementById('firma-canvas').toDataURL('image/png');
+
+    const ahora = new Date().toISOString();
+    const hash = await generarHash(firmaDataURL + fotoDataURL + ahora);
+
+    const { error } = await sb.from('consentimientos').update({
+      estado: 'firmado',
+      firma_data: firmaDataURL,
+      foto_paciente: fotoDataURL,
+      firmado_at: ahora,
+      hash_sha256: hash
+    }).eq('id', consentimientoData.id);
+
+    if (error) {
+      alert('Error al guardar: ' + error.message);
+      btn.disabled = false; btn.textContent = '✓ Firmar y completar consentimiento';
+      return;
+    }
+
+    document.getElementById('pantalla-form').style.display = 'none';
+    document.getElementById('pantalla-exito').style.display = 'block';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  async function generarHash(texto) {
+    const enc = new TextEncoder().encode(texto);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // ─── DESCARGAR PDF ───────────────────────────────
+  async function descargarPDF() {
+    const btn = document.getElementById('btn-descargar-pdf');
+    btn.textContent = 'Generando PDF...';
+    btn.disabled = true;
+
+    const d = consentimientoData;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, mg = 20;
+
+    // Fondo
+    doc.setFillColor(15, 23, 42);
+    doc.rect(0, 0, W, 297, 'F');
+
+    // Header dorado
+    doc.setFillColor(200, 162, 74);
+    doc.rect(0, 0, W, 28, 'F');
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(16); doc.setFont('helvetica', 'bold');
+    doc.text('ConsentPro', mg, 12);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal');
+    doc.text('Plataforma Internacional de Consentimiento Digital', mg, 18);
+    doc.setFontSize(7);
+    doc.text('Documento con validez jurídica · SHA-256 verificado', mg, 23);
+
+    // Título
+    doc.setTextColor(200, 162, 74);
+    doc.setFontSize(14); doc.setFont('helvetica', 'bold');
+    doc.text('CONSENTIMIENTO INFORMADO', mg, 40);
+
+    doc.setDrawColor(200, 162, 74);
+    doc.setLineWidth(0.4);
+    doc.line(mg, 43, W - mg, 43);
+
+    // Datos del procedimiento
+    let y = 52;
+    doc.setTextColor(226, 232, 240);
+    doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text('PROCEDIMIENTO', mg, y); y += 6;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+    doc.setTextColor(241, 245, 249);
+    doc.text((d.nombre_procedimiento || d.tipo_procedimiento || 'Procedimiento médico'), mg, y); y += 5;
+    doc.setFontSize(8); doc.setTextColor(148, 163, 184);
+    if (d.descripcion_procedimiento) {
+      const lines = doc.splitTextToSize(d.descripcion_procedimiento, W - mg*2);
+      doc.text(lines, mg, y); y += lines.length * 4 + 4;
+    }
+
+    // Datos paciente
+    y += 4;
+    doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
+    doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text('DATOS DEL PACIENTE', mg, y); y += 7;
+    doc.setFont('helvetica', 'normal'); doc.setTextColor(226, 232, 240);
+    const campos = [
+      ['Nombre completo', d.paciente_nombre],
+      ['Cédula / ID', d.paciente_cedula || 'No proporcionada'],
+      ['Correo electrónico', d.paciente_email || 'No proporcionado'],
+      ['Fecha de firma', new Date(d.firmado_at || Date.now()).toLocaleString('es-VE')]
+    ];
+    campos.forEach(([label, val]) => {
+      doc.setFontSize(7); doc.setTextColor(100, 116, 139); doc.text(label, mg, y);
+      doc.setFontSize(9); doc.setTextColor(226, 232, 240); doc.text(val || '—', mg + 45, y);
+      y += 7;
+    });
+
+    // Texto legal
+    y += 4;
+    doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
+    doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+    doc.text('DECLARACIÓN DE CONSENTIMIENTO', mg, y); y += 7;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(148, 163, 184);
+    const textoLegal = 'Yo, el/la abajo firmante, en pleno uso de mis facultades mentales, declaro haber sido informado/a de manera clara y suficiente sobre el procedimiento médico indicado, sus objetivos, beneficios, riesgos posibles, alternativas disponibles y las consecuencias de no realizarlo. He tenido la oportunidad de formular todas las preguntas necesarias y han sido respondidas satisfactoriamente. Entiendo que este consentimiento es voluntario y que puedo revocarlo antes del procedimiento. Autorizo expresamente la realización del procedimiento descrito.';
+    const legalLines = doc.splitTextToSize(textoLegal, W - mg*2);
+    doc.text(legalLines, mg, y); y += legalLines.length * 4 + 8;
+
+    // Imagen de firma
+    if (firmaDataURL) {
+      doc.setDrawColor(30, 41, 59); doc.line(mg, y, W-mg, y); y += 8;
+      doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+      doc.text('FIRMA DIGITAL DEL PACIENTE', mg, y); y += 7;
+      try {
+        doc.addImage(firmaDataURL, 'PNG', mg, y, 80, 28);
+      } catch(e) {}
+      y += 34;
+    }
+
+    // Foto del paciente
+    if (fotoDataURL) {
+      doc.setTextColor(200, 162, 74); doc.setFontSize(8); doc.setFont('helvetica', 'bold');
+      doc.text('FOTO DE VERIFICACIÓN DEL PACIENTE', mg + 90, y - 34);
+      try {
+        doc.addImage(fotoDataURL, 'JPEG', mg + 90, y - 28, 40, 30);
+      } catch(e) {}
+    }
+
+    // Footer con hash
+    y += 8;
+    doc.setDrawColor(200, 162, 74); doc.setLineWidth(0.3);
+    doc.line(mg, 275, W-mg, 275);
+    doc.setFontSize(6.5); doc.setTextColor(100, 116, 139); doc.setFont('helvetica', 'normal');
+    doc.text('Documento generado por ConsentPro · consentpro.net', mg, 280);
+    doc.text('Hash SHA-256: ' + (d.hash_sha256 ? d.hash_sha256.substring(0, 48) + '...' : 'Verificando...'), mg, 285);
+
+    doc.save(`Consentimiento_${(d.paciente_nombre || 'paciente').replace(/\s+/g,'_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+
+    btn.textContent = '⬇ Descargar mi copia en PDF';
+    btn.disabled = false;
+  }
+
+  // Iniciar
+  cargarConsentimiento();
+</script>
+</body>
+</html>
