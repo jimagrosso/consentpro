@@ -125,6 +125,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="plantillas-catalogo.js"></script>
 <script>
   const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
@@ -166,6 +167,40 @@
     }
   }
 
+  // ══════════════════════════════════════════════════════
+  // SEED: Pre-cargar plantillas de la especialidad elegida
+  // ══════════════════════════════════════════════════════
+  async function seedTemplatesForUser(userId, especialidad) {
+    const templates = getTemplatesForSpecialty(especialidad);
+    if (!templates || templates.length === 0) return;
+
+    for (const tpl of templates) {
+      // Idempotente: verificar si ya existe este catalog_id para este médico
+      const { data: exists } = await sb
+        .from('plantillas')
+        .select('id')
+        .eq('medico_id', userId)
+        .eq('catalog_id', tpl.catalog_id)
+        .single();
+
+      if (!exists) {
+        await sb.from('plantillas').insert({
+          medico_id: userId,
+          catalog_id: tpl.catalog_id,
+          titulo: tpl.titulo,
+          tipo_procedimiento: tpl.tipo_procedimiento,
+          nombre_procedimiento: tpl.nombre_procedimiento,
+          descripcion: tpl.descripcion,
+          specialty_tags: tpl.specialty_tags,
+          activa: true,
+          es_catalogo: true,
+          version: tpl.version || 1,
+          locale: tpl.locale || 'es-LATAM'
+        });
+      }
+    }
+  }
+
   async function guardar() {
     if (!especialidadSeleccionada || especialidadSeleccionada === '__otra__') return;
     const btn = document.getElementById('btn-continuar');
@@ -198,6 +233,9 @@
       btn.textContent = 'Ir a mi panel →';
       alert('Error al guardar. Intenta de nuevo.');
     } else {
+      // Pre-cargar plantillas de la especialidad (seed silencioso)
+      btn.textContent = 'Preparando tus plantillas...';
+      await seedTemplatesForUser(currentUser.id, especialidadSeleccionada);
       window.location.href = 'dashboard.html';
     }
   }

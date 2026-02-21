@@ -109,7 +109,15 @@
     </div>
 
     <div class="card mb-6">
-      <h2 style="font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:20px">Procedimiento</h2>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <h2 style="font-size:1rem;font-weight:700;color:#f1f5f9;margin:0">Procedimiento</h2>
+        <div style="display:flex;align-items:center;gap:8px;flex:1;max-width:360px">
+          <div style="font-size:.68rem;font-weight:700;color:rgba(200,162,74,.7);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap">⚡ Plantilla</div>
+          <select id="sel-plantilla" class="input-field" style="padding:8px 12px;font-size:.8rem" onchange="aplicarPlantilla(this.value)">
+            <option value="">Seleccionar plantilla...</option>
+          </select>
+        </div>
+      </div>
       <div class="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label>Tipo de procedimiento</label>
@@ -217,6 +225,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="plantillas-catalogo.js"></script>
 <script>
   const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
@@ -225,11 +234,93 @@
   let currentUser = null;
   let metodoSeleccionado = 'whatsapp';
   let consentimientoId = null;
+  let misPlantillas = []; // cache de plantillas del usuario
+
+  // ══════════════════════════════════════════════════════
+  // CARGA DE PLANTILLAS DEL USUARIO (desde DB)
+  // ══════════════════════════════════════════════════════
+  async function cargarPlantillas(userId) {
+    const { data, error } = await sb
+      .from('plantillas')
+      .select('id, titulo, tipo_procedimiento, nombre_procedimiento, descripcion, activa')
+      .eq('medico_id', userId)
+      .eq('activa', true)
+      .order('titulo');
+
+    if (error || !data || data.length === 0) return;
+
+    misPlantillas = data;
+    const sel = document.getElementById('sel-plantilla');
+    if (!sel) return;
+
+    // Agrupar por tipo_procedimiento para optgroups
+    const grupos = {};
+    data.forEach(tpl => {
+      const g = tpl.tipo_procedimiento || 'General';
+      if (!grupos[g]) grupos[g] = [];
+      grupos[g].push(tpl);
+    });
+
+    sel.innerHTML = '<option value="">Seleccionar plantilla...</option>';
+    Object.entries(grupos).forEach(([grupo, tpls]) => {
+      const og = document.createElement('optgroup');
+      og.label = grupo;
+      tpls.forEach(tpl => {
+        const op = document.createElement('option');
+        op.value = tpl.id;
+        op.textContent = tpl.titulo;
+        og.appendChild(op);
+      });
+      sel.appendChild(og);
+    });
+
+    // Estilo visual para indicar que hay plantillas disponibles
+    sel.style.borderColor = 'rgba(200,162,74,.4)';
+  }
+
+  // ══════════════════════════════════════════════════════
+  // APLICAR PLANTILLA SELECCIONADA → auto-fill campos
+  // ══════════════════════════════════════════════════════
+  function aplicarPlantilla(plantillaId) {
+    if (!plantillaId) return;
+    const tpl = misPlantillas.find(t => t.id === plantillaId);
+    if (!tpl) return;
+
+    // Auto-llenar campos del procedimiento
+    if (tpl.tipo_procedimiento) {
+      const sel = document.getElementById('proc-tipo');
+      // Buscar opción que coincida (parcial, case-insensitive)
+      const opts = Array.from(sel.options);
+      const match = opts.find(o => 
+        o.text.toLowerCase().includes(tpl.tipo_procedimiento.toLowerCase()) ||
+        tpl.tipo_procedimiento.toLowerCase().includes(o.text.toLowerCase())
+      );
+      if (match) sel.value = match.value;
+    }
+
+    if (tpl.nombre_procedimiento) {
+      document.getElementById('proc-nombre').value = tpl.nombre_procedimiento;
+    }
+
+    if (tpl.descripcion) {
+      document.getElementById('proc-descripcion').value = tpl.descripcion;
+    }
+
+    // Feedback visual
+    const sel = document.getElementById('sel-plantilla');
+    sel.style.borderColor = 'rgba(34,197,94,.5)';
+    setTimeout(() => { sel.style.borderColor = 'rgba(200,162,74,.4)'; }, 1500);
+
+    // Scroll suave al campo de descripción para que el doctor vea que se llenó
+    document.getElementById('proc-nombre').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 
   async function init() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) { window.location.href = 'login.html'; return; }
     currentUser = session.user;
+    // Cargar plantillas del usuario en segundo plano
+    cargarPlantillas(currentUser.id);
   }
 
   function irPaso2() {

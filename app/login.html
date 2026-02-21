@@ -120,6 +120,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="plantillas-catalogo.js"></script>
 <script>
   const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
@@ -152,7 +153,37 @@
     if (!perfil || !perfil.especialidad) {
       window.location.href = 'especialidad.html';
     } else {
+      // Si tiene especialidad pero aún no tiene plantillas → seed silencioso
+      if (typeof seedTemplatesForUser === 'function') {
+        const { count } = await sb.from('plantillas')
+          .select('id', { count: 'exact', head: true })
+          .eq('medico_id', user.id);
+        if (!count || count === 0) {
+          await seedTemplatesForUser(user.id, perfil.especialidad);
+        }
+      }
       window.location.href = 'dashboard.html';
+    }
+  }
+
+  // Seed de plantillas para usuario (llamado desde login o especialidad.html)
+  async function seedTemplatesForUser(userId, especialidad) {
+    if (typeof getTemplatesForSpecialty !== 'function') return;
+    const templates = getTemplatesForSpecialty(especialidad);
+    if (!templates || templates.length === 0) return;
+    for (const tpl of templates) {
+      const { data: exists } = await sb.from('plantillas').select('id')
+        .eq('medico_id', userId).eq('catalog_id', tpl.catalog_id).single();
+      if (!exists) {
+        await sb.from('plantillas').insert({
+          medico_id: userId, catalog_id: tpl.catalog_id,
+          titulo: tpl.titulo, tipo_procedimiento: tpl.tipo_procedimiento,
+          nombre_procedimiento: tpl.nombre_procedimiento,
+          descripcion: tpl.descripcion, specialty_tags: tpl.specialty_tags,
+          activa: true, es_catalogo: true,
+          version: tpl.version || 1, locale: tpl.locale || 'es-LATAM'
+        });
+      }
     }
   }
 
