@@ -274,17 +274,21 @@
     const btn = document.getElementById('btn-crear');
     btn.disabled = true; btn.textContent = 'Creando...';
 
-    // ── VERIFICAR LÍMITE FREEMIUM (3 gratis) ─────────────
-    const { data: perfil } = await sb.from('perfiles').select('plan, consentimientos_usados').eq('id', currentUser.id).single();
+    // ── VERIFICAR LÍMITE SEGÚN PLAN ─────────────────────
+    const { data: perfil } = await sb.from('perfiles')
+      .select('plan, consentimientos_disponibles, consentimientos_usados')
+      .eq('id', currentUser.id).single();
+
     const usados = perfil?.consentimientos_usados || 0;
+    const disponibles = perfil?.consentimientos_disponibles ?? 3;
     const plan = perfil?.plan || 'gratuito';
 
-    if (plan === 'gratuito' && usados >= 3) {
-      // Redirigir a página de pago
-      mostrarModalPago(usados);
+    if (usados >= disponibles) {
+      mostrarModalPago(usados, disponibles, plan);
       btn.disabled = false; btn.textContent = 'Crear y enviar consentimiento';
       return;
     }
+    // ─────────────────────────────────────────────────────
     // ─────────────────────────────────────────────────────
 
     const nombre = document.getElementById('pac-nombre').value.trim();
@@ -318,7 +322,7 @@
     }
 
     // Incrementar contador de uso
-    await sb.from('perfiles').upsert({ id: currentUser.id, consentimientos_usados: usados + 1 });
+    await sb.from('perfiles').update({ consentimientos_usados: usados + 1 }).eq('id', currentUser.id);
 
     consentimientoId = data.id;
     const baseUrl = window.location.origin + window.location.pathname.replace('nuevo.html','');
@@ -326,11 +330,11 @@
 
     document.getElementById('link-firma').textContent = linkFirma;
 
-    // Mostrar aviso de consentimientos restantes si es plan gratuito
-    const restantes = 3 - (usados + 1);
+    // Mostrar aviso de consentimientos restantes
+    const restantes = disponibles - (usados + 1);
     let msgExtra = '';
     if (plan === 'gratuito' && restantes > 0) {
-      msgExtra = ` · Te quedan ${restantes} consentimiento${restantes > 1 ? 's' : ''} gratuito${restantes > 1 ? 's' : ''}.`;
+      msgExtra = ` · Te quedan ${restantes} consentimiento${restantes !== 1 ? 's' : ''} gratuito${restantes !== 1 ? 's' : ''}.`;
     } else if (plan === 'gratuito' && restantes === 0) {
       msgExtra = ' · Has usado los 3 gratuitos. El próximo requerirá suscripción.';
     }
@@ -348,7 +352,7 @@
     document.getElementById('step-label').textContent = '✓ Consentimiento creado';
   }
 
-  function mostrarModalPago(usados) {
+  function mostrarModalPago(usados, disponibles, plan) {
     // Crear modal de upgrade
     const modal = document.createElement('div');
     modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px';

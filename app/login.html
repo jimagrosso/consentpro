@@ -199,7 +199,10 @@
       // Insert perfil
       if(data.user) {
         await sb.from('perfiles').upsert({
-          id: data.user.id, email, nombre, apellido, especialidad, pais
+          id: data.user.id, email, nombre, apellido, especialidad, pais,
+          plan: 'gratuito',
+          consentimientos_disponibles: 3,
+          consentimientos_usados: 0
         });
       }
       showAlert('¡Cuenta creada! Revisa tu email para confirmar y luego inicia sesión.', 'success');
