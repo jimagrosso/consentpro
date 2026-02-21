@@ -401,6 +401,7 @@
     const plan = perfil?.plan || 'gratuito';
 
     if (usados >= disponibles) {
+      cpHide();
       mostrarModalPago(usados, disponibles, plan);
       btn.disabled = false; btn.textContent = 'Crear y enviar consentimiento';
       return;
@@ -433,6 +434,7 @@
     }).select().single();
 
     if (error) {
+      cpHide();
       alert('Error al crear: ' + error.message);
       btn.disabled = false; btn.textContent = 'Crear y enviar consentimiento';
       return;
@@ -461,7 +463,8 @@
     const msgWA = encodeURIComponent(`Hola ${nombre}, le comparto el enlace para firmar su consentimiento informado: ${linkFirma}`);
     document.getElementById('btn-whatsapp-envio').href = `https://wa.me/${telLimpio}?text=${msgWA}`;
 
-    // Mostrar paso 3
+    // Ocultar loading y mostrar paso 3
+    cpHide();
     document.getElementById('step2').style.display = 'none';
     document.getElementById('step3').style.display = 'block';
     document.getElementById('dot-2').className = 'step-dot done';
