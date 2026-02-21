@@ -224,10 +224,10 @@
         </button>
       </div>
       <div id="mob-menu" class="md:hidden rounded-2xl mt-2 px-5 py-4 flex flex-col gap-3" style="background:rgba(8,12,20,0.97);border:1px solid var(--border);">
-        <a href="soluciones/medicos.html" class="nav-link text-sm">Soluciones</a>
-        <a href="producto.html" class="nav-link text-sm" style="color:var(--teal);">Producto</a>
-        <a href="index.html#precios" class="nav-link text-sm">Precios</a>
-        <a href="index.html#asesoria-legal" class="nav-link text-sm">Asesoría Legal</a>
+        <a href="soluciones/medicos.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Soluciones</a>
+        <a href="producto.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)" style="color:var(--teal);">Producto</a>
+        <a href="index.html#precios" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Precios</a>
+        <a href="index.html#asesoria-legal" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Asesoría Legal</a>
         <div style="border-top:1px solid var(--border);padding-top:12px;">
           <a href="soluciones/medicos.html" class="btn-teal w-full text-center text-sm justify-center">Solicitar acceso</a>
         </div>
@@ -863,7 +863,31 @@
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); obs.unobserve(e.target); } });
     }, {threshold:.1, rootMargin:'0px 0px -40px 0px'});
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => obs.observe(el));
-  </script>
+  
+  function toggleMobMenu() {
+    const menu = document.getElementById('mob-menu');
+    const iconOpen = document.getElementById('mob-icon-open');
+    const iconClose = document.getElementById('mob-icon-close');
+    const isOpen = menu.classList.toggle('open');
+    iconOpen.style.display = isOpen ? 'none' : 'block';
+    iconClose.style.display = isOpen ? 'block' : 'none';
+  }
+  // Close menu when clicking a link
+  document.addEventListener('DOMContentLoaded', function() {
+    const menu = document.getElementById('mob-menu');
+    if (menu) {
+      menu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          menu.classList.remove('open');
+          const iconOpen = document.getElementById('mob-icon-open');
+          const iconClose = document.getElementById('mob-icon-close');
+          if(iconOpen) iconOpen.style.display = 'block';
+          if(iconClose) iconClose.style.display = 'none';
+        });
+      });
+    }
+  });
+</script>
 
 </body>
 </html>

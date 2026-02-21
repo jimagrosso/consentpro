@@ -25,8 +25,8 @@
     .glass-card:hover{border-color:rgba(200,162,74,.2)}
     .sec-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;flex-shrink:0}
     nav.scrolled{background:rgba(11,17,32,.97)!important;backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
-    #mob-menu{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1)}
-    #mob-menu.open{max-height:400px}
+    #mob-menu{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,1,.36,1);background:rgba(11,17,32,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07)}
+    #mob-menu.open{max-height:600px}
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-thumb{background:rgba(200,162,74,.3);border-radius:99px}
   </style>
@@ -53,17 +53,18 @@
       <a href="app/login.html" class="btn-ghost" style="padding:9px 18px;font-size:.8rem">Iniciar sesión</a>
       <a href="soluciones/medicos.html" class="btn-gold" style="padding:9px 18px;font-size:.8rem">Empezar gratis</a>
     </div>
-    <button onclick="document.getElementById('mob-menu').classList.toggle('open')" class="md:hidden p-2" style="background:none;border:none;cursor:pointer">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="#e2e8f0" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <button id="mob-btn" onclick="toggleMobMenu()" class="md:hidden" style="background:none;border:none;cursor:pointer;padding:10px;margin:-10px;display:flex;align-items:center;justify-content:center">
+      <svg id="mob-icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg id="mob-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none"><path d="M5 5l14 14M19 5L5 19" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/></svg>
     </button>
   </div>
   <div id="mob-menu" class="md:hidden" style="background:rgba(11,17,32,.98);border-top:1px solid var(--border)">
     <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-2">
-      <a href="producto.html" class="nav-link py-2">Producto</a>
-      <a href="soluciones/medicos.html" class="nav-link py-2">Soluciones</a>
-      <a href="seguridad.html" class="nav-link py-2" style="color:var(--gold)">Seguridad</a>
-      <a href="precios.html" class="nav-link py-2">Precios</a>
-      <a href="nosotros.html" class="nav-link py-2">Nosotros</a>
+      <a href="producto.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Producto</a>
+      <a href="soluciones/medicos.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Soluciones</a>
+      <a href="seguridad.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)" style="color:var(--gold)">Seguridad</a>
+      <a href="precios.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Precios</a>
+      <a href="nosotros.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Nosotros</a>
       <a href="app/login.html" class="btn-gold text-center justify-center mt-2" style="padding:11px">Iniciar sesión</a>
     </div>
   </div>
@@ -217,6 +218,30 @@
 <script>
   window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  function toggleMobMenu() {
+    const menu = document.getElementById('mob-menu');
+    const iconOpen = document.getElementById('mob-icon-open');
+    const iconClose = document.getElementById('mob-icon-close');
+    const isOpen = menu.classList.toggle('open');
+    iconOpen.style.display = isOpen ? 'none' : 'block';
+    iconClose.style.display = isOpen ? 'block' : 'none';
+  }
+  // Close menu when clicking a link
+  document.addEventListener('DOMContentLoaded', function() {
+    const menu = document.getElementById('mob-menu');
+    if (menu) {
+      menu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          menu.classList.remove('open');
+          const iconOpen = document.getElementById('mob-icon-open');
+          const iconClose = document.getElementById('mob-icon-close');
+          if(iconOpen) iconOpen.style.display = 'block';
+          if(iconClose) iconClose.style.display = 'none';
+        });
+      });
+    }
   });
 </script>
 </body>

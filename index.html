@@ -504,15 +504,15 @@
 
     /* ── Mobile nav ── */
     #mobile-menu {
-      transform: translateY(-8px);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      display: none;
     }
     #mobile-menu.open {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
+      display: block;
+      animation: menuSlideDown 0.25s ease;
+    }
+    @keyframes menuSlideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* ── Announcement bar ── */
@@ -612,28 +612,26 @@
         <!-- Mobile hamburger -->
         <button id="menu-btn" class="md:hidden p-2 rounded-lg hover:bg-surface transition-colors" aria-label="Toggle menu" aria-expanded="false">
           <svg id="icon-open" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M3 5h14M3 10h14M3 15h14" stroke="#111827" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3 5h14M3 10h14M3 15h14" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
           <svg id="icon-close" class="hidden" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M5 5l10 10M15 5L5 15" stroke="#111827" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 5l10 10M15 5L5 15" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
     </div>
 
     <!-- Mobile menu -->
-    <div id="mobile-menu" class="md:hidden absolute top-full left-0 right-0 bg-white border-b border-surface shadow-card px-6 py-4">
-      <div class="flex flex-col gap-4">
-        <!-- [i18n] mobile nav -->
-        <a href="producto.html" class="nav-link text-sm">Producto</a>
-        <a href="soluciones/medicos.html" class="nav-link text-sm">Soluciones → Médicos y Clínicas</a>
-        <a href="seguridad.html" class="nav-link text-sm">Seguridad</a>
-        <a href="#como-funciona" class="nav-link text-sm">Cómo funciona</a>
-        <a href="#asesoria-legal" class="nav-link text-sm">Asesoría Legal</a>
-        <a href="#precios" class="nav-link text-sm">Precios</a>
-        <div class="flex flex-col gap-2 pt-2 border-t border-surface">
-          <a href="/app/login.html" class="btn-outline text-sm text-center">Iniciar sesión</a>
-          <a href="#precios" class="btn-primary text-sm text-center">Prueba gratuita</a>
+    <div id="mobile-menu" class="md:hidden absolute top-full left-0 right-0 px-6 py-5" style="background:rgba(11,17,32,.98);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px)">
+      <div class="flex flex-col gap-1">
+        <a href="producto.html" style="padding:12px 4px;font-size:.9rem;color:rgba(226,232,240,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05);display:block;transition:.2s" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='rgba(226,232,240,.7)'">Producto</a>
+        <a href="soluciones/medicos.html" style="padding:12px 4px;font-size:.9rem;color:rgba(226,232,240,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05);display:block;transition:.2s" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='rgba(226,232,240,.7)'">Soluciones — Médicos y Clínicas</a>
+        <a href="seguridad.html" style="padding:12px 4px;font-size:.9rem;color:rgba(226,232,240,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05);display:block;transition:.2s" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='rgba(226,232,240,.7)'">Seguridad</a>
+        <a href="#como-funciona" style="padding:12px 4px;font-size:.9rem;color:rgba(226,232,240,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05);display:block;transition:.2s" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='rgba(226,232,240,.7)'">Cómo funciona</a>
+        <a href="precios.html" style="padding:12px 4px;font-size:.9rem;color:rgba(226,232,240,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05);display:block;transition:.2s" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='rgba(226,232,240,.7)'">Precios</a>
+        <div style="display:flex;flex-direction:column;gap:10px;padding-top:14px;margin-top:4px">
+          <a href="app/login.html" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);color:#e2e8f0;text-decoration:none;text-align:center;font-size:.875rem;font-weight:500;transition:.2s">Iniciar sesión</a>
+          <a href="app/login.html#registro" style="padding:12px;border-radius:10px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;text-decoration:none;text-align:center;font-size:.875rem;font-weight:700;box-shadow:0 4px 16px rgba(200,162,74,.3)">Empezar gratis →</a>
         </div>
       </div>
     </div>
@@ -2118,8 +2116,8 @@
       menuBtn.addEventListener('click', () => {
         menuOpen = !menuOpen;
         mobileMenu.classList.toggle('open', menuOpen);
-        iconOpen.classList.toggle('hidden', menuOpen);
-        iconClose.classList.toggle('hidden', !menuOpen);
+        iconOpen.style.display = menuOpen ? 'none' : 'block';
+        iconClose.style.display = menuOpen ? 'block' : 'none';
         menuBtn.setAttribute('aria-expanded', menuOpen);
       });
 
@@ -2128,8 +2126,8 @@
         link.addEventListener('click', () => {
           menuOpen = false;
           mobileMenu.classList.remove('open');
-          iconOpen.classList.remove('hidden');
-          iconClose.classList.add('hidden');
+          iconOpen.style.display = 'block';
+          iconClose.style.display = 'none';
           menuBtn.setAttribute('aria-expanded', 'false');
         });
       });

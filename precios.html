@@ -72,8 +72,8 @@
     .faq-icon{transition:transform .3s;color:var(--gold);font-size:1.1rem;line-height:1}
     .faq-item.open .faq-icon{transform:rotate(45deg)}
 
-    #mob-menu{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1)}
-    #mob-menu.open{max-height:400px}
+    #mob-menu{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,1,.36,1);background:rgba(11,17,32,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07)}
+    #mob-menu.open{max-height:600px}
     .gold-line{width:40px;height:2px;background:linear-gradient(90deg,var(--gold),rgba(200,162,74,.2));border-radius:2px}
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:var(--navy)}
@@ -123,10 +123,10 @@
         </button>
       </div>
       <div id="mob-menu" class="md:hidden rounded-2xl mt-2 px-5 py-4 flex flex-col gap-3" style="background:rgba(15,23,42,.97);border:1px solid var(--border)">
-        <a href="soluciones/medicos.html" class="nav-link text-sm">Soluciones</a>
-        <a href="producto.html" class="nav-link text-sm">Producto</a>
-        <a href="precios.html" class="nav-link text-sm" style="color:var(--gold)">Precios</a>
-        <a href="nosotros.html" class="nav-link text-sm">Nosotros</a>
+        <a href="soluciones/medicos.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Soluciones</a>
+        <a href="producto.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Producto</a>
+        <a href="precios.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)" style="color:var(--gold)">Precios</a>
+        <a href="nosotros.html" style="font-size:.9rem;font-weight:500;color:rgba(226,232,240,.7);text-decoration:none;padding:10px 0;display:block;border-bottom:1px solid rgba(255,255,255,.05)">Nosotros</a>
         <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:8px">
           <a href="#prepago" class="btn-gold w-full text-center text-sm justify-center">Paquete 100 × $30</a>
         </div>
@@ -592,6 +592,30 @@
     // Reveal
     const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed');obs.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
     document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obs.observe(el));
-  </script>
+  
+  function toggleMobMenu() {
+    const menu = document.getElementById('mob-menu');
+    const iconOpen = document.getElementById('mob-icon-open');
+    const iconClose = document.getElementById('mob-icon-close');
+    const isOpen = menu.classList.toggle('open');
+    iconOpen.style.display = isOpen ? 'none' : 'block';
+    iconClose.style.display = isOpen ? 'block' : 'none';
+  }
+  // Close menu when clicking a link
+  document.addEventListener('DOMContentLoaded', function() {
+    const menu = document.getElementById('mob-menu');
+    if (menu) {
+      menu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          menu.classList.remove('open');
+          const iconOpen = document.getElementById('mob-icon-open');
+          const iconClose = document.getElementById('mob-icon-close');
+          if(iconOpen) iconOpen.style.display = 'block';
+          if(iconClose) iconClose.style.display = 'none';
+        });
+      });
+    }
+  });
+</script>
 </body>
 </html>
