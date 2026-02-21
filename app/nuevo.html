@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConsentPro · Nuevo Consentimiento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:#0b1120;color:#e2e8f0;min-height:100vh}
+    :root{--gold:#C8A24A;--border:rgba(255,255,255,0.07)}
+    .sidebar{width:240px;background:rgba(17,24,39,.95);border-right:1px solid var(--border);min-height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;padding:24px 16px;z-index:30}
+    .main{margin-left:240px;padding:32px;max-width:900px}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;font-size:.85rem;font-weight:500;color:rgba(226,232,240,.5);cursor:pointer;transition:all .2s;text-decoration:none;margin-bottom:2px}
+    .nav-item:hover{background:rgba(255,255,255,.04);color:#e2e8f0}
+    .nav-item.active{background:rgba(200,162,74,.1);color:var(--gold);border:1px solid rgba(200,162,74,.2)}
+    .input-field{width:100%;padding:11px 14px;background:rgba(11,17,32,.7);border:1px solid var(--border);border-radius:10px;color:#e2e8f0;font-size:.875rem;font-family:'DM Sans',sans-serif;transition:border-color .2s;outline:none}
+    .input-field:focus{border-color:rgba(200,162,74,.5)}
+    .input-field::placeholder{color:rgba(226,232,240,.2)}
+    label{font-size:.72rem;font-weight:700;color:rgba(226,232,240,.45);letter-spacing:.07em;text-transform:uppercase;display:block;margin-bottom:7px}
+    .card{background:rgba(21,31,53,.7);border:1px solid var(--border);border-radius:18px;padding:28px}
+    .btn-gold{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.9rem;border-radius:12px;border:none;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(200,162,74,.3);font-family:'DM Sans',sans-serif}
+    .btn-gold:hover{transform:translateY(-2px)}
+    .btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:transparent;color:#e2e8f0;font-weight:500;font-size:.875rem;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .2s;text-decoration:none;font-family:'DM Sans',sans-serif}
+    .btn-ghost:hover{border-color:rgba(200,162,74,.3);color:var(--gold)}
+    /* Pasos */
+    .step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .3s}
+    .step-dot.done{background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120}
+    .step-dot.active{background:rgba(200,162,74,.15);border:2px solid var(--gold);color:var(--gold)}
+    .step-dot.pending{background:rgba(255,255,255,.05);border:1px solid var(--border);color:rgba(226,232,240,.25)}
+    /* WhatsApp button */
+    .btn-wa{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:linear-gradient(135deg,#25d366,#128C7E);color:#fff;font-weight:700;font-size:.85rem;border-radius:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all .3s}
+    .btn-wa:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.3)}
+    select.input-field option{background:#1e293b;color:#e2e8f0}
+    textarea.input-field{resize:vertical;min-height:90px}
+    @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:16px}}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="flex items-center gap-2.5 mb-8 px-2">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#C8A24A,#A8832A)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 3 2 5.5 5.5 6.5C10.5 13.5 12.5 11 12.5 8V4L7 1z" fill="#0b1120"/></svg>
+    </div>
+    <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;color:#fff">ConsentPro</span>
+  </div>
+  <a href="dashboard.html" class="nav-item">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+    Panel principal
+  </a>
+  <a href="nuevo.html" class="nav-item active">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="1.5" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 5v5M5 7.5h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Nuevo consentimiento
+  </a>
+  <div style="margin-top:auto;border-top:1px solid var(--border);padding-top:16px">
+    <button onclick="logout()" class="nav-item w-full" style="color:rgba(239,68,68,.6)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2H2.5A1.5 1.5 0 001 3.5v7A1.5 1.5 0 002.5 12H5M9.5 10l3-3-3-3M12.5 7H5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Cerrar sesión
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="mb-7">
+    <a href="dashboard.html" style="font-size:.8rem;color:rgba(226,232,240,.4);text-decoration:none">← Panel</a>
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#f1f5f9;margin-top:8px">Nuevo consentimiento</h1>
+    <p style="font-size:.85rem;color:rgba(226,232,240,.4);margin-top:4px">Completa los datos del paciente y el procedimiento</p>
+  </div>
+
+  <!-- Pasos indicador -->
+  <div class="flex items-center gap-3 mb-8">
+    <div class="step-dot done" id="dot-1">1</div>
+    <div style="height:1px;width:32px;background:rgba(200,162,74,.3)"></div>
+    <div class="step-dot pending" id="dot-2">2</div>
+    <div style="height:1px;width:32px;background:var(--border)"></div>
+    <div class="step-dot pending" id="dot-3">3</div>
+    <p style="font-size:.75rem;color:rgba(226,232,240,.4);margin-left:8px" id="step-label">Paso 1 de 3 — Datos del paciente</p>
+  </div>
+
+  <!-- PASO 1 -->
+  <div id="step1">
+    <div class="card mb-5">
+      <h2 style="font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:20px">Datos del paciente</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label>Nombre del paciente</label>
+          <input type="text" id="pac-nombre" class="input-field" placeholder="Nombre completo" required/>
+        </div>
+        <div>
+          <label>Teléfono / WhatsApp</label>
+          <input type="tel" id="pac-telefono" class="input-field" placeholder="+58 414 000 0000"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label>Email del paciente (opcional)</label>
+          <input type="email" id="pac-email" class="input-field" placeholder="paciente@email.com"/>
+        </div>
+        <div>
+          <label>Documento de identidad</label>
+          <input type="text" id="pac-cedula" class="input-field" placeholder="V-12.345.678"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-6">
+      <h2 style="font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:20px">Procedimiento</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label>Tipo de procedimiento</label>
+          <select id="proc-tipo" class="input-field">
+            <option value="">Seleccionar...</option>
+            <option>Consulta general</option>
+            <option>Cirugía</option>
+            <option>Procedimiento estético</option>
+            <option>Procedimiento ginecológico</option>
+            <option>Anestesia</option>
+            <option>Diagnóstico por imagen</option>
+            <option>Tratamiento odontológico</option>
+            <option>Procedimiento pediátrico</option>
+            <option>Otro procedimiento</option>
+          </select>
+        </div>
+        <div>
+          <label>Nombre específico del procedimiento</label>
+          <input type="text" id="proc-nombre" class="input-field" placeholder="Ej: Cesárea electiva"/>
+        </div>
+      </div>
+      <div>
+        <label>Descripción / riesgos a informar (opcional)</label>
+        <textarea id="proc-descripcion" class="input-field" placeholder="Describe el procedimiento, riesgos principales y alternativas que el paciente debe conocer..."></textarea>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <a href="dashboard.html" class="btn-ghost">Cancelar</a>
+      <button class="btn-gold" onclick="irPaso2()">
+        Continuar
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5H11M7.5 3l3.5 3.5-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- PASO 2 — Método de envío -->
+  <div id="step2" style="display:none">
+    <div class="card mb-6">
+      <h2 style="font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:6px">¿Cómo envías el consentimiento?</h2>
+      <p style="font-size:.8rem;color:rgba(226,232,240,.4);margin-bottom:20px">El paciente recibirá un enlace para firmarlo desde su dispositivo</p>
+
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="metodo-card rounded-xl p-4 text-center cursor-pointer" id="met-whatsapp" onclick="selectMetodo('whatsapp')" style="background:rgba(37,211,102,.06);border:2px solid rgba(37,211,102,.3);transition:all .2s">
+          <div class="text-2xl mb-2">💬</div>
+          <p style="font-size:.82rem;font-weight:700;color:#22c55e">WhatsApp</p>
+          <p style="font-size:.7rem;color:rgba(226,232,240,.4);margin-top:3px">Recomendado</p>
+        </div>
+        <div class="metodo-card rounded-xl p-4 text-center cursor-pointer" id="met-email" onclick="selectMetodo('email')" style="background:rgba(30,41,59,.7);border:2px solid var(--border);transition:all .2s">
+          <div class="text-2xl mb-2">📧</div>
+          <p style="font-size:.82rem;font-weight:700;color:rgba(226,232,240,.7)">Email</p>
+          <p style="font-size:.7rem;color:rgba(226,232,240,.3);margin-top:3px">Correo electrónico</p>
+        </div>
+        <div class="metodo-card rounded-xl p-4 text-center cursor-pointer" id="met-tablet" onclick="selectMetodo('tablet')" style="background:rgba(30,41,59,.7);border:2px solid var(--border);transition:all .2s">
+          <div class="text-2xl mb-2">📱</div>
+          <p style="font-size:.82rem;font-weight:700;color:rgba(226,232,240,.7)">En sala</p>
+          <p style="font-size:.7rem;color:rgba(226,232,240,.3);margin-top:3px">Tablet / celular</p>
+        </div>
+      </div>
+
+      <div id="metodo-info" class="rounded-xl p-4 mb-2" style="background:rgba(200,162,74,.05);border:1px solid rgba(200,162,74,.15)">
+        <p id="metodo-texto" style="font-size:.82rem;color:rgba(226,232,240,.6)">
+          Se enviará un mensaje de WhatsApp al número del paciente con el enlace para firmar.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between gap-3">
+      <button class="btn-ghost" onclick="irPaso1()">← Atrás</button>
+      <button class="btn-gold" onclick="crearConsentimiento()" id="btn-crear">
+        Crear y enviar consentimiento
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5H11M7.5 3l3.5 3.5-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- PASO 3 — Éxito -->
+  <div id="step3" style="display:none">
+    <div class="card text-center py-12">
+      <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5" style="background:linear-gradient(135deg,#C8A24A,#A8832A)">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14l6 6L23 8" stroke="#0b1120" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-bottom:8px">¡Consentimiento creado!</h2>
+      <p style="font-size:.9rem;color:rgba(226,232,240,.5);margin-bottom:28px" id="exito-msg">El paciente recibirá el enlace para firmar.</p>
+
+      <!-- Enlace de firma -->
+      <div class="rounded-xl p-4 mb-6 text-left" style="background:rgba(11,17,32,.6);border:1px solid var(--border)">
+        <p style="font-size:.7rem;font-weight:700;color:rgba(226,232,240,.4);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px">Enlace de firma</p>
+        <div class="flex items-center gap-3">
+          <p id="link-firma" style="font-size:.8rem;color:var(--gold);word-break:break-all;flex:1"></p>
+          <button onclick="copiarLink()" class="btn-ghost" style="padding:8px 14px;font-size:.75rem;flex-shrink:0">Copiar</button>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-3">
+        <a id="btn-whatsapp-envio" href="#" target="_blank" class="btn-wa">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C3.7 1 1 3.7 1 7c0 1.1.3 2.2.9 3.1L1 13l2.9-.9C4.8 12.7 5.9 13 7 13c3.3 0 6-2.7 6-6S10.3 1 7 1zm3.3 8.4c-.1.3-.6.6-1 .7-.3 0-.6.1-1.9-.4-1.6-.6-2.6-2.3-2.7-2.4-.1-.1-.8-1-.8-2 0-.9.5-1.3.7-1.5.2-.2.3-.2.5-.2h.3c.1 0 .2 0 .3.2l.6 1.5c.1.1.1.2 0 .3l-.2.3c-.1.1-.2.1-.1.3.2.4.6.9 1 1.2.4.3.9.6 1.1.7.1.1.2.1.3 0l.4-.4c.1-.2.2-.2.3-.1l1.5.7c.1.1.2.2.2.3 0 .2-.1.5-.2.8z" fill="white"/></svg>
+          Enviar por WhatsApp
+        </a>
+        <a href="dashboard.html" class="btn-ghost">Ir al panel</a>
+        <button onclick="nuevoConsentimiento()" class="btn-ghost">+ Crear otro</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://xinubscrhnjcixokidyi.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  let currentUser = null;
+  let metodoSeleccionado = 'whatsapp';
+  let consentimientoId = null;
+
+  async function init() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'login.html'; return; }
+    currentUser = session.user;
+  }
+
+  function irPaso2() {
+    const nombre = document.getElementById('pac-nombre').value.trim();
+    if (!nombre) { alert('Ingresa el nombre del paciente'); return; }
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    document.getElementById('dot-1').className = 'step-dot done';
+    document.getElementById('dot-2').className = 'step-dot active';
+    document.getElementById('step-label').textContent = 'Paso 2 de 3 — Método de envío';
+  }
+
+  function irPaso1() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('dot-2').className = 'step-dot pending';
+    document.getElementById('step-label').textContent = 'Paso 1 de 3 — Datos del paciente';
+  }
+
+  const mensajesMetodo = {
+    whatsapp: 'Se enviará un mensaje de WhatsApp al número del paciente con el enlace para firmar.',
+    email: 'Se enviará un email con el enlace de firma al correo del paciente.',
+    tablet: 'Se generará un enlace/QR para que el paciente firme en la tablet de la clínica.'
+  };
+
+  function selectMetodo(m) {
+    metodoSeleccionado = m;
+    ['whatsapp','email','tablet'].forEach(id => {
+      const el = document.getElementById('met-' + id);
+      if (id === m) {
+        el.style.borderColor = 'rgba(200,162,74,.6)';
+        el.style.background = 'rgba(200,162,74,.08)';
+      } else {
+        el.style.borderColor = 'var(--border)';
+        el.style.background = 'rgba(30,41,59,.7)';
+      }
+    });
+    document.getElementById('metodo-texto').textContent = mensajesMetodo[m];
+  }
+
+  async function crearConsentimiento() {
+    const btn = document.getElementById('btn-crear');
+    btn.disabled = true; btn.textContent = 'Creando...';
+
+    const nombre = document.getElementById('pac-nombre').value.trim();
+    const telefono = document.getElementById('pac-telefono').value.trim();
+    const email = document.getElementById('pac-email').value.trim();
+    const cedula = document.getElementById('pac-cedula').value.trim();
+    const tipoProcedimiento = document.getElementById('proc-tipo').value;
+    const nombreProcedimiento = document.getElementById('proc-nombre').value.trim();
+    const descripcion = document.getElementById('proc-descripcion').value.trim();
+
+    const token = crypto.randomUUID();
+
+    const { data, error } = await sb.from('consentimientos').insert({
+      medico_id: currentUser.id,
+      paciente_nombre: nombre,
+      paciente_telefono: telefono,
+      paciente_email: email,
+      paciente_cedula: cedula,
+      tipo_procedimiento: tipoProcedimiento,
+      nombre_procedimiento: nombreProcedimiento,
+      descripcion_procedimiento: descripcion,
+      metodo_envio: metodoSeleccionado,
+      estado: 'enviado',
+      token_firma: token
+    }).select().single();
+
+    if (error) {
+      alert('Error al crear: ' + error.message);
+      btn.disabled = false; btn.textContent = 'Crear y enviar consentimiento';
+      return;
+    }
+
+    consentimientoId = data.id;
+    const baseUrl = window.location.origin + window.location.pathname.replace('nuevo.html','');
+    const linkFirma = `${baseUrl}firmar.html?t=${token}`;
+
+    document.getElementById('link-firma').textContent = linkFirma;
+    document.getElementById('exito-msg').textContent = `Consentimiento para ${nombre} creado exitosamente.`;
+
+    const telLimpio = telefono.replace(/\D/g,'');
+    const msgWA = encodeURIComponent(`Hola ${nombre}, le comparto el enlace para firmar su consentimiento informado: ${linkFirma}`);
+    document.getElementById('btn-whatsapp-envio').href = `https://wa.me/${telLimpio}?text=${msgWA}`;
+
+    // Mostrar paso 3
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
+    document.getElementById('dot-2').className = 'step-dot done';
+    document.getElementById('dot-3').className = 'step-dot done';
+    document.getElementById('step-label').textContent = '✓ Consentimiento creado';
+  }
+
+  function copiarLink() {
+    const link = document.getElementById('link-firma').textContent;
+    navigator.clipboard.writeText(link).then(() => alert('Enlace copiado al portapapeles'));
+  }
+
+  function nuevoConsentimiento() {
+    window.location.reload();
+  }
+
+  async function logout() {
+    await sb.auth.signOut();
+    window.location.href = 'login.html';
+  }
+
+  // Seleccionar WhatsApp por defecto
+  selectMetodo('whatsapp');
+  init();
+</script>
+</body>
+</html>
