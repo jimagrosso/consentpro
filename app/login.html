@@ -205,9 +205,10 @@
     const templates = getTemplatesForSpecialty(especialidad);
     if (!templates || templates.length === 0) return;
     for (const tpl of templates) {
-      const { data: exists } = await sb.from('plantillas').select('id')
+      const { data: exists } = await sb.from('plantillas').select('id, descripcion')
         .eq('medico_id', userId).eq('catalog_id', tpl.catalog_id).single();
       if (!exists) {
+        // No existe → insertar completa
         await sb.from('plantillas').insert({
           medico_id: userId, catalog_id: tpl.catalog_id,
           titulo: tpl.titulo, tipo_procedimiento: tpl.tipo_procedimiento,
@@ -216,6 +217,13 @@
           activa: true, es_catalogo: true,
           version: tpl.version || 1, locale: tpl.locale || 'es-LATAM'
         });
+      } else if (!exists.descripcion) {
+        // Existe pero sin descripción → actualizar
+        await sb.from('plantillas').update({
+          descripcion: tpl.descripcion,
+          nombre_procedimiento: tpl.nombre_procedimiento,
+          tipo_procedimiento: tpl.tipo_procedimiento
+        }).eq('id', exists.id);
       }
     }
   }

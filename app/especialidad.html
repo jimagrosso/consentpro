@@ -204,7 +204,7 @@
       // Idempotente: verificar si ya existe este catalog_id para este médico
       const { data: exists } = await sb
         .from('plantillas')
-        .select('id')
+        .select('id, descripcion')
         .eq('medico_id', userId)
         .eq('catalog_id', tpl.catalog_id)
         .single();
@@ -223,6 +223,12 @@
           version: tpl.version || 1,
           locale: tpl.locale || 'es-LATAM'
         });
+      } else if (!exists.descripcion) {
+        await sb.from('plantillas').update({
+          descripcion: tpl.descripcion,
+          nombre_procedimiento: tpl.nombre_procedimiento,
+          tipo_procedimiento: tpl.tipo_procedimiento
+        }).eq('id', exists.id);
       }
     }
   }
