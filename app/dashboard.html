@@ -215,7 +215,7 @@
   </div>
 
   <!-- Sección Pre-consultas pendientes -->
-  <div id="preconsultas-section" style="display:none;margin-bottom:28px">
+  <div id="preconsultas-section" style="margin-bottom:28px">
     <div style="background:rgba(21,31,53,.7);border:1px solid var(--border);border-radius:18px;overflow:hidden">
       <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div style="display:flex;align-items:center;gap:10px">
@@ -232,7 +232,7 @@
           Copiar link para pacientes
         </button>
       </div>
-      <div id="lista-preconsultas" style="padding:8px"></div>
+      <div id="lista-preconsultas" style="padding:8px"><div id="preconsultas-empty" style="padding:28px;text-align:center"><p style="font-size:.82rem;color:rgba(226,232,240,.3)">No hay pre-consultas pendientes. Comparte el link con tus pacientes para que llenen el formulario antes de su consulta.</p></div></div>
     </div>
   </div>
 
@@ -472,15 +472,16 @@
       .eq('incorporado', false)
       .order('created_at', { ascending: false });
 
-    if (error || !data || data.length === 0) return;
+    const badge = document.getElementById('badge-preconsultas');
+    const lista = document.getElementById('lista-preconsultas');
 
-    const section = document.getElementById('preconsultas-section');
-    const badge   = document.getElementById('badge-preconsultas');
-    const lista   = document.getElementById('lista-preconsultas');
+    if (error || !data || data.length === 0) {
+      document.getElementById('txt-preconsultas-sub').textContent = 'Comparte el link para que tus pacientes llenen el formulario antes de su consulta';
+      return;
+    }
 
-    section.style.display = 'block';
-    badge.style.display   = 'inline-block';
-    badge.textContent     = data.length;
+    badge.style.display = 'inline-block';
+    badge.textContent   = data.length;
     document.getElementById('txt-preconsultas-sub').textContent =
       data.length + ' paciente' + (data.length !== 1 ? 's' : '') + ' esperan ser incorporados';
 
