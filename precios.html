@@ -83,6 +83,7 @@
     .pdf-pill{display:flex;align-items:center;gap:10px;padding:11px 16px;background:rgba(30,41,59,.8);border:1px solid var(--border);border-radius:12px;font-size:.78rem;color:rgba(226,232,240,.75)}
     .pdf-pill span.icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.2)}
   </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -616,6 +617,32 @@
       });
     }
   });
+</script>
+
+<script>
+const STRIPE_LINKS = {
+  esencial: 'https://buy.stripe.com/aFa8wQgfZ56Rgu85Wy5c40o',
+  pro:      'https://buy.stripe.com/14A28se7R7eZcdS4Su5c40p',
+  clinica:  'https://buy.stripe.com/dRmaEY7JtarbdhW70C5c40q'
+};
+async function comprar(plan) {
+  const sb = supabase.createClient(
+    'https://xinubscrhnjcixokidyi.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA'
+  );
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    localStorage.setItem('cp_pending_plan', plan);
+    window.location.href = 'app/login.html?next=comprar';
+    return;
+  }
+  const url = STRIPE_LINKS[plan];
+  const params = new URLSearchParams({
+    client_reference_id: session.user.id,
+    prefilled_email:     session.user.email
+  });
+  window.open(url + '?' + params.toString(), '_blank');
+}
 </script>
 </body>
 </html>

@@ -209,6 +209,29 @@
         }
       }
       clearTimeout(safetyTimer);
+      // Verificar si venía a comprar un plan
+      const pendingPlan = localStorage.getItem('cp_pending_plan');
+      if (pendingPlan) {
+        localStorage.removeItem('cp_pending_plan');
+        const STRIPE_LINKS = {
+          esencial: 'https://buy.stripe.com/aFa8wQgfZ56Rgu85Wy5c40o',
+          pro:      'https://buy.stripe.com/14A28se7R7eZcdS4Su5c40p',
+          clinica:  'https://buy.stripe.com/dRmaEY7JtarbdhW70C5c40q'
+        };
+        const stripeUrl = STRIPE_LINKS[pendingPlan];
+        if (stripeUrl) {
+          const params = new URLSearchParams({
+            client_reference_id: user.id,
+            prefilled_email:     user.email
+          });
+          cpMsg('Redirigiendo a pago...', 'Abriendo Stripe');
+          setTimeout(() => {
+            window.location.href = 'dashboard.html'; // llevar al dashboard también
+            window.open(stripeUrl + '?' + params.toString(), '_blank');
+          }, 800);
+          return;
+        }
+      }
       cpMsg('Entrando a tu panel...', '');
       window.location.href = 'dashboard.html';
     }
