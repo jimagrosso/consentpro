@@ -337,8 +337,9 @@
     const disponibles = perfil?.consentimientos_disponibles ?? 3;
     const usados      = perfil?.consentimientos_usados      ?? 0;
     const restantes   = Math.max(0, disponibles - usados);
-    const planNombre  = (perfil?.plan === 'premium') ? 'Plan Premium 300' :
-                        (perfil?.plan === 'prepago')  ? 'Plan Prepago'     : 'Plan Gratuito';
+    const plan        = perfil?.plan || 'gratuito';
+    const planNombre  = (plan === 'premium') ? 'Plan Premium 300' :
+                        (plan === 'prepago')  ? 'Plan Prepago'     : 'Plan Gratuito';
     const pct = disponibles > 0 ? (restantes / disponibles) * 100 : 0;
 
     // Color de la barra según % restante
@@ -367,8 +368,8 @@
     } else if (restantes <= 5) {
       alertEl.style.display  = 'flex';
       alertTxt.textContent   = `Solo te quedan ${restantes}. Considera renovar pronto.`;
-      if (perfil?.plan === 'gratuito') btnRenov.style.display = 'inline-block';
-    } else if (perfil?.plan === 'gratuito') {
+      if (plan === 'gratuito') btnRenov.style.display = 'inline-block';
+    } else if (plan === 'gratuito') {
       btnRenov.style.display = 'inline-block';
       document.getElementById('disp-btn').textContent = 'Ver planes →';
     }
@@ -403,7 +404,7 @@
     } else if (pacRest <= 5) {
       pacAlertEl.style.display  = 'flex';
       pacAlertTxt.textContent   = 'Solo te quedan ' + pacRest + ' pacientes disponibles.';
-      if (perfil?.plan === 'gratuito') pacBtnRenov.style.display = 'inline-block';
+      if (plan === 'gratuito') pacBtnRenov.style.display = 'inline-block';
     } else if (perfil?.plan === 'gratuito') {
       pacBtnRenov.style.display = 'inline-block';
       pacBtnRenov.textContent   = 'Ver planes →';
