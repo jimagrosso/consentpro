@@ -168,7 +168,10 @@
     // Si ya tiene especialidad, ir al dashboard directo
     sb.from('perfiles').select('especialidad').eq('id', currentUser.id).single()
       .then(({data}) => {
-        if (data?.especialidad) cpMsg('¡Listo! Entrando a tu panel...',''); window.location.href = 'dashboard.html';
+        if (data?.especialidad) {
+          cpMsg('¡Listo! Entrando a tu panel...','');
+          window.location.href = 'dashboard.html';
+        }
       });
   });
 
