@@ -155,7 +155,7 @@
     // Cargar nombre del médico
     const { data: perfil } = await sb
       .from('perfiles')
-      .select('nombre_completo, especialidad')
+      .select('nombre, apellido, especialidad')
       .eq('id', medicoId)
       .single();
 
@@ -164,7 +164,7 @@
       return;
     }
 
-    const nombre = perfil.nombre_completo || 'Tu médico';
+    const nombre = perfil.nombre || 'Tu médico';
     const esp    = perfil.especialidad    || '';
     document.getElementById('nombre-medico').textContent =
       'Formulario enviado a: ' + nombre + (esp ? ' · ' + esp : '');
