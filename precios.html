@@ -557,8 +557,8 @@
         if(v) el.textContent='$'+v;
       });
     }
-    document.getElementById('tog-mensual').addEventListener('click',()=>{billingMode='mensual';document.getElementById('tog-mensual').classList.add('active');document.getElementById('tog-anual').classList.remove('active');updatePrices()});
-    document.getElementById('tog-anual').addEventListener('click',()=>{billingMode='anual';document.getElementById('tog-anual').classList.add('active');document.getElementById('tog-mensual').classList.remove('active');updatePrices()});
+    if(document.getElementById('tog-mensual')){document.getElementById('tog-mensual').addEventListener('click',()=>{billingMode='mensual';document.getElementById('tog-mensual').classList.add('active');document.getElementById('tog-anual').classList.remove('active');updatePrices()});}
+    if(document.getElementById('tog-anual')){document.getElementById('tog-anual').addEventListener('click',()=>{billingMode='anual';document.getElementById('tog-anual').classList.add('active');document.getElementById('tog-mensual').classList.remove('active');updatePrices()});}
 
     // ROI Calc
     const fmt=n=>n>=1000?'$'+Math.round(n/1000*10)/10+'k':'$'+Math.round(n);
@@ -578,8 +578,8 @@
       document.getElementById('res-plan-btn').textContent=plan;
       document.getElementById('res-ahorro').textContent=fmt(Math.max(0,costoBase-(precio*12)));
     }
-    ['sl-pacientes','sl-consulta','sl-riesgo'].forEach(id=>document.getElementById(id).addEventListener('input',calcROI));
-    calcROI();
+    ['sl-pacientes','sl-consulta','sl-riesgo'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',calcROI);});
+    if(document.getElementById('sl-pacientes'))calcROI();
 
     // FAQ
     document.querySelectorAll('.faq-btn').forEach(btn=>{
