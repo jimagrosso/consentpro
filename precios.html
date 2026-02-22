@@ -211,14 +211,21 @@
             </div>
 
             <!-- CTA -->
-            <div class="flex flex-col sm:flex-row gap-3">
-              <a href="https://wa.me/584145173115?text=Hola%2C%20quiero%20reservar%20el%20paquete%20de%20100%20consentimientos%20por%20%2430" target="_blank" class="btn-whatsapp text-sm">
+            <div class="flex flex-col gap-3">
+              <button onclick="comprar('prepago')" id="btn-comprar-prepago" class="btn-gold w-full justify-center" style="padding:14px 24px;font-size:.95rem;font-weight:700;border:none;cursor:pointer;font-family:inherit;border-radius:14px;display:flex;align-items:center;gap:8px">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12l-1 8H3L2 4z" stroke="#0b1120" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 4V3a3 3 0 016 0v1" stroke="#0b1120" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Comprar ahora — $19.99
+                <span style="font-size:.72rem;font-weight:600;background:rgba(0,0,0,.15);padding:2px 8px;border-radius:99px">Pago seguro con Stripe</span>
+              </button>
+              <div class="flex sm:flex-row gap-3">
+              <a href="https://wa.me/584145173115?text=Hola%2C%20quiero%20reservar%20el%20paquete%20de%20100%20consentimientos%20por%20%2430" target="_blank" class="btn-whatsapp text-sm" style="flex:1">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1C4.1 1 1 4.1 1 8c0 1.3.3 2.5 1 3.6L1 15l3.5-1C5.5 14.6 6.7 15 8 15c3.9 0 7-3.1 7-7S11.9 1 8 1zm3.7 9.7c-.1.4-.8.7-1.2.8-.3.1-.7.1-2.2-.5-1.9-.7-3.1-2.7-3.2-2.8-.1-.2-.9-1.2-.9-2.2 0-1 .5-1.5.7-1.7.2-.2.4-.3.6-.3h.4c.1 0 .3 0 .4.3l.7 1.7c.1.2.1.3 0 .4l-.3.4c-.1.1-.2.2-.1.4.3.5.7 1 1.1 1.4.5.4 1 .7 1.2.8.2.1.3.1.4 0l.5-.5c.1-.2.3-.2.4-.1l1.7.8c.2.1.3.2.3.4 0 .2-.1.6-.2.9z" fill="white"/></svg>
                 Reservar por WhatsApp
               </a>
               <a href="mailto:abgjosemrojas@gmail.com?subject=Quiero%20el%20paquete%20100%20consentimientos%20%2430" class="btn-ghost text-sm">
                 Pedir por Email
               </a>
+              </div>
             </div>
             <p style="font-size:.68rem;color:var(--text-dim);margin-top:10px">⏱️ El Abg. Rojas te contacta en menos de 24 horas para configurar tus plantillas personalizadas.</p>
           </div>
@@ -623,6 +630,7 @@
 
 <script>
 const STRIPE_LINKS = {
+  prepago:  'PENDIENTE_STRIPE_LINK_19_99',
   esencial: 'https://buy.stripe.com/aFa8wQgfZ56Rgu85Wy5c40o',
   pro:      'https://buy.stripe.com/14A28se7R7eZcdS4Su5c40p',
   clinica:  'https://buy.stripe.com/dRmaEY7JtarbdhW70C5c40q'
