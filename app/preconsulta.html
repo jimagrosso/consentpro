@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulario de Pre-Consulta · ConsentPro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:#0b1120;color:#e2e8f0;min-height:100vh}
+    :root{--gold:#C8A24A;--navy:#0b1120;--border:rgba(255,255,255,0.08)}
+    .card{background:rgba(21,31,53,.8);border:1px solid var(--border);border-radius:20px;padding:32px}
+    .input-field{width:100%;background:rgba(15,23,42,.6);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:#e2e8f0;font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border .2s}
+    .input-field:focus{border-color:rgba(200,162,74,.4);background:rgba(15,23,42,.9)}
+    .input-field::placeholder{color:rgba(226,232,240,.2)}
+    textarea.input-field{resize:vertical;min-height:90px}
+    .btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.95rem;border-radius:12px;border:none;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(200,162,74,.3);font-family:'DM Sans',sans-serif;width:100%}
+    .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(200,162,74,.4)}
+    .btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .section-title{font-size:.62rem;font-weight:700;color:rgba(200,162,74,.7);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+    .section-title:first-of-type{margin-top:0;padding-top:0;border-top:none}
+    label{font-size:.75rem;color:rgba(226,232,240,.45);margin-bottom:5px;display:block}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .spinner{width:20px;height:20px;border:2px solid rgba(11,17,32,.3);border-top-color:#0b1120;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    /* Success screen */
+    #pantalla-exito{display:none;text-align:center;padding:48px 24px}
+    @media(max-width:600px){.grid-2{grid-template-columns:1fr}.card{padding:24px}}
+  </style>
+</head>
+<body>
+
+<!-- Fondo decorativo -->
+<div style="position:fixed;inset:0;pointer-events:none;z-index:0">
+  <div style="position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(200,162,74,.04),transparent 65%)"></div>
+</div>
+
+<div style="max-width:560px;margin:0 auto;padding:32px 16px;position:relative;z-index:1">
+
+  <!-- Header del médico -->
+  <div id="header-medico" style="text-align:center;margin-bottom:32px">
+    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#C8A24A,#A8832A);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L2.5 6v5c0 4.5 3 8.2 8.5 9.5C16.5 19.2 19.5 15.5 19.5 11V6L11 2z" fill="#0b1120"/></svg>
+    </div>
+    <p style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#f1f5f9;margin-bottom:4px">ConsentPro</p>
+    <p id="nombre-medico" style="font-size:.85rem;color:rgba(226,232,240,.45)">Cargando información del médico...</p>
+  </div>
+
+  <!-- Formulario -->
+  <div class="card" id="card-formulario">
+
+    <!-- Pantalla éxito -->
+    <div id="pantalla-exito">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid rgba(34,197,94,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14l6 6L23 8" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#f1f5f9;margin-bottom:10px">¡Formulario enviado!</h2>
+      <p style="font-size:.88rem;color:rgba(226,232,240,.5);line-height:1.7;margin-bottom:6px">Tu información fue recibida correctamente.</p>
+      <p style="font-size:.88rem;color:rgba(226,232,240,.5);line-height:1.7">El médico revisará tus datos antes de tu consulta para brindarte una mejor atención.</p>
+    </div>
+
+    <!-- Formulario activo -->
+    <div id="form-contenido">
+
+      <div style="margin-bottom:24px">
+        <h1 style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:#f1f5f9;margin-bottom:6px">Formulario de pre-consulta</h1>
+        <p style="font-size:.82rem;color:rgba(226,232,240,.4);line-height:1.6">Completa estos datos desde casa para ahorrar tiempo en tu consulta y ser mejor atendido/a. Es opcional y confidencial.</p>
+      </div>
+
+      <!-- Error médico no encontrado -->
+      <div id="error-medico" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:16px;margin-bottom:20px;text-align:center">
+        <p style="font-size:.85rem;color:#f87171">Este enlace no es válido o ha expirado.</p>
+      </div>
+
+      <!-- Datos personales -->
+      <p class="section-title">Datos personales</p>
+      <div class="grid-2" style="margin-bottom:12px">
+        <div><label>Nombre *</label><input id="f-nombre" type="text" class="input-field" placeholder="Tu nombre"/></div>
+        <div><label>Apellido</label><input id="f-apellido" type="text" class="input-field" placeholder="Tu apellido"/></div>
+      </div>
+      <div class="grid-2" style="margin-bottom:12px">
+        <div><label>Cédula / ID</label><input id="f-cedula" type="text" class="input-field" placeholder="V-12345678"/></div>
+        <div><label>Teléfono</label><input id="f-telefono" type="tel" class="input-field" placeholder="+58 412 000 0000"/></div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Correo electrónico</label>
+        <input id="f-email" type="email" class="input-field" placeholder="tu@correo.com"/>
+      </div>
+
+      <!-- Motivo de consulta -->
+      <p class="section-title">Motivo de la consulta</p>
+      <div style="margin-bottom:12px">
+        <label>¿Por qué visitas al médico? ¿Qué te preocupa?</label>
+        <textarea id="f-motivo" class="input-field" placeholder="Describe brevemente tu motivo de consulta, síntomas o lo que deseas tratar..."></textarea>
+      </div>
+
+      <!-- Historial médico -->
+      <p class="section-title">Información médica</p>
+      <div style="margin-bottom:12px">
+        <label>Alergias conocidas</label>
+        <textarea id="f-alergias" class="input-field" placeholder="Medicamentos, alimentos, materiales a los que eres alérgico/a... Si no tienes, escribe 'Ninguna'." style="min-height:75px"></textarea>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Vitaminas y suplementos que tomas actualmente</label>
+        <textarea id="f-vitaminas" class="input-field" placeholder="Ej: Vitamina D 1000UI, Omega 3, Hierro... Si no tomas ninguno, escribe 'Ninguno'." style="min-height:75px"></textarea>
+      </div>
+      <div style="margin-bottom:12px">
+        <label>Medicamentos actuales (con receta o sin receta)</label>
+        <textarea id="f-medicamentos" class="input-field" placeholder="Nombre del medicamento, dosis y frecuencia si los conoces... Si no tomas ninguno, escribe 'Ninguno'." style="min-height:75px"></textarea>
+      </div>
+      <div style="margin-bottom:4px">
+        <label>Antecedentes médicos relevantes (opcional)</label>
+        <textarea id="f-antecedentes" class="input-field" placeholder="Cirugías previas, enfermedades crónicas, condiciones importantes que el médico deba conocer..." style="min-height:75px"></textarea>
+      </div>
+
+      <!-- Error submit -->
+      <div id="error-submit" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:12px 14px;margin-top:16px">
+        <p id="error-submit-txt" style="font-size:.82rem;color:#f87171"></p>
+      </div>
+
+      <!-- Botón enviar -->
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+        <button id="btn-enviar" onclick="enviarFormulario()" class="btn-gold">
+          Enviar mi información
+        </button>
+        <p style="font-size:.68rem;color:rgba(226,232,240,.2);text-align:center;margin-top:12px;line-height:1.5">
+          Tu información es confidencial y solo será visible para el médico que te compartió este enlace. Powered by ConsentPro.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://xinubscrhnjcixokidyi.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA'
+  );
+
+  let medicoId = null;
+
+  async function init() {
+    const params = new URLSearchParams(window.location.search);
+    medicoId = params.get('m');
+
+    if (!medicoId) {
+      mostrarErrorMedico();
+      return;
+    }
+
+    // Cargar nombre del médico
+    const { data: perfil } = await sb
+      .from('perfiles')
+      .select('nombre_completo, especialidad')
+      .eq('id', medicoId)
+      .single();
+
+    if (!perfil) {
+      mostrarErrorMedico();
+      return;
+    }
+
+    const nombre = perfil.nombre_completo || 'Tu médico';
+    const esp    = perfil.especialidad    || '';
+    document.getElementById('nombre-medico').textContent =
+      'Formulario enviado a: ' + nombre + (esp ? ' · ' + esp : '');
+    document.title = 'Pre-consulta — ' + nombre + ' · ConsentPro';
+  }
+
+  function mostrarErrorMedico() {
+    document.getElementById('error-medico').style.display = 'block';
+    document.getElementById('btn-enviar').disabled = true;
+  }
+
+  async function enviarFormulario() {
+    if (!medicoId) return;
+
+    const nombre = document.getElementById('f-nombre').value.trim();
+    if (!nombre) {
+      mostrarError('Por favor ingresa tu nombre.');
+      return;
+    }
+
+    const btn = document.getElementById('btn-enviar');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Enviando...';
+    ocultarError();
+
+    const payload = {
+      medico_id:             medicoId,
+      nombre,
+      apellido:              document.getElementById('f-apellido').value.trim()      || null,
+      cedula:                document.getElementById('f-cedula').value.trim()        || null,
+      telefono:              document.getElementById('f-telefono').value.trim()      || null,
+      email:                 document.getElementById('f-email').value.trim()         || null,
+      motivo_consulta:       document.getElementById('f-motivo').value.trim()        || null,
+      alergias:              document.getElementById('f-alergias').value.trim()      || null,
+      vitaminas_suplementos: document.getElementById('f-vitaminas').value.trim()     || null,
+      medicamentos_actuales: document.getElementById('f-medicamentos').value.trim()  || null,
+      antecedentes_personales: document.getElementById('f-antecedentes').value.trim() || null,
+    };
+
+    const { error } = await sb.from('preconsultas').insert(payload);
+
+    if (error) {
+      btn.disabled = false;
+      btn.innerHTML = 'Enviar mi información';
+      mostrarError('Hubo un error al enviar. Por favor intenta de nuevo.');
+      console.error(error);
+      return;
+    }
+
+    // Éxito
+    document.getElementById('form-contenido').style.display = 'none';
+    document.getElementById('pantalla-exito').style.display = 'block';
+  }
+
+  function mostrarError(msg) {
+    const el = document.getElementById('error-submit');
+    document.getElementById('error-submit-txt').textContent = msg;
+    el.style.display = 'block';
+  }
+  function ocultarError() {
+    document.getElementById('error-submit').style.display = 'none';
+  }
+
+  init();
+</script>
+</body>
+</html>

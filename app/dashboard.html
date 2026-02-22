@@ -98,6 +98,11 @@
     <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="5" r="2.8" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 13.5c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
     Mis pacientes
   </a>
+  <a href="#preconsultas-section" onclick="document.getElementById('preconsultas-section').scrollIntoView({behavior:'smooth'});return false;" class="nav-item" id="nav-preconsultas">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 6h5M5 8.5h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><circle cx="12" cy="3.5" r="2.5" fill="#ef4444" id="badge-circle" style="display:none"/></svg>
+    Pre-consultas
+    <span id="badge-preconsultas" style="display:none;margin-left:auto;background:#ef4444;color:#fff;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:99px;line-height:1.4"></span>
+  </a>
   </div>
 
   <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:16px">
@@ -206,6 +211,28 @@
         <span id="pac-disp-alerta-texto"></span>
       </p>
       <p style="font-size:.65rem;color:rgba(226,232,240,.2);margin-top:8px">* La cuota es anual y se renueva cada año a partir de tu fecha de activación, independientemente del uso.</p>
+    </div>
+  </div>
+
+  <!-- Sección Pre-consultas pendientes -->
+  <div id="preconsultas-section" style="display:none;margin-bottom:28px">
+    <div style="background:rgba(21,31,53,.7);border:1px solid var(--border);border-radius:18px;overflow:hidden">
+      <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="2" width="11" height="10" rx="1.5" stroke="#ef4444" stroke-width="1.3"/><path d="M4.5 5.5h5M4.5 7.5h3" stroke="#ef4444" stroke-width="1.1" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p style="font-size:.88rem;font-weight:700;color:#f1f5f9">Pre-consultas pendientes</p>
+            <p id="txt-preconsultas-sub" style="font-size:.72rem;color:rgba(226,232,240,.4)">Pacientes que llenaron el formulario previo</p>
+          </div>
+        </div>
+        <button onclick="copiarLinkPreconsulta()" id="btn-copiar-link" style="display:inline-flex;align-items:center;gap:7px;padding:9px 16px;background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.25);border-radius:10px;color:var(--gold);font-size:.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(200,162,74,.18)'" onmouseout="this.style.background='rgba(200,162,74,.1)'">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 8L8 5M3.5 6.5L2 8a2.5 2.5 0 003.5 3.5L7 10M6 3l1.5-1.5A2.5 2.5 0 0111 5L9.5 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          Copiar link para pacientes
+        </button>
+      </div>
+      <div id="lista-preconsultas" style="padding:8px"></div>
     </div>
   </div>
 
@@ -383,6 +410,10 @@
     }
     // ──────────────────────────────────────────────────────────
 
+    // ── PRECONSULTAS PENDIENTES ──────────────────────────────
+    cargarPreconsultas(user.id);
+    // ─────────────────────────────────────────────────────────
+
     cpHide();
 
     // ── Disparar tour si es la primera vez ──────────────────
@@ -428,6 +459,164 @@
     await sb.auth.signOut();
     window.location.href = 'login.html';
   }
+
+  // ── PRECONSULTAS ──────────────────────────────────────────
+  let _medicoId = null;
+
+  async function cargarPreconsultas(userId) {
+    _medicoId = userId;
+    const { data, error } = await sb
+      .from('preconsultas')
+      .select('*')
+      .eq('medico_id', userId)
+      .eq('incorporado', false)
+      .order('created_at', { ascending: false });
+
+    if (error || !data || data.length === 0) return;
+
+    const section = document.getElementById('preconsultas-section');
+    const badge   = document.getElementById('badge-preconsultas');
+    const lista   = document.getElementById('lista-preconsultas');
+
+    section.style.display = 'block';
+    badge.style.display   = 'inline-block';
+    badge.textContent     = data.length;
+    document.getElementById('txt-preconsultas-sub').textContent =
+      data.length + ' paciente' + (data.length !== 1 ? 's' : '') + ' esperan ser incorporados';
+
+    lista.innerHTML = data.map(p => {
+      const hace = tiempoRelativo(p.created_at);
+      return `
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border)" id="row-${p.id}">
+          <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#f87171;flex-shrink:0">
+            ${(p.nombre[0]+(p.apellido||'?')[0]).toUpperCase()}
+          </div>
+          <div style="flex:1;min-width:0">
+            <p style="font-size:.87rem;font-weight:600;color:#f1f5f9">${p.nombre} ${p.apellido||''}</p>
+            <p style="font-size:.72rem;color:rgba(226,232,240,.4)">${p.cedula||''} ${p.cedula&&p.email?'·':''} ${p.email||''} · ${hace}</p>
+            ${p.motivo_consulta ? `<p style="font-size:.72rem;color:rgba(200,162,74,.6);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px">💬 ${p.motivo_consulta}</p>` : ''}
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0">
+            <button onclick="verDetallePreconsulta('${p.id}')" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:rgba(226,232,240,.6);font-size:.75rem;cursor:pointer;font-family:'DM Sans',sans-serif">Ver</button>
+            <button onclick="incorporarPreconsulta('${p.id}')" style="padding:7px 14px;border-radius:8px;border:none;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.75rem;cursor:pointer;font-family:'DM Sans',sans-serif">Incorporar →</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function incorporarPreconsulta(id) {
+    // Verificar cuota de pacientes
+    const { data: perfil } = await sb.from('perfiles').select('pacientes_disponibles, pacientes_usados, plan').eq('id', _medicoId).single();
+    const usados = perfil?.pacientes_usados ?? 0;
+    const disp   = perfil?.pacientes_disponibles ?? 3;
+    if (usados >= disp) {
+      alert('Has alcanzado el límite de pacientes de tu plan. Actualiza tu plan en /precios.html');
+      return;
+    }
+
+    const { data: p } = await sb.from('preconsultas').select('*').eq('id', id).single();
+    if (!p) return;
+
+    // Insertar en pacientes
+    const { error } = await sb.from('pacientes').insert({
+      medico_id:             _medicoId,
+      nombre:                p.nombre,
+      apellido:              p.apellido,
+      cedula:                p.cedula,
+      telefono:              p.telefono,
+      email:                 p.email,
+      alergias:              p.alergias,
+      medicamentos_actuales: p.medicamentos_actuales,
+      antecedentes_personales: (p.antecedentes_personales ? p.antecedentes_personales : '') +
+                                (p.vitaminas_suplementos ? '\nVitaminas/suplementos: ' + p.vitaminas_suplementos : ''),
+      notas:                 p.motivo_consulta ? 'Motivo de consulta: ' + p.motivo_consulta : null,
+    });
+
+    if (error) { alert('Error al incorporar: ' + error.message); return; }
+
+    // Marcar como incorporada y actualizar contador
+    await sb.from('preconsultas').update({ incorporado: true }).eq('id', id);
+    await sb.from('perfiles').update({ pacientes_usados: usados + 1 }).eq('id', _medicoId);
+
+    // Quitar fila del DOM
+    const row = document.getElementById('row-' + id);
+    if (row) row.remove();
+
+    // Actualizar badge
+    const badge = document.getElementById('badge-preconsultas');
+    const nuevoCnt = parseInt(badge.textContent) - 1;
+    if (nuevoCnt <= 0) {
+      document.getElementById('preconsultas-section').style.display = 'none';
+      badge.style.display = 'none';
+    } else {
+      badge.textContent = nuevoCnt;
+      document.getElementById('txt-preconsultas-sub').textContent =
+        nuevoCnt + ' paciente' + (nuevoCnt !== 1 ? 's' : '') + ' esperan ser incorporados';
+    }
+
+    // Pequeña confirmación
+    mostrarToast('Paciente incorporado a Mis Pacientes ✓');
+  }
+
+  async function verDetallePreconsulta(id) {
+    const { data: p } = await sb.from('preconsultas').select('*').eq('id', id).single();
+    if (!p) return;
+    const hace = tiempoRelativo(p.created_at);
+    const campos = [
+      ['Nombre', p.nombre + ' ' + (p.apellido||'')],
+      ['Cédula', p.cedula],
+      ['Teléfono', p.telefono],
+      ['Email', p.email],
+      ['Motivo de consulta', p.motivo_consulta],
+      ['Alergias', p.alergias],
+      ['Vitaminas / suplementos', p.vitaminas_suplementos],
+      ['Medicamentos actuales', p.medicamentos_actuales],
+      ['Antecedentes', p.antecedentes_personales],
+    ].filter(([,v]) => v).map(([k,v]) => `<div style="margin-bottom:12px"><p style="font-size:.65rem;color:rgba(200,162,74,.6);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">${k}</p><p style="font-size:.85rem;color:#e2e8f0;line-height:1.5">${v}</p></div>`).join('');
+
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(5,8,18,.88);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px';
+    ov.innerHTML = `
+      <div style="background:#0f172a;border:1px solid rgba(200,162,74,.2);border-radius:20px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto">
+        <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between">
+          <div><p style="font-size:1rem;font-weight:700;color:#f1f5f9">${p.nombre} ${p.apellido||''}</p><p style="font-size:.72rem;color:rgba(226,232,240,.35)">Enviado ${hace}</p></div>
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:transparent;color:rgba(226,232,240,.5);cursor:pointer;font-size:1rem">✕</button>
+        </div>
+        <div style="padding:24px">${campos}</div>
+        <div style="padding:0 24px 24px;display:flex;gap:10px">
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:transparent;color:rgba(226,232,240,.5);cursor:pointer;font-family:'DM Sans',sans-serif">Cerrar</button>
+          <button onclick="incorporarPreconsulta('${p.id}');this.closest('div[style*=fixed]').remove()" style="flex:2;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Incorporar a Mis Pacientes →</button>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
+  }
+
+  function copiarLinkPreconsulta() {
+    if (!_medicoId) return;
+    const link = window.location.origin + '/app/preconsulta.html?m=' + _medicoId;
+    navigator.clipboard.writeText(link).then(() => {
+      mostrarToast('Link copiado al portapapeles ✓');
+    }).catch(() => {
+      prompt('Copia este link:', link);
+    });
+  }
+
+  function tiempoRelativo(isoStr) {
+    const diff = (Date.now() - new Date(isoStr)) / 1000;
+    if (diff < 60)  return 'hace un momento';
+    if (diff < 3600) return 'hace ' + Math.floor(diff/60) + ' min';
+    if (diff < 86400) return 'hace ' + Math.floor(diff/3600) + 'h';
+    return 'hace ' + Math.floor(diff/86400) + 'd';
+  }
+
+  function mostrarToast(msg) {
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(21,31,53,.97);border:1px solid rgba(200,162,74,.3);border-radius:12px;padding:12px 18px;font-size:.83rem;color:#f1f5f9;z-index:300;animation:fadeUp .3s ease;font-family:DM Sans,sans-serif';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2800);
+  }
+  // ─────────────────────────────────────────────────────────
 
   // ── MODAL DETALLE ─────────────────────────────────────
   let _modalData = null;
