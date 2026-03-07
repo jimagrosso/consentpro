@@ -286,6 +286,17 @@
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+  // ── Sanitize user data to prevent XSS ──
+  function esc(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
   const hora = new Date().getHours();
   const greetings = ['Buenos días', 'Buenos días', 'Buenas tardes', 'Buenas noches'];
   document.getElementById('greeting').textContent = hora < 12 ? 'Buenos días' : hora < 18 ? 'Buenas tardes' : 'Buenas noches';
@@ -440,8 +451,8 @@
       document.getElementById('tabla-body').innerHTML = recientes.map(c => `
         <div class="table-row px-6 py-4 flex items-center justify-between" onclick="abrirModal('${c.id}')" title="Ver detalle">
           <div>
-            <p style="font-size:.875rem;font-weight:600;color:#f1f5f9;margin-bottom:3px">${c.paciente_nombre}</p>
-            <p style="font-size:.75rem;color:rgba(226,232,240,.4)">${c.tipo_procedimiento || 'Sin procedimiento'} · ${formatDate(c.created_at)}</p>
+            <p style="font-size:.875rem;font-weight:600;color:#f1f5f9;margin-bottom:3px">${esc(c.paciente_nombre)}</p>
+            <p style="font-size:.75rem;color:rgba(226,232,240,.4)">${esc(c.tipo_procedimiento) || 'Sin procedimiento'} · ${formatDate(c.created_at)}</p>
           </div>
           <div class="flex items-center gap-3">
             ${badges[c.estado] || badges.pendiente}
@@ -491,12 +502,12 @@
       return `
         <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border)" id="row-${p.id}">
           <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#f87171;flex-shrink:0">
-            ${(p.nombre[0]+(p.apellido||'?')[0]).toUpperCase()}
+            ${esc((p.nombre[0]+(p.apellido||'?')[0]).toUpperCase())}
           </div>
           <div style="flex:1;min-width:0">
-            <p style="font-size:.87rem;font-weight:600;color:#f1f5f9">${p.nombre} ${p.apellido||''}</p>
-            <p style="font-size:.72rem;color:rgba(226,232,240,.4)">${p.cedula||''} ${p.cedula&&p.email?'·':''} ${p.email||''} · ${hace}</p>
-            ${p.motivo_consulta ? `<p style="font-size:.72rem;color:rgba(200,162,74,.6);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px">💬 ${p.motivo_consulta}</p>` : ''}
+            <p style="font-size:.87rem;font-weight:600;color:#f1f5f9">${esc(p.nombre)} ${esc(p.apellido||'')}</p>
+            <p style="font-size:.72rem;color:rgba(226,232,240,.4)">${esc(p.cedula||'')} ${p.cedula&&p.email?'·':''} ${esc(p.email||'')} · ${hace}</p>
+            ${p.motivo_consulta ? `<p style="font-size:.72rem;color:rgba(200,162,74,.6);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px">💬 ${esc(p.motivo_consulta)}</p>` : ''}
           </div>
           <div style="display:flex;gap:8px;flex-shrink:0">
             <button onclick="verDetallePreconsulta('${p.id}')" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:rgba(226,232,240,.6);font-size:.75rem;cursor:pointer;font-family:'DM Sans',sans-serif">Ver</button>
