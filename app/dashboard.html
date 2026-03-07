@@ -27,7 +27,23 @@
     .table-row:hover{background:rgba(255,255,255,.02)}
     .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:400px 100%;animation:shimmer 1.5s infinite;border-radius:8px}
     @keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
-    @media(max-width:768px){.sidebar{width:100%;min-height:auto;position:relative;flex-direction:row;flex-wrap:wrap;padding:16px}.main{margin-left:0;padding:16px}}
+    @media(max-width:768px){
+      .sidebar{
+        width:100%;min-height:auto;position:fixed;
+        bottom:0;top:auto;left:0;right:0;
+        flex-direction:row;flex-wrap:nowrap;
+        padding:8px 16px 12px;justify-content:space-around;
+        align-items:center;border-right:none;
+        border-top:1px solid var(--border);
+        background:rgba(11,17,32,.98);z-index:50;
+        overflow-x:auto;gap:4px;
+      }
+      .sidebar .logo-area,.sidebar hr,.sidebar .upgrade-box,.sidebar .user-info { display:none; }
+      .nav-item{ flex-direction:column;gap:3px;padding:6px 8px;font-size:.58rem;min-width:48px;text-align:center;margin-bottom:0; }
+      .main{ margin-left:0;padding:16px;padding-bottom:90px; }
+      #tour-stats{ grid-template-columns:repeat(2,1fr) !important; }
+      #tour-tabla{ overflow-x:auto; }
+    }
 
     /* ── MODAL DETALLE ── */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}

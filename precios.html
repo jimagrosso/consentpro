@@ -82,6 +82,17 @@
     /* PDF feature pills */
     .pdf-pill{display:flex;align-items:center;gap:10px;padding:11px 16px;background:rgba(30,41,59,.8);border:1px solid var(--border);border-radius:12px;font-size:.78rem;color:rgba(226,232,240,.75)}
     .pdf-pill span.icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(200,162,74,.1);border:1px solid rgba(200,162,74,.2)}
+
+    /* ── MOBILE ── */
+    @media(max-width:768px){
+      .prepago-card,.plan-card{padding:24px 18px;}
+      .grid.md\:grid-cols-2,.grid.md\:grid-cols-3{ grid-template-columns:1fr !important; }
+      h1{font-size:2rem !important;}
+      h2{font-size:1.6rem !important;}
+      section{padding-left:16px !important;padding-right:16px !important;}
+      .max-w-7xl,.max-w-4xl,.max-w-5xl{padding-left:0 !important;padding-right:0 !important;}
+      .btn-gold,.btn-ghost,.btn-whatsapp{width:100%;justify-content:center;text-align:center;}
+    }
   </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
