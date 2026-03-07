@@ -40,6 +40,11 @@
     #cp-loading .cp-msg{font-size:.95rem;font-weight:600;color:#f1f5f9;text-align:center;letter-spacing:.01em}
     #cp-loading .cp-sub{font-size:.78rem;color:rgba(226,232,240,.4);text-align:center;margin-top:-12px}
     @keyframes cpSpin{to{transform:rotate(360deg)}}
+    @media (max-width: 768px) {
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { overflow-x: hidden; }
+      .login-card { margin: 16px; padding: 28px 20px; }
+    }
   </style>
 </head>
 <body>

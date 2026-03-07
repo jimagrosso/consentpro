@@ -521,57 +521,69 @@
     /* ── MOBILE RESPONSIVE ── */
     @media (max-width: 768px) {
 
+      /* GLOBAL — prevenir overflow horizontal */
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { overflow-x: hidden; max-width: 100vw; }
+
+      /* NAVBAR — asegurar que no desborde */
+      #navbar .max-w-7xl { padding-left: 16px !important; padding-right: 16px !important; }
+
       /* HERO — apilar vertical */
-      #hero { padding-top: 100px; padding-bottom: 48px; min-height: auto; }
-      #hero .grid { grid-template-columns: 1fr !important; gap: 40px; }
-      #hero h1 { font-size: 2.4rem !important; line-height: 1.12; }
+      #hero { padding-top: 88px; padding-bottom: 48px; min-height: auto; }
+      #hero .max-w-7xl { padding-left: 16px !important; padding-right: 16px !important; }
+      #hero .grid { grid-template-columns: 1fr !important; gap: 32px; width: 100%; }
+      #hero h1 { font-size: 2.2rem !important; line-height: 1.12; }
       #hero p  { font-size: 1rem; }
       #hero .reveal { order: 0; }
-      /* Ocultar la imagen hero en móvil para no aplastar */
+      /* Ocultar la imagen hero en móvil */
       #hero .grid > div:last-child { display: none; }
+      /* Asegurar que el hero-content no desborde */
+      #hero-content { width: 100% !important; max-width: 100% !important; overflow: hidden; }
+      #hero .inline-flex { flex-wrap: wrap; }
+
+      /* BOTONES hero — full width en móvil */
+      #hero .flex.items-center.gap-4 { flex-direction: column !important; align-items: stretch !important; }
+      #hero .flex.items-center.gap-4 > a,
+      #hero .flex.items-center.gap-4 > button { width: 100% !important; justify-content: center; }
+
+      /* CONTENEDORES GENERALES */
+      .max-w-7xl { padding-left: 16px !important; padding-right: 16px !important; max-width: 100vw !important; }
 
       /* SECCIÓN EN ACCIÓN — apilar imágenes */
-      #hero ~ section .grid,
       section .grid.lg\:grid-cols-2 { grid-template-columns: 1fr !important; }
       section .grid.lg\:grid-cols-2 img { width: 100%; height: auto; border-radius: 12px; }
 
-      /* COMO FUNCIONA — ya era grid-cols-1 en mobile ✅ */
-
-      /* MÓDULOS — 1 columna */
-      .grid.md\:grid-cols-3 { grid-template-columns: 1fr !important; }
-
-      /* INDUSTRIAS */
+      /* GRIDS GENERALES — 1 columna */
       .grid.md\:grid-cols-2,
       .grid.md\:grid-cols-3,
-      .grid.lg\:grid-cols-3 { grid-template-columns: 1fr !important; }
+      .grid.lg\:grid-cols-2,
+      .grid.lg\:grid-cols-3,
+      .grid.lg\:grid-cols-4 { grid-template-columns: 1fr !important; }
 
-      /* SEGURIDAD & OTRAS SECCIONES flex row → column */
-      section > div > div[class*="flex"][class*="gap"],
-      section > div[class*="flex"][class*="gap"] {
-        flex-direction: column;
-      }
-
-      /* TESTIMONIOS, CTA, FOOTER grids */
+      /* TESTIMONIOS */
       .grid.lg\:grid-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
+
+      /* SEGURIDAD & SECCIONES flex row → column */
+      section > div > div[class*="flex"][class*="gap"],
+      section > div[class*="flex"][class*="gap"] { flex-direction: column; }
 
       /* PADDING general en secciones */
       section { padding-left: 16px !important; padding-right: 16px !important; }
       section .max-w-7xl { padding-left: 0 !important; padding-right: 0 !important; }
 
       /* DASHBOARD MOCKUP */
-      .dashboard-mockup { transform: scale(0.85); transform-origin: top center; display: none; }
+      .dashboard-mockup { display: none; }
 
-      /* BOTONES hero — full width en móvil */
-      #hero .flex.flex-col.sm\:flex-row { flex-direction: column !important; }
-      #hero .flex.flex-col.sm\:flex-row a,
-      #hero .flex.flex-col.sm\:flex-row button { width: 100%; justify-content: center; }
-
-      /* TEXTOS — ajustar tamaños */
+      /* TEXTOS */
       h2 { font-size: 1.9rem !important; }
       h3 { font-size: 1.3rem !important; }
 
+      /* PRECIOS — cards full width */
+      .pricing-card { width: 100% !important; }
+
       /* FOOTER — columna única */
       footer .grid { grid-template-columns: 1fr !important; gap: 32px; }
+      footer .flex.flex-wrap { flex-direction: column; gap: 8px; }
     }
 
     /* Tablet 768-1024 */
