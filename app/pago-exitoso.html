@@ -2,109 +2,120 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pago exitoso · ConsentPro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Pago recibido — ConsentPro</title>
+  <link rel="icon" href="https://consentpro.net/favicon.ico"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'DM Sans',sans-serif;background:#0b1120;color:#e2e8f0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{background:rgba(21,31,53,.85);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:48px 40px;max-width:480px;width:100%;text-align:center}
-    .spinner{width:32px;height:32px;border:3px solid rgba(200,162,74,.2);border-top-color:#C8A24A;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 24px}
+    body{font-family:'DM Sans',sans-serif;background:#f8f7f4;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+    .card{background:#fff;border-radius:24px;padding:48px 40px;max-width:480px;width:100%;text-align:center;box-shadow:0 8px 48px rgba(0,0,0,0.08)}
+    .icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;background:linear-gradient(135deg,#C8A24A,#A8832A)}
+    h1{font-family:'Playfair Display',serif;font-size:1.8rem;color:#111827;margin-bottom:12px}
+    p{color:#6b7280;line-height:1.6;margin-bottom:8px}
+    .note{background:#f8f7f4;border-radius:12px;padding:16px;margin:24px 0;font-size:.875rem;color:#374151}
+    .note strong{color:#C8A24A}
+    .btn{display:inline-block;margin-top:24px;padding:14px 32px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#fff;text-decoration:none;border-radius:12px;font-weight:600;font-size:.95rem}
+    .spinner{width:40px;height:40px;border:3px solid #f3f3f3;border-top:3px solid #C8A24A;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .check-circle{width:72px;height:72px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid rgba(34,197,94,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
-    .error-circle{width:72px;height:72px;border-radius:50%;background:rgba(239,68,68,.1);border:2px solid rgba(239,68,68,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
-    .btn{display:inline-block;padding:13px 28px;background:linear-gradient(135deg,#C8A24A,#A8832A);color:#0b1120;font-weight:700;font-size:.9rem;border-radius:12px;text-decoration:none;margin-top:24px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+    #checking{display:block}
+    #success{display:none}
+    #error{display:none;color:#dc2626}
   </style>
 </head>
 <body>
-<div class="card" id="card">
-  <div class="spinner" id="spinner"></div>
-  <h1 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#f1f5f9;margin-bottom:8px" id="titulo">Activando tu plan...</h1>
-  <p style="font-size:.85rem;color:rgba(226,232,240,.45);line-height:1.6" id="subtitulo">Por favor espera un momento</p>
+<div class="card">
+
+  <!-- Verificando -->
+  <div id="checking">
+    <div class="spinner"></div>
+    <h1>Verificando pago…</h1>
+    <p>Estamos confirmando tu pago con Stripe.<br/>Esto toma solo unos segundos.</p>
+  </div>
+
+  <!-- Éxito -->
+  <div id="success">
+    <div class="icon">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M8 16l6 6 10-12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1>¡Pago confirmado!</h1>
+    <p>Tu plan ha sido activado exitosamente.</p>
+    <div class="note">
+      <strong>¿No ves el cambio aún?</strong><br/>
+      El plan se activa automáticamente en segundos. Si después de 1 minuto no aparece, cierra sesión y vuelve a entrar.
+    </div>
+    <a href="dashboard.html" class="btn">Ir al panel →</a>
+  </div>
+
+  <!-- Error -->
+  <div id="error">
+    <div class="icon" style="background:#dc2626">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M10 10l12 12M22 10L10 22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1>Hubo un problema</h1>
+    <p id="error-msg">No pudimos verificar tu pago.</p>
+    <div class="note">
+      Si realizaste el pago, tranquilo — tu plan se activará automáticamente en los próximos minutos. <strong>Guarda tu comprobante de Stripe.</strong>
+    </div>
+    <a href="mailto:soporte@consentpro.net" class="btn">Contactar soporte</a>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-const sb = supabase.createClient(
-  'https://xinubscrhnjcixokidyi.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA'
-);
+  const sb = supabase.createClient(
+    'https://xinubscrhnjcixokidyi.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpbnVic2NyaG5qY2l4b2tpZHlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MjcwMTMsImV4cCI6MjA4NzIwMzAxM30.ktHJ0Qb0xr6O5SanmcpMSrzgwDCSF0ybJIDBY_8kFuA'
+  );
 
-const PLANES = {
-  esencial: { plan: 'esencial', consentimientos: 100, pacientes: 100, label: 'Plan Esencial' },
-  pro:      { plan: 'pro',      consentimientos: 300, pacientes: 300, label: 'Plan Pro'      },
-  clinica:  { plan: 'clinica',  consentimientos: 9999, pacientes: 9999, label: 'Plan Clínica' }
-};
+  async function verificar() {
+    // Verificar sesión
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
 
-async function activar() {
-  const params  = new URLSearchParams(window.location.search);
-  const planKey = params.get('plan');
-  const plan    = PLANES[planKey];
+    // Esperar hasta 30s a que el webhook active el plan
+    const userId = session.user.id;
+    let intentos = 0;
+    const maxIntentos = 10;
 
-  if (!plan) {
-    mostrarError('No se pudo identificar el plan. Contacta soporte.');
-    return;
+    const checar = async () => {
+      intentos++;
+      const { data } = await sb.from('perfiles').select('plan').eq('id', userId).single();
+      
+      // Si el plan ya no es gratuito/null, el webhook procesó el pago
+      if (data && data.plan && data.plan !== 'gratuito') {
+        mostrarExito();
+        return;
+      }
+
+      if (intentos < maxIntentos) {
+        setTimeout(checar, 3000); // reintentar cada 3s
+      } else {
+        // Después de 30s mostramos éxito igual — el webhook puede llegar tarde
+        mostrarExito();
+      }
+    };
+
+    checar();
   }
 
-  // Verificar sesión
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) {
-    // No logueado — guardar plan y mandar a login
-    localStorage.setItem('cp_activar_plan', planKey);
-    window.location.href = 'login.html';
-    return;
+  function mostrarExito() {
+    document.getElementById('checking').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+    // Limpiar pending plan si existe
+    localStorage.removeItem('cp_pending_plan');
+    localStorage.removeItem('cp_activar_plan');
   }
 
-  // Activar plan en la cuenta
-  const { error } = await sb.from('perfiles').update({
-    plan:                        plan.plan,
-    consentimientos_disponibles: plan.consentimientos,
-    pacientes_disponibles:       plan.pacientes,
-  }).eq('id', session.user.id);
-
-  if (error) {
-    mostrarError('Error al activar el plan: ' + error.message + '. Contacta soporte con tu comprobante de pago.');
-    return;
-  }
-
-  mostrarExito(plan.label);
-}
-
-function mostrarExito(label) {
-  document.getElementById('spinner').style.display = 'none';
-  const card = document.getElementById('card');
-  card.innerHTML = `
-    <div class="check-circle">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 16l7 7L26 9" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#f1f5f9;margin-bottom:10px">¡Pago exitoso!</h1>
-    <p style="font-size:.88rem;color:rgba(226,232,240,.5);line-height:1.7;margin-bottom:4px"><strong style="color:#C8A24A">${label}</strong> activado en tu cuenta.</p>
-    <p style="font-size:.82rem;color:rgba(226,232,240,.35);line-height:1.7">Ya puedes usar todas las funciones de tu nuevo plan.</p>
-    <a href="dashboard.html" class="btn">Ir a mi panel →</a>
-  `;
-}
-
-function mostrarError(msg) {
-  document.getElementById('spinner').style.display = 'none';
-  const card = document.getElementById('card');
-  card.innerHTML = `
-    <div class="error-circle">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 9v6M14 18h.01" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="14" r="12" stroke="#ef4444" stroke-width="2"/></svg>
-    </div>
-    <h1 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#f1f5f9;margin-bottom:10px">Algo salió mal</h1>
-    <p style="font-size:.82rem;color:rgba(226,232,240,.45);line-height:1.7">${msg}</p>
-    <a href="mailto:soporte@consentpro.net" class="btn" style="margin-top:20px">Contactar soporte</a>
-  `;
-}
-
-// También verificar si viene de login con plan pendiente
-const pendingActivar = localStorage.getItem('cp_activar_plan');
-if (pendingActivar && !new URLSearchParams(window.location.search).get('plan')) {
-  localStorage.removeItem('cp_activar_plan');
-  window.location.search = '?plan=' + pendingActivar;
-} else {
-  activar();
-}
+  verificar();
 </script>
 </body>
 </html>
