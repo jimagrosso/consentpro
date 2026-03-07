@@ -221,7 +221,7 @@
         const stripeUrl = STRIPE_LINKS[pendingPlan];
         if (stripeUrl) {
           const params = new URLSearchParams({
-            client_reference_id: user.id,
+            client_reference_id: user.id + ':' + pendingPlan,
             prefilled_email:     user.email
           });
           cpMsg('Redirigiendo a pago...', 'Abriendo Stripe');
