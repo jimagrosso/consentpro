@@ -952,32 +952,44 @@
           <p class="text-ink/60 text-sm leading-relaxed">
             El paciente llena una pre-consulta, firma en pantalla y se lleva una copia. Tú guardas el registro sellado con evidencia criptográfica. Todo en 2 minutos.
           </p>
-          <div class="space-y-3">
-            <div class="flex items-start gap-3">
-              <div class="w-5 h-5 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style="background:rgba(200,162,74,0.15)">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C8A24A" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <!-- 2 columnas de features -->
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Feature: Pre-consulta -->
+            <div class="bg-surface rounded-xl p-4 border border-ink/6">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2" style="background:rgba(200,162,74,0.12)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="2" stroke="#C8A24A" stroke-width="1.3"/><path d="M5 6h6M5 8.5h6M5 11h4" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg>
               </div>
-              <p class="text-sm text-ink/70"><span class="font-semibold text-ink">Pre-consulta digital</span> — el paciente llena sus datos antes de entrar a la consulta</p>
+              <p class="text-xs font-bold text-ink mb-1">Planilla de check-in</p>
+              <p class="text-xs text-ink/50 leading-relaxed">El paciente llena su historia clínica desde el celular antes de la consulta</p>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="w-5 h-5 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style="background:rgba(200,162,74,0.15)">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C8A24A" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <!-- Feature: Base de datos -->
+            <div class="bg-surface rounded-xl p-4 border border-gold/20" style="background:rgba(200,162,74,0.04)">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2" style="background:rgba(200,162,74,0.15)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="5" rx="5" ry="2.5" stroke="#C8A24A" stroke-width="1.3"/><path d="M3 5v3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V5" stroke="#C8A24A" stroke-width="1.3"/><path d="M3 8v3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V8" stroke="#C8A24A" stroke-width="1.3"/></svg>
               </div>
-              <p class="text-sm text-ink/70"><span class="font-semibold text-ink">Firma digital + foto</span> — identidad del paciente verificada en el momento</p>
+              <p class="text-xs font-bold text-ink mb-1">Base de pacientes</p>
+              <p class="text-xs text-ink/50 leading-relaxed">Todos tus pacientes guardados, buscables y organizados por consulta</p>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="w-5 h-5 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style="background:rgba(200,162,74,0.15)">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C8A24A" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <!-- Feature: Firma + foto -->
+            <div class="bg-surface rounded-xl p-4 border border-ink/6">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2" style="background:rgba(200,162,74,0.12)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12c2-4 4-6 5-6s2 2 3 2 2-2 4-4" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/><circle cx="11" cy="5" r="2" stroke="#C8A24A" stroke-width="1.3"/></svg>
               </div>
-              <p class="text-sm text-ink/70"><span class="font-semibold text-ink">PDF sellado SHA-256</span> — evidencia que no puede alterarse ni cuestionarse</p>
+              <p class="text-xs font-bold text-ink mb-1">Firma + foto del paciente</p>
+              <p class="text-xs text-ink/50 leading-relaxed">Identidad verificada en el momento. Nadie puede negar haber firmado</p>
             </div>
-            <div class="flex items-start gap-3">
-              <div class="w-5 h-5 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0" style="background:rgba(200,162,74,0.15)">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C8A24A" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <!-- Feature: PDF sellado -->
+            <div class="bg-surface rounded-xl p-4 border border-ink/6">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2" style="background:rgba(200,162,74,0.12)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 4.5v4C2 12 4.7 14.5 8 15.5c3.3-1 6-3.5 6-7v-4L8 1z" stroke="#C8A24A" stroke-width="1.3"/><path d="M5.5 8l2 2 3-3" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/></svg>
               </div>
-              <p class="text-sm text-ink/70"><span class="font-semibold text-ink">Historial de pacientes</span> — todos tus consentimientos organizados, buscables, descargables</p>
+              <p class="text-xs font-bold text-ink mb-1">PDF sellado SHA-256</p>
+              <p class="text-xs text-ink/50 leading-relaxed">Evidencia criptográfica que no puede alterarse ni cuestionarse en juicio</p>
             </div>
           </div>
+          <a href="app/login.html#registro" class="inline-flex items-center gap-2 text-sm font-semibold text-gold hover:opacity-70 transition-opacity mt-2">
+            Empezar gratis — 3 consentimientos sin costo →
+          </a>
         </div>
       </div>
     </div>
@@ -1083,136 +1095,190 @@
 
       <div class="text-center mb-20">
         <div class="gold-divider mx-auto mb-5 reveal"></div>
-        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Módulos de la Plataforma</p>
+        <p class="text-xs font-semibold text-gold tracking-widest uppercase mb-3 reveal delay-1">Lo que incluye ConsentPro</p>
         <h2 id="modulos-title" class="font-display text-4xl lg:text-5xl font-bold text-ink mb-4 reveal delay-2" style="letter-spacing:-0.02em;">
-          <!-- [i18n] -->
-          Todo lo que tu equipo<br/>de compliance necesita.
+          Tres herramientas que tu<br/>consulta necesita hoy.
         </h2>
         <p class="text-ink/55 text-lg max-w-xl mx-auto reveal delay-3">
-          <!-- [i18n] -->
-          Tres potentes módulos, una plataforma unificada — diseñada para escalar con tu organización.
+          Pre-consulta digital, base de datos de pacientes y consentimiento sellado — todo en un solo lugar.
         </p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-6">
 
-        <!-- Module 1: Digital Consents -->
+        <!-- Módulo 1: Pre-consulta / Check-in digital -->
         <div class="module-card reveal delay-1" tabindex="0" role="article">
+          <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+              <rect x="5" y="3" width="18" height="22" rx="3" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M9 9h10M9 13h10M9 17h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="21" cy="21" r="4" fill="#0b1120"/>
+              <path d="M19.5 21l1 1 2-2" stroke="#C8A24A" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Planilla de Pre-consulta</span>
+          <h3 class="font-display text-xl font-bold text-ink mb-3">
+            Check-in digital del paciente
+          </h3>
+          <p class="text-ink/55 text-sm leading-relaxed mb-6">
+            Antes de entrar al consultorio, el paciente llena su historia clínica básica, motivo de consulta y datos personales — desde su celular, sin papel.
+          </p>
+          <!-- Mini mockup de la planilla -->
+          <div class="bg-surface rounded-xl p-4 mb-6 border border-ink/6">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-2 h-2 rounded-full bg-gold"></div>
+              <span class="text-xs font-semibold text-ink/60 uppercase tracking-wide">Campos de la planilla</span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-ink/6">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#C8A24A" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs text-ink/70">Datos personales y de contacto</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-ink/6">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#C8A24A" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs text-ink/70">Antecedentes médicos y alergias</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-ink/6">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#C8A24A" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs text-ink/70">Motivo de consulta del día</span>
+              </div>
+              <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-ink/6">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#C8A24A" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4.5" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs text-ink/70">Firma digital + foto de identidad</span>
+              </div>
+            </div>
+          </div>
+          <a href="app/login.html#registro" class="text-sm font-medium text-gold flex items-center gap-1.5 hover:opacity-70 transition-opacity duration-200 group">
+            Ver planilla de ejemplo →
+          </a>
+        </div>
+
+        <!-- Módulo 2: Base de datos de pacientes -->
+        <div class="module-card reveal delay-2" tabindex="0" role="article" style="border-color:rgba(200,162,74,0.3);background:linear-gradient(160deg,#fffdf7 0%,#fff 100%);">
+          <!-- Badge "destacado" -->
+          <div class="absolute -top-3 left-6">
+            <span class="bg-gold text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm tracking-wide">⭐ Más usado</span>
+          </div>
+          <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6 mt-3">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
+              <ellipse cx="14" cy="8" rx="9" ry="4" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M5 8v6c0 2.2 4 4 9 4s9-1.8 9-4V8" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M5 14v6c0 2.2 4 4 9 4s9-1.8 9-4v-6" stroke="currentColor" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Base de Datos</span>
+          <h3 class="font-display text-xl font-bold text-ink mb-3">
+            Todos tus pacientes,<br/>organizados y seguros
+          </h3>
+          <p class="text-ink/55 text-sm leading-relaxed mb-6">
+            Cada paciente queda registrado con su historia, consentimientos y pre-consultas. Búscalos por nombre, fecha o especialidad. Accede desde cualquier dispositivo.
+          </p>
+          <!-- Mini mockup base de datos -->
+          <div class="bg-white rounded-xl border border-gold/20 mb-6 overflow-hidden shadow-sm">
+            <div class="bg-surface px-4 py-2.5 border-b border-ink/6 flex items-center justify-between">
+              <span class="text-xs font-semibold text-ink/50">Mis pacientes</span>
+              <span class="text-xs text-gold font-medium">Ver todos →</span>
+            </div>
+            <div class="divide-y divide-ink/5">
+              <div class="flex items-center gap-3 px-4 py-2.5">
+                <div class="w-7 h-7 rounded-full bg-gold/20 flex items-center justify-center text-gold text-xs font-bold flex-shrink-0">ML</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-ink truncate">María López</p>
+                  <p class="text-xs text-ink/40">2 consentimientos · 10 mar</p>
+                </div>
+                <span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-medium flex-shrink-0">Activo</span>
+              </div>
+              <div class="flex items-center gap-3 px-4 py-2.5">
+                <div class="w-7 h-7 rounded-full bg-gold/20 flex items-center justify-center text-gold text-xs font-bold flex-shrink-0">JR</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-ink truncate">José Rodríguez</p>
+                  <p class="text-xs text-ink/40">1 consentimiento · 8 mar</p>
+                </div>
+                <span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-medium flex-shrink-0">Activo</span>
+              </div>
+              <div class="flex items-center gap-3 px-4 py-2.5">
+                <div class="w-7 h-7 rounded-full bg-gold/20 flex items-center justify-center text-gold text-xs font-bold flex-shrink-0">AG</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-semibold text-ink truncate">Ana García</p>
+                  <p class="text-xs text-ink/40">3 consentimientos · 5 mar</p>
+                </div>
+                <span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-medium flex-shrink-0">Activo</span>
+              </div>
+            </div>
+          </div>
+          <ul class="space-y-2 mb-4">
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Búsqueda instantánea por nombre o fecha
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Historial completo por paciente
+            </li>
+            <li class="flex items-center gap-2 text-xs text-ink/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Acceso desde el celular o computadora
+            </li>
+          </ul>
+          <a href="app/login.html#registro" class="text-sm font-medium text-gold flex items-center gap-1.5 hover:opacity-70 transition-opacity duration-200">
+            Explorar la base de datos →
+          </a>
+        </div>
+
+        <!-- Módulo 3: Consentimiento sellado -->
+        <div class="module-card reveal delay-3" tabindex="0" role="article">
           <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
               <path d="M14 3L5 8v7c0 5.5 3.8 10.6 9 12 5.2-1.4 9-6.5 9-12V8L14 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
               <path d="M10 14l3 3 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
-          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Módulo 01</span>
+          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Consentimiento Digital</span>
           <h3 class="font-display text-xl font-bold text-ink mb-3">
-            <!-- [i18n] -->
-            Consentimientos Digitales
+            PDF sellado con<br/>validez jurídica
           </h3>
           <p class="text-ink/55 text-sm leading-relaxed mb-6">
-            <!-- [i18n] -->
-            Recopila, almacena y gestiona consentimientos digitales en canales web, móvil y offline. Plantillas personalizables para cada jurisdicción.
+            Cada consentimiento genera un PDF con firma del paciente, foto tomada en el momento, fecha y hora exacta, y sello SHA-256 que no puede alterarse.
           </p>
-          <ul class="space-y-2 mb-6">
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Recopilación multicanal
-            </li>
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Plantillas por jurisdicción
-            </li>
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Firma biométrica y electrónica
-            </li>
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Vencimiento y renovación automáticos
-            </li>
-          </ul>
-          <a href="producto.html" class="text-sm font-medium text-ink flex items-center gap-1.5 hover:text-gold transition-colors duration-200 group">
-            Saber más
-            <svg class="transition-transform duration-200 group-hover:translate-x-1" width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        </div>
-
-        <!-- Module 2: Compliance & Policies -->
-        <div class="module-card reveal delay-2" tabindex="0" role="article">
-          <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
-              <rect x="5" y="3" width="18" height="22" rx="3" stroke="currentColor" stroke-width="1.6"/>
-              <path d="M9 9h10M9 13h10M9 17h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-              <circle cx="20" cy="20" r="4" fill="#1e293b" stroke="currentColor" stroke-width="1.2"/>
-              <path d="M18.5 20l1 1 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            </svg>
+          <!-- Mini mockup del PDF -->
+          <div class="bg-surface rounded-xl border border-ink/8 p-4 mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-ink flex items-center justify-center">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L2 4v4.5C2 11.5 4.2 13.6 7 14.5c2.8-.9 5-3 5-6V4L7 1z" stroke="#C8A24A" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="#C8A24A" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-ink">Consentimiento_2024.pdf</p>
+                  <p class="text-xs text-ink/40">Sellado · 14 mar 2024 · 14:32</p>
+                </div>
+              </div>
+              <span class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-semibold">✓ Válido</span>
+            </div>
+            <div class="space-y-1.5 text-xs text-ink/50">
+              <div class="flex justify-between">
+                <span>Paciente</span><span class="text-ink font-medium">María López</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Firma digital</span><span class="text-green-500 font-medium">✓ Verificada</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Foto ID</span><span class="text-green-500 font-medium">✓ Capturada</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Hash SHA-256</span><span class="text-gold font-mono text-xs">8f14e45f...</span>
+              </div>
+            </div>
           </div>
-          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Módulo 02</span>
-          <h3 class="font-display text-xl font-bold text-ink mb-3">
-            <!-- [i18n] -->
-            Compliance y Políticas
-          </h3>
-          <p class="text-ink/55 text-sm leading-relaxed mb-6">
-            <!-- [i18n] -->
-            Publica y gestiona políticas de privacidad, términos de servicio y documentos de compliance — siempre actualizados con los cambios normativos.
-          </p>
-          <ul class="space-y-2 mb-6">
+          <ul class="space-y-2 mb-4">
             <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Versionado de políticas y registro de cambios
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Plantillas por procedimiento (estética, cirugía, etc.)
             </li>
             <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Alertas regulatorias automáticas
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Se envía automáticamente al paciente por email
             </li>
             <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Soporte multiidioma
-            </li>
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Flujo de revisión legal
+              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Descargable en cualquier momento
             </li>
           </ul>
-          <a href="producto.html" class="text-sm font-medium text-ink flex items-center gap-1.5 hover:text-gold transition-colors duration-200 group">
-            Saber más
-            <svg class="transition-transform duration-200 group-hover:translate-x-1" width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        </div>
-
-        <!-- Module 3: Management & Evidence -->
-        <div class="module-card reveal delay-3" tabindex="0" role="article">
-          <div class="module-icon w-14 h-14 rounded-2xl bg-ink flex items-center justify-center mb-6">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-gold">
-              <path d="M4 20l6-8 4 4 5-7 5 11H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-              <circle cx="22" cy="6" r="3" fill="#1e293b" stroke="currentColor" stroke-width="1.2"/>
-              <path d="M21 6l.8.8 1.6-1.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <span class="text-xs font-semibold text-gold tracking-wider uppercase mb-3 block">Módulo 03</span>
-          <h3 class="font-display text-xl font-bold text-ink mb-3">
-            <!-- [i18n] -->
-            Gestión y Evidencia
-          </h3>
-          <p class="text-ink/55 text-sm leading-relaxed mb-6">
-            <!-- [i18n] -->
-            Registro de auditoría centralizado, generación de evidencia con validez jurídica y gestión de ARSF (Acceso, Rectificación, Supresión y otros) en un solo lugar.
-          </p>
-          <ul class="space-y-2 mb-6">
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Registros de auditoría inviolables
-            </li>
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Gestión del flujo ARSF
-            </li>
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Exportación regulatoria con un clic
-            </li>
-            <li class="flex items-center gap-2 text-xs text-ink/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>Sellado de tiempo blockchain
-            </li>
-          </ul>
-          <a href="producto.html" class="text-sm font-medium text-ink flex items-center gap-1.5 hover:text-gold transition-colors duration-200 group">
-            Saber más
-            <svg class="transition-transform duration-200 group-hover:translate-x-1" width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7H12M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <a href="app/login.html#registro" class="text-sm font-medium text-gold flex items-center gap-1.5 hover:opacity-70 transition-opacity duration-200">
+            Crear mi primer consentimiento →
           </a>
         </div>
       </div>
