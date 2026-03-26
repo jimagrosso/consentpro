@@ -594,11 +594,334 @@ He recibido información sobre el procedimiento. Tuve oportunidad de preguntar. 
 Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoría legal según normativa local.`
 }
 
+// ──────────────────────────────────────────────────────────────
+// MEDICINA ESTETICA v1.1 — Micropigmentacion, Peeling Quimico,
+// Laser Diodo, Laser CO2 Fraccionado, Inductores de Colageno
+// ──────────────────────────────────────────────────────────────
+,{
+  catalog_id: 'estetica_micropigmentacion',
+  titulo: 'Micropigmentacion (Dermopigmentacion)',
+  tipo_procedimiento: 'Procedimiento estetico',
+  nombre_procedimiento: 'Micropigmentacion / Dermopigmentacion cosmética',
+  specialty_tags: ['MED_ESTETICA'],
+  version: 1,
+  descripcion: `CONSENTIMIENTO INFORMADO - MICROPIGMENTACION / DERMOPIGMENTACION
+
+OBJETIVO DEL PROCEDIMIENTO
+La micropigmentacion (tambien llamada dermopigmentacion o maquillaje semipermanente) consiste en la introduccion de pigmentos biocompatibles en la dermis superficial mediante agujas o micropigmentadoras especializadas. Se utiliza para la definicion de cejas (incluyendo tecnicas como pelo a pelo, ombre, microblading), delineado de ojos, labios, areolas mamarias u otras zonas indicadas por el profesional.
+
+TECNICA A REALIZAR
+El profesional indicara la tecnica especifica: microblading (incisiones manuales superficiales con pigmento), micropigmentacion a maquina, tecnica combinada, u otras. Cada tecnica tiene consideraciones particulares de cicatrizacion y duracion.
+
+COMO SE REALIZA
+Se aplica anestesico topico en la zona a tratar. Se realiza el diseno previo sobre la piel para aprobacion del paciente. Se procede con la tecnica indicada introduciendo el pigmento en la dermis superficial de forma controlada. La sesion dura entre 1 y 3 horas dependiendo del area y la tecnica.
+
+BENEFICIOS ESPERADOS
+Definicion estetica de la zona tratada con duracion variable segun la tecnica, el tipo de piel, el metabolismo y los cuidados posteriores (aproximadamente 1 a 3 anos; el microblading tiende a durar menos en pieles grasas). El resultado final se aprecia entre 4 y 6 semanas tras la sesion, una vez completada la cicatrizacion. Se requiere generalmente una sesion de retoque a las 4-8 semanas. No se garantizan resultados especificos.
+
+RIESGOS COMUNES (transitorios)
+- Enrojecimiento, inflamacion y sensibilidad en la zona tratada (dias 1 a 3)
+- Costras o descamacion durante la cicatrizacion (7 a 14 dias) - no deben retirarse manualmente
+- Perdida de parte del pigmento durante el proceso de cicatrizacion (normal y esperado)
+- Intensidad del color mas oscura los primeros dias, aclarando progresivamente
+
+RIESGOS POCO FRECUENTES
+- Reaccion alergica o de hipersensibilidad al pigmento
+- Infeccion en la zona tratada si no se siguen los cuidados indicados
+- Cicatrizacion anomala (queloides o cicatriz hipertrofica) en personas con predisposicion
+- Resultado asimetrico que puede requerir correccion en sesion de retoque
+- Migracion del pigmento especialmente en pieles muy grasas
+- Cambio de tonalidad del pigmento con el tiempo
+
+CONTRAINDICACIONES
+Embarazo o lactancia; piel con heridas activas, infeccion o inflamacion en la zona; rosacéa activa; tendencia a queloides; trastornos de la coagulacion o anticoagulacion activa; diabetes no controlada; hipersensibilidad conocida a algun componente de los pigmentos; tratamiento activo con isotretinoina (Roacutan) — requiere suspension previa; radioterapia reciente en la zona.
+
+CUIDADOS POSTERIORES
+- Mantener la zona limpia y aplicar el producto cicatrizante indicado
+- No mojar la zona con agua directa los primeros 7 dias (evitar piscinas, mar, sudoracion excesiva)
+- No aplicar maquillaje sobre la zona durante la cicatrizacion
+- No exponer al sol directo durante la cicatrizacion (minimo 4 semanas)
+- No rascar ni retirar costras manualmente
+- Usar protector solar en la zona una vez cicatrizada
+
+SENALES DE ALARMA
+Signos de infeccion (enrojecimiento progresivo, secrecion purulenta, fiebre, dolor intenso); reaccion alergica severa; formacion de queloides. Consulte al profesional tratante.
+
+CONSENTIMIENTO FOTOGRAFICO (opcional)
+( ) Autorizo fotografias antes y despues para registro en historia clinica.
+( ) Autorizo uso con fines academicos (identidad protegida).
+
+DECLARACION DEL PACIENTE
+He leido y comprendido este documento. Tuve la oportunidad de realizar preguntas sobre la tecnica, los pigmentos a utilizar y los cuidados posteriores. Entiendo que el resultado final depende en gran medida de mis cuidados durante la cicatrizacion. Puedo retirar mi consentimiento antes del inicio del procedimiento.
+
+---
+Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoria legal segun normativa local.`
+}
+
+,{
+  catalog_id: 'estetica_peeling_quimico',
+  titulo: 'Peeling Quimico Facial',
+  tipo_procedimiento: 'Procedimiento estetico',
+  nombre_procedimiento: 'Peeling quimico facial (superficial, medio o profundo)',
+  specialty_tags: ['MED_ESTETICA','DERMATOLOGIA'],
+  version: 1,
+  descripcion: `CONSENTIMIENTO INFORMADO - PEELING QUIMICO FACIAL
+
+OBJETIVO DEL PROCEDIMIENTO
+El peeling quimico consiste en la aplicacion controlada de una solucion quimica sobre la piel con el fin de producir una exfoliacion controlada que estimule la renovacion cutanea. Segun la profundidad de accion se clasifica en:
+- Superficial: actua sobre la epidermis (ej.: acido glicolico, acido mandelico, acido salicilico, TCA bajas concentraciones)
+- Medio: alcanza la dermis superficial (ej.: TCA 30-35%, combinaciones tipo Jessner + TCA)
+- Profundo: penetra hasta la dermis media/reticular (ej.: fenol — generalmente requiere anestesia y monitoreo especial)
+
+El tipo de peeling indicado en su caso es: [el medico indicara la profundidad y el agente especifico]
+
+INDICACIONES HABITUALES
+Manchas (melasma, hiperpigmentacion post-inflamatoria), textura irregular, poros dilatados, acne activo leve-moderado y/o cicatrices superficiales de acne, fotoenvejecimiento leve a moderado, entre otras segun evaluacion medica.
+
+COMO SE REALIZA
+Se limpia y prepara la piel. Se aplica la solucion quimica con un pincel, gasa o aplicador sobre la zona indicada. El tiempo de contacto es controlado con precision por el medico. Se neutraliza el acido (si aplica) o se retira segun protocolo. La sesion dura entre 30 y 60 minutos. Puede producir sensacion de ardor, calor o picazon durante la aplicacion.
+
+BENEFICIOS ESPERADOS
+Mejoria en la textura, luminosidad y tono de la piel. Reduccion de manchas y cicatrices superficiales segun el tipo de peeling. Los resultados son progresivos; se suele recomendar un protocolo de varias sesiones para peelings superficiales. No se garantizan resultados especificos.
+
+PERIODO DE DESCAMACION ESPERADO
+- Dias 1-3: enrojecimiento, calor y sensibilidad
+- Dias 3-7: inicio de descamacion — NO retirar costras ni piel manualmente
+- Dias 7-14: cicatrizacion progresiva
+
+RIESGOS COMUNES (esperados, parte del proceso)
+- Enrojecimiento (eritema), sensacion de calor y ardor durante y tras la aplicacion
+- Descamacion o pelado de la piel durante 3 a 10 dias — es parte del proceso
+- Sensibilidad cutanea aumentada temporalmente
+
+RIESGOS POCO FRECUENTES
+- Hiperpigmentacion post-inflamatoria (manchas oscuras) — mayor riesgo en fototipos altos
+- Hipopigmentacion (zonas mas claras) — mas frecuente en peelings profundos
+- Infeccion bacteriana o viral (reactivacion de herpes)
+- Cicatrizacion anomala
+- Reaccion alergica al agente quimico
+- En peelings de fenol: riesgos sistemicos cardiacos y renales
+
+CONTRAINDICACIONES
+Embarazo o lactancia; uso activo de isotretinoina oral — requiere suspension minimo 6-12 meses previos; herpes labial activo sin profilaxis; piel con heridas, eccemas o infecciones activas; exposicion solar reciente significativa; cicatrices queloides; fototipo muy alto sin protocolo de preparacion.
+
+CUIDADOS POSTERIORES (ESENCIALES)
+- No rascar, frotar ni retirar las costras o la piel que descama
+- Aplicar el hidratante y los productos indicados por el medico
+- Uso estricto de protector solar SPF 50+ durante al menos 3 meses
+- Evitar exposicion solar directa durante la cicatrizacion
+- No aplicar productos activos (retinoides, acidos) hasta autorizacion medica
+
+SENALES DE ALARMA
+Signos de infeccion (enrojecimiento progresivo, secrecion, fiebre, dolor intenso); aparicion de ulceras o heridas profundas; manchas inusuales. Contacte al medico.
+
+CONSENTIMIENTO FOTOGRAFICO (opcional)
+( ) Autorizo fotografias antes y despues para registro en historia clinica.
+( ) Autorizo uso con fines academicos (identidad protegida).
+
+DECLARACION DEL PACIENTE
+He recibido informacion sobre el tipo de peeling indicado, el agente a utilizar, los cuidados previos y posteriores requeridos, y los riesgos. Tuve la oportunidad de preguntar. Entiendo que la fotoproteccion estricta es fundamental para el resultado y la seguridad del procedimiento.
+
+---
+Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoria legal segun normativa local.`
+}
+
+,{
+  catalog_id: 'estetica_laser_diodo',
+  titulo: 'Depilacion con Laser de Diodo',
+  tipo_procedimiento: 'Procedimiento estetico',
+  nombre_procedimiento: 'Depilacion definitiva con laser de diodo',
+  specialty_tags: ['MED_ESTETICA','DERMATOLOGIA'],
+  version: 1,
+  descripcion: `CONSENTIMIENTO INFORMADO - DEPILACION CON LASER DE DIODO
+
+OBJETIVO DEL PROCEDIMIENTO
+El laser de diodo es una tecnologia de depilacion que emite una longitud de onda especifica (habitualmente 808 nm o variantes) absorbida selectivamente por la melanina del foliculo piloso. El calor generado destruye el foliculo de forma selectiva, logrando una reduccion permanente del vello. El termino "definitivo" se refiere a reduccion significativa y permanente, no necesariamente eliminacion del 100% del vello en todos los casos.
+
+COMO SE REALIZA
+Se afeita la zona a tratar antes de la sesion (generalmente por el paciente en casa, 24 horas antes). Se aplica gel conductor frio sobre la piel. El medico o especialista aplica el dispositivo laser sobre la zona, emitiendo pulsos de luz. El equipo incorpora sistema de enfriamiento para proteger la epidermis y reducir la molestia. La duracion varia segun el area tratada (desde minutos para labio superior hasta 1-2 horas para piernas completas).
+
+NUMERO DE SESIONES ESPERADAS
+La depilacion con laser requiere multiples sesiones (generalmente entre 6 y 10 sesiones o mas) con intervalos de 4 a 8 semanas, dado que solo actua sobre los foliculos en fase activa de crecimiento (anagena).
+
+BENEFICIOS ESPERADOS
+Reduccion progresiva y permanente del vello en la zona tratada. La mayoria de los pacientes experimenta una reduccion del 70-90% tras el protocolo completo. El vello residual suele ser mas fino y claro. No se garantiza la eliminacion total del 100% del vello.
+
+RIESGOS COMUNES (transitorios)
+- Enrojecimiento (eritema) y sensacion de calor en la zona tratada (horas post-sesion)
+- Foliculitis transitoria (inflamacion de los foliculos)
+- Edema leve alrededor de los foliculos tratados
+- Leve molestia durante la aplicacion
+
+RIESGOS POCO FRECUENTES
+- Hiperpigmentacion post-inflamatoria — mayor riesgo en pieles mas oscuras o con exposicion solar reciente
+- Hipopigmentacion (zonas mas claras) — riesgo mas elevado en pieles muy bronceadas
+- Quemaduras superficiales si la piel esta bronceada o con parametros incorrectos
+- En casos muy raros: cicatrices
+- Crecimiento paradojico del vello — fenomeno reportado en algunas personas especialmente en cara y escote
+
+CONTRAINDICACIONES
+Exposicion solar reciente o bronceado activo (minimo 4-6 semanas sin bronceado antes de cada sesion); embarazo; bronceado artificial (autobronceantes); herpes activo en la zona; isotretinoina oral activa (requiere suspension previa); tatuajes en el area de tratamiento.
+
+CUIDADOS PREVIOS A CADA SESION
+- Afeitar la zona 24 horas antes (no depilar con cera, hilo o pinzas)
+- No tomar sol ni usar autobronceantes en las 4-6 semanas previas
+- No aplicar perfumes ni desodorantes el dia de la sesion
+
+CUIDADOS POSTERIORES
+- Aplicar frio local si hay molestia o eritema
+- Usar protector solar SPF 50+ en la zona (especialmente si es area expuesta)
+- Evitar exposicion solar directa las 2-4 semanas siguientes a cada sesion
+- Evitar sauna, banos muy calientes y ejercicio intenso las primeras 24-48 horas
+- No depilar con cera ni pinzas entre sesiones (se puede afeitar)
+
+SENALES DE ALARMA
+Quemadura visible, ampollas, dolor intenso persistente, signos de infeccion. Contacte al medico.
+
+DECLARACION DEL PACIENTE
+He recibido informacion sobre el tratamiento, el numero de sesiones esperadas, los cuidados indispensables (especialmente la fotoproteccion) y los riesgos. Tuve la oportunidad de preguntar. Entiendo que debo evitar el bronceado durante todo el protocolo de tratamiento.
+
+---
+Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoria legal segun normativa local.`
+}
+
+,{
+  catalog_id: 'estetica_laser_co2_fraccionado',
+  titulo: 'Laser CO2 Fraccionado',
+  tipo_procedimiento: 'Procedimiento estetico',
+  nombre_procedimiento: 'Resurfacing con laser CO2 fraccionado',
+  specialty_tags: ['MED_ESTETICA','DERMATOLOGIA'],
+  version: 1,
+  descripcion: `CONSENTIMIENTO INFORMADO - LASER CO2 FRACCIONADO
+
+OBJETIVO DEL PROCEDIMIENTO
+El laser CO2 fraccionado es un laser ablativo de dioxido de carbono que actua en la piel de forma fraccionada, creando multiples columnas microscopicas de tejido tratado (zonas de microablacion termica — MTZ) rodeadas por tejido sano que acelera la recuperacion. Se utiliza para el tratamiento de cicatrices (especialmente de acne), arrugas, textura irregular, manchas y fotoenvejecimiento. Es uno de los tratamientos con mayor eficacia disponibles para estas indicaciones.
+
+COMO SE REALIZA
+Se aplica anestesico topico con oclusion (crema anestesica bajo vendaje oclusivo) durante 30 a 60 minutos antes del procedimiento. Se limpia la piel. El medico aplica el laser CO2 fraccionado sobre la zona indicada con los parametros establecidos. La sesion dura entre 20 y 60 minutos. La piel quedara enrojecida e inflamada inmediatamente tras la sesion.
+
+PERIODO DE RECUPERACION ESPERADO (fundamental comprenderlo antes)
+- Dias 1-3: Enrojecimiento intenso, inflamacion (edema), sensacion de calor. Aspecto de "quemadura solar moderada"
+- Dias 3-7: Formacion de costras o micro-costras — NO deben retirarse manualmente
+- Dias 7-14: Descamacion progresiva y cicatrizacion. La piel nueva es rosa/rojiza
+- Semanas 2-4: La piel progresivamente normaliza su aspecto
+- Se recomienda planificar con tiempo libre de actividades sociales durante al menos 7-10 dias
+
+BENEFICIOS ESPERADOS
+Mejoria significativa en cicatrices de acne, arrugas finas y medias, textura e irregularidades de la piel, manchas por fotodano. Los resultados se desarrollan progresivamente durante 3 a 6 meses. No se garantizan resultados especificos.
+
+RIESGOS COMUNES (esperados, parte del proceso)
+- Enrojecimiento, inflamacion y calor significativos post-procedimiento (dias 1-5)
+- Costras y descamacion durante la cicatrizacion
+- Sensibilidad cutanea aumentada durante semanas
+- Eritema residual (color rosado-rojo) que puede durar 4-12 semanas
+
+RIESGOS POCO FRECUENTES
+- Hiperpigmentacion post-inflamatoria — mayor riesgo en fototipos oscuros
+- Infeccion bacteriana o viral (reactivacion de herpes) — el medico indicara profilaxis antiviral preventiva
+- Cicatrizacion anomala (queloides o cicatrices hipertroficas)
+- Hipopigmentacion (zonas permanentemente mas claras)
+- Milia (pequenos quistes de queratina superficiales) — transitorios y tratables
+
+CONTRAINDICACIONES
+Embarazo o lactancia; uso activo de isotretinoina oral — requiere suspension minimo 6-12 meses previos; herpes labial activo sin profilaxis; infeccion activa en la zona; exposicion solar reciente significativa; tendencia a queloides en el area facial; piel bronceada; radioterapia reciente en la zona.
+
+PROFILAXIS ANTIVIRAL
+En personas con historia de herpes labial (HSV-1), el medico indicara tratamiento antiviral profilactico iniciando 1-2 dias antes del procedimiento. Informe al medico si tiene antecedentes de herpes.
+
+CUIDADOS POSTERIORES (ESTRICTOS)
+- Aplicar los productos hidratantes/cicatrizantes indicados con frecuencia (la piel tratada no debe secarse)
+- NO rascar ni retirar costras bajo ninguna circunstancia
+- Uso de protector solar SPF 50+ durante minimo 3-6 meses
+- Evitar exposicion solar directa durante al menos 3 meses
+- No aplicar maquillaje hasta autorizacion medica
+
+SENALES DE ALARMA
+Signos de infeccion (fiebre, secrecion purulenta, dolor intenso creciente); ampollas grandes o ulceras; manchas blancas persistentes; lesiones vesiculosas (posible herpes). Contacte al medico de inmediato.
+
+CONSENTIMIENTO FOTOGRAFICO (opcional)
+( ) Autorizo fotografias antes, durante la cicatrizacion y despues para registro clinico.
+( ) Autorizo uso con fines academicos (identidad protegida).
+
+DECLARACION DEL PACIENTE
+He recibido informacion detallada sobre el procedimiento, el periodo de recuperacion esperado (que puede ser de varias semanas), los cuidados obligatorios (especialmente fotoproteccion y no retirar costras) y los riesgos. Tuve la oportunidad de hacer preguntas. Entiendo que el resultado final se aprecia meses despues del tratamiento.
+
+---
+Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoria legal segun normativa local.`
+}
+
+,{
+  catalog_id: 'estetica_inductores_colageno',
+  titulo: 'Inductores de Colageno (Bioestimuladores)',
+  tipo_procedimiento: 'Procedimiento estetico',
+  nombre_procedimiento: 'Inductores de colageno / Bioestimuladores dermicos',
+  specialty_tags: ['MED_ESTETICA','DERMATOLOGIA'],
+  version: 1,
+  descripcion: `CONSENTIMIENTO INFORMADO - INDUCTORES DE COLAGENO / BIOESTIMULADORES DERMICOS
+
+OBJETIVO DEL PROCEDIMIENTO
+Los inductores de colageno (tambien llamados bioestimuladores dermicos) son sustancias que, al ser inyectadas en la dermis o hipodermis, estimulan los fibroblastos para que produzcan colageno y otros componentes de la matriz extracelular de forma natural y progresiva. A diferencia de los rellenos que ocupan espacio fisicamente, los inductores generan resultados graduales a traves de la propia respuesta biologica del organismo. Los productos disponibles incluyen (entre otros): acido polilactico (PLLA), hidroxiapatita de calcio (CaHA), acido polinucleotido (PDRN/PN), entre otros segun indicacion medica.
+
+PRODUCTO A UTILIZAR
+El medico indicara el producto especifico, la tecnica de aplicacion y el plan de sesiones segun su evaluacion individual, el area a tratar y el objetivo estetico.
+
+INDICACIONES HABITUALES
+Perdida de volumen y firmeza difusa, arrugas profundas, flacidez cutanea en cara, cuello, escote, manos u otras zonas; restauracion del volumen facial; mejoria de la calidad general de la piel; entre otras segun evaluacion medica.
+
+COMO SE REALIZA
+Se aplica anestesico topico y/o bloqueo anestesico local segun la zona. El medico inyecta el producto mediante agujas o canulas en los planos anatomicos indicados. La sesion dura entre 30 y 60 minutos. Inmediatamente despues puede observarse inflamacion y posibles nodulos transitorios en la zona tratada, que son parte normal del proceso.
+
+DIFERENCIA CON RELLENOS DERMICOS (importante comprender)
+Los bioestimuladores no estan disenados principalmente para corregir volumen inmediato, sino para generar una mejoria progresiva y natural. Los resultados definitivos se aprecian entre 3 y 6 meses. Esto debe comprenderse antes del tratamiento.
+
+BENEFICIOS ESPERADOS
+Mejoria progresiva de la calidad, firmeza y volumen de la piel. Los efectos pueden durar 1 a 2 anos o mas segun el producto y el paciente. Se suele recomendar un protocolo inicial de 2 a 3 sesiones con intervalo de 4 a 6 semanas. No se garantizan resultados especificos.
+
+RIESGOS COMUNES (transitorios)
+- Dolor, ardor o molestia durante y tras la inyeccion
+- Enrojecimiento, edema (inflamacion) y hematomas locales — pueden ser mas marcados que con rellenos
+- Nodulos o irregularidades palpables en los primeros dias o semanas — habitualmente transitorios
+- Asimetria inicial en proceso de integracion del producto
+
+RIESGOS POCO FRECUENTES
+- Nodulos persistentes que requieran manejo medico
+- Granulomas tardios (reaccion inflamatoria cronica al producto)
+- Infeccion local
+- Reaccion de hipersensibilidad
+- Oclusion vascular — riesgo existe; el medico esta entrenado para su prevencion y manejo
+- Calcificaciones subcutaneas (reportadas especialmente con CaHA a largo plazo)
+
+CONTRAINDICACIONES
+Embarazo o lactancia; enfermedades autoinmunes activas; infeccion activa en la zona a tratar; tendencia severa a queloides; trastornos de la coagulacion activos; expectativas no realistas; antecedentes de reacciones granulomatosas a materiales de relleno previos.
+
+MASAJES POSTERIORES (si aplica)
+Para algunos productos (especialmente PLLA), el medico indicara un protocolo de masajes de la zona tratada (habitualmente durante 5 minutos, 5 veces al dia, durante 5 dias — "regla de los 5"). El cumplimiento de estas indicaciones es responsabilidad del paciente y es fundamental para prevenir nodulos.
+
+CUIDADOS POSTERIORES
+- Evitar presion sobre la zona las primeras 24 horas
+- Realizar los masajes indicados si el medico lo prescribe
+- Aplicar frio local si hay molestia o inflamacion
+- Evitar ejercicio intenso, sauna y calor el dia del procedimiento
+
+SENALES DE ALARMA
+Palidez, manchas cutaneas, dolor intenso o perdida de sensibilidad (posibles signos de compromiso vascular): acudir inmediatamente. Signos de infeccion. Nodulos que aumenten progresivamente de tamano. Contacte al medico.
+
+CONSENTIMIENTO FOTOGRAFICO (opcional)
+( ) Autorizo fotografias antes y durante el seguimiento para registro clinico.
+( ) Autorizo uso con fines academicos (identidad protegida).
+
+DECLARACION DEL PACIENTE
+He recibido informacion sobre el producto a utilizar, el caracter progresivo de los resultados (que toman semanas a meses en apreciarse), los cuidados post-procedimiento incluyendo los masajes si aplica, y los riesgos. Tuve la oportunidad de preguntar. Entiendo que este tratamiento produce mejoria gradual y que los resultados no son inmediatos.
+
+---
+Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoria legal segun normativa local.`
+}
+
 ]; // fin PLANTILLAS_CATALOGO
 
 // Mapa de especialidades → catalog_ids
 const ESPECIALIDAD_TEMPLATES = {
-  'Medicina Estética':              ['general_botox','general_prp','general_sueroterapia','general_fotos_datos','estetica_hifu_facial','estetica_relleno_ha'],
+  'Medicina Estética':              ['general_botox','general_prp','general_sueroterapia','general_fotos_datos','estetica_hifu_facial','estetica_relleno_ha','estetica_micropigmentacion','estetica_peeling_quimico','estetica_laser_diodo','estetica_laser_co2_fraccionado','estetica_inductores_colageno'],
   'Ginecología y Obstetricia':      ['general_botox','general_prp','general_sueroterapia','general_fotos_datos','gineco_laser_vaginal','gineco_labioplastia','gineco_pellets_hormonales','gineco_hifu_vaginal'],
   'Medicina General':               ['general_botox','general_prp','general_sueroterapia','general_fotos_datos'],
   'Cirugía General':                ['general_fotos_datos','general_sueroterapia'],
@@ -624,3 +947,9 @@ function getTemplatesForSpecialty(especialidad) {
 
 // Exportar para uso en otros archivos
 if (typeof module !== 'undefined') module.exports = { PLANTILLAS_CATALOGO, ESPECIALIDAD_TEMPLATES, getTemplatesForSpecialty };
+
+// ──────────────────────────────────────────────────────────────
+// MEDICINA ESTÉTICA — NUEVAS PLANTILLAS v1.1
+// Micropigmentación, Peeling Químico, Láser Diodo,
+// Láser CO2 Fraccionado, Inductores de Colágeno
+// ──────────────────────────────────────────────────────────────
