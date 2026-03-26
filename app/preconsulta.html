@@ -152,23 +152,24 @@
       return;
     }
 
-    // Cargar nombre del médico
+    // Cargar nombre del médico (opcional — si no tiene perfil el formulario igual funciona)
     const { data: perfil } = await sb
       .from('perfiles')
       .select('nombre, apellido, especialidad')
       .eq('id', medicoId)
-      .single();
+      .maybeSingle();
 
-    if (!perfil) {
-      mostrarErrorMedico();
-      return;
+    if (perfil) {
+      const nombre = perfil.nombre || 'Tu médico';
+      const esp    = perfil.especialidad || '';
+      document.getElementById('nombre-medico').textContent =
+        'Formulario enviado a: ' + nombre + (esp ? ' · ' + esp : '');
+      document.title = 'Pre-consulta — ' + nombre + ' · ConsentPro';
+    } else {
+      // El médico no tiene perfil completado, pero el enlace es válido
+      document.getElementById('nombre-medico').textContent = 'Formulario de pre-consulta';
+      document.title = 'Pre-consulta · ConsentPro';
     }
-
-    const nombre = perfil.nombre || 'Tu médico';
-    const esp    = perfil.especialidad    || '';
-    document.getElementById('nombre-medico').textContent =
-      'Formulario enviado a: ' + nombre + (esp ? ' · ' + esp : '');
-    document.title = 'Pre-consulta — ' + nombre + ' · ConsentPro';
   }
 
   function mostrarErrorMedico() {
