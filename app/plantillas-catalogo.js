@@ -917,11 +917,89 @@ He recibido informacion sobre el producto a utilizar, el caracter progresivo de 
 Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoria legal segun normativa local.`
 }
 
+,{
+  catalog_id: 'estetica_eliminacion_tatuajes',
+  titulo: 'Eliminación de Tatuajes con Láser',
+  tipo_procedimiento: 'Procedimiento estético',
+  nombre_procedimiento: 'Eliminación de tatuajes con láser Q-switched / Pico',
+  specialty_tags: ['MED_ESTETICA','DERMATOLOGIA'],
+  version: 1,
+  descripcion: `CONSENTIMIENTO INFORMADO - ELIMINACION DE TATUAJES CON LASER
+
+OBJETIVO DEL PROCEDIMIENTO
+La eliminacion de tatuajes mediante laser utiliza pulsos de luz de alta energia que fragmentan las particulas de pigmento del tatuaje en particulas mas pequenas, las cuales son eliminadas progresivamente por el sistema linfatico del organismo. Las tecnologias mas utilizadas son el laser Q-switched (Nd:YAG, Alejandrita, Ruby) y el laser Picosegundo (Pico), cada una con diferentes longitudes de onda segun el color del tatuaje a tratar.
+
+IMPORTANTE SOBRE EL LASER INDICADO EN SU CASO
+El medico indicara el equipo y longitud de onda segun los colores presentes en el tatuaje. Diferentes colores responden mejor a diferentes longitudes de onda: el negro y oscuro responden mejor, los rojos y naranjas tienen respuesta variable, y los verdes, azules claros y amarillos son los mas dificiles de eliminar.
+
+COMO SE REALIZA
+Se aplica crema anestesica topica con oclusion 30-60 minutos antes (o anestesia local si el medico lo considera necesario). Se protegen los ojos con gafas especiales. El medico aplica el laser sobre el tatuaje con los parametros adecuados segun el pigmento y la zona. La duracion varia segun el tamano del tatuaje (desde minutos para tatuajes pequenos hasta 30-60 minutos para areas extensas). Se aplica frio durante el procedimiento.
+
+NUMERO DE SESIONES ESPERADAS
+La eliminacion de tatuajes SIEMPRE requiere multiples sesiones. El numero depende de: tamano y localizacion del tatuaje, colores presentes, profundidad del pigmento, tipo de tinta utilizada, antiguedad del tatuaje y respuesta individual. En promedio se requieren entre 6 y 15 sesiones o mas, con intervalos de 6 a 12 semanas entre sesiones (para permitir la eliminacion linfatica del pigmento fragmentado). Tatuajes profesionales tipicamente requieren mas sesiones que tatuajes amateurs.
+
+NO SE GARANTIZA LA ELIMINACION COMPLETA. El resultado mas probable es un aclaramiento significativo. Algunos pigmentos (especialmente verdes, amarillos, turquesa) pueden resistir el tratamiento.
+
+BENEFICIOS ESPERADOS
+Aclaramiento progresivo del tatuaje sesion a sesion. El resultado final (parcial o total) se aprecia al completar el protocolo y varios meses despues de la ultima sesion. La respuesta varia enormemente entre personas y tatuajes.
+
+RIESGOS COMUNES (esperados y transitorios)
+- Enrojecimiento, inflamacion y calor inmediatos tras la sesion
+- Formacion de pequenas ampollas o costras en las horas-dias siguientes (parte normal del proceso - NO reventar ni retirar)
+- Sensacion de ardor similar a quemadura solar durante 24-48 horas
+- Cambio temporal de pigmentacion en la zona
+- Posible sangrado puntual durante la sesion
+
+RIESGOS POCO FRECUENTES
+- Hiperpigmentacion post-inflamatoria (oscurecimiento temporal de la piel circundante) - mayor riesgo en fototipos oscuros; la fotoproteccion estricta reduce este riesgo
+- Hipopigmentacion (aclaramiento permanente de la piel tratada) - mas frecuente con sesiones muy agresivas o en fototipos oscuros
+- Cicatrices o cambios de textura - riesgo mayor si las ampollas se revientan o se siguen las sesiones muy seguidas
+- Reaccion alergica o inflamatoria al pigmento fragmentado (poco frecuente pero posible, especialmente con pigmentos rojos)
+- Infeccion si no se siguen los cuidados indicados
+- Paradoxal darkening (oscurecimiento paradojico): algunos pigmentos blancos, rosados o carne pueden oscurecerse con el laser. Se realiza una prueba en area pequena antes de tratar zonas extensas con estos colores
+- En casos raros: cicatrizacion anomala o fibrosis
+
+CONSIDERACIONES ESPECIALES SEGUN COLOR DEL TATUAJE
+- Negro y grises: mejor respuesta
+- Rojo, naranja, marron: respuesta variable, mayor riesgo de reaccion alergica
+- Verde, azul claro, turquesa, amarillo: los mas resistentes, pueden requerir muchas mas sesiones o no eliminarse completamente
+- Blanco, rosa, beige: riesgo de oscurecimiento paradojico
+
+CONTRAINDICACIONES
+Embarazo o lactancia. Bronceado activo o reciente en la zona (minimo 4-6 semanas sin sol antes de cada sesion). Piel con heridas, infecciones o eccemas activos en la zona. Isotretinoina oral activa (suspension minima 6-12 meses previos). Tendencia a queloides o cicatrices hipertroficas en la zona (el medico evaluara el riesgo). Enfermedades autoinmunes activas segun criterio medico. Fotosensibilizacion activa por medicamentos.
+
+CUIDADOS POSTERIORES (FUNDAMENTALES)
+- NO reventar las ampollas que puedan formarse - aumenta riesgo de cicatriz e infeccion
+- NO rascar ni retirar costras manualmente
+- Aplicar el producto cicatrizante indicado por el medico (vaselina, crema cicatrizante)
+- Cubrir la zona las primeras 24-48 horas con aposito no adherente
+- Limpiar suavemente con agua y jabon suave
+- Uso estricto de protector solar SPF 50+ en la zona desde que cicatriza y durante todo el protocolo
+- Evitar exposicion solar directa en la zona tratada durante todo el tiempo entre sesiones
+- No aplicar maquillaje ni productos activos hasta cicatrizacion completa
+
+INTERVALOS ENTRE SESIONES
+Es indispensable respetar el intervalo de 6 a 12 semanas entre sesiones. Sesiones muy seguidas aumentan el riesgo de cicatriz y no mejoran el resultado (el sistema linfatico necesita tiempo para eliminar el pigmento fragmentado).
+
+SENALES DE ALARMA
+Signos de infeccion (enrojecimiento progresivo, pus, fiebre, dolor intenso que empeora). Ampollas muy grandes o que se extienden. Reaccion alergica sistemica. Consulte al medico si alguno de estos ocurre.
+
+CONSENTIMIENTO FOTOGRAFICO (opcional)
+( ) Autorizo fotografias de la zona antes y durante el proceso de eliminacion para registro clinico.
+( ) Autorizo uso con fines academicos o de evidencia clinica (identidad protegida si aplica).
+
+DECLARACION DEL PACIENTE
+He recibido informacion detallada sobre el procedimiento, el numero de sesiones necesarias (que puede ser elevado), los cuidados obligatorios entre sesiones (especialmente fotoproteccion y no reventar ampollas), y los riesgos incluyendo la posibilidad de no lograr eliminacion completa. Tuve la oportunidad de preguntar. Entiendo que los resultados son progresivos y que es imprescindible respetar los intervalos entre sesiones.
+
+---
+Disclaimer: Este documento es un modelo informativo. Debe ser revisado y adaptado por el profesional y su asesoria legal segun normativa local.`
+}
+
 ]; // fin PLANTILLAS_CATALOGO
 
 // Mapa de especialidades → catalog_ids
 const ESPECIALIDAD_TEMPLATES = {
-  'Medicina Estética':              ['general_botox','general_prp','general_sueroterapia','general_fotos_datos','estetica_hifu_facial','estetica_relleno_ha','estetica_micropigmentacion','estetica_peeling_quimico','estetica_laser_diodo','estetica_laser_co2_fraccionado','estetica_inductores_colageno'],
+  'Medicina Estética':              ['general_botox','general_prp','general_sueroterapia','general_fotos_datos','estetica_hifu_facial','estetica_relleno_ha','estetica_micropigmentacion','estetica_peeling_quimico','estetica_laser_diodo','estetica_laser_co2_fraccionado','estetica_inductores_colageno','estetica_eliminacion_tatuajes'],
   'Ginecología y Obstetricia':      ['general_botox','general_prp','general_sueroterapia','general_fotos_datos','gineco_laser_vaginal','gineco_labioplastia','gineco_pellets_hormonales','gineco_hifu_vaginal'],
   'Medicina General':               ['general_botox','general_prp','general_sueroterapia','general_fotos_datos'],
   'Cirugía General':                ['general_fotos_datos','general_sueroterapia'],
